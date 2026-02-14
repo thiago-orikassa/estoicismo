@@ -21,10 +21,11 @@
 - BE-08: endpoint `POST /v1/analytics/events` implementado com autenticação, versionamento e persistência.
 - AN-01: base UI Android (Material 3) implementada em Flutter.
 - IOS-01: base UI iOS (HIG/Cupertino + Dynamic Type base) implementada em Flutter.
+- SC-02: catálogo editorial fechado com 90/90 referências canônicas e texto literal.
+- SC-04: revisão de integridade concluída com curadoria final para MVP (`40 verified` / `50 rejected`).
 
 ## Tarefas em andamento
 - BE-01: banco base iniciado com migração SQL e contrato OpenAPI inicial.
-- SC-02: catálogo com 90 referências montado; extração literal e validação final pendentes.
 - MA-05: orquestração de gatilhos de paywall em app (A/B/C) implementada com regra de frequência/cooldown, pendente validação E2E completa.
 
 ## Decisões editoriais confirmadas (SC-02)
@@ -48,6 +49,9 @@
 - `/Users/thiagoorikassa/Documents/Estoicismo/qa/plano-testes-v1.md`
 - `/Users/thiagoorikassa/Documents/Estoicismo/qa/eventos-analytics-v1.md`
 - `/Users/thiagoorikassa/Documents/Estoicismo/content/catalog/quotes_catalog_90.csv`
+- `/Users/thiagoorikassa/Documents/Estoicismo/content/seeds/quotes_seed_review_v1.json`
+- `/Users/thiagoorikassa/Documents/Estoicismo/content/seeds/quotes_seed_verified_v2.json`
+- `/Users/thiagoorikassa/Documents/Estoicismo/docs/execution/sc-04-log-integridade-2026-02-14.md`
 - `/Users/thiagoorikassa/Documents/Estoicismo/content/recommendations/recommendations_40.csv`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/main.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/app_state.dart`
@@ -68,8 +72,8 @@
 ## Próximo bloco de execução
 1. QA-05: suíte E2E de monetização (feature block -> paywall -> trial/compra/restore).
 2. AN-04 + IOS-04: integração de compra/restore usando contrato BE-07.
-3. SC-02: finalizar extração literal e validação de 90 citações.
-4. BE-01: fechar provisionamento dev/stage com runtime/execução padronizada.
+3. BE-01: fechar provisionamento dev/stage com runtime/execução padronizada.
+4. QA-03: retomar E2E do fluxo diário em 7 ciclos com o novo seed de conteúdo.
 
 ## Bloqueio técnico atual
 - Sem bloqueio técnico crítico de toolchain no momento (Flutter disponível no ambiente local).

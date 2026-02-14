@@ -3,9 +3,9 @@ PS-01,Product Strategist,Fechar escopo MVP congelado (v1),P0,S,-,Documento de es
 PS-02,Product Strategist,Definir metas D1/D7 + baseline esperado,P0,S,PS-01,Metas registradas com formula de calculo,DONE
 PS-03,Product Strategist,Priorizar backlog por impacto x risco,P0,S,PS-01,Ranking de tarefas P0/P1 aprovado,DONE
 SC-01,Stoic Content Curator,Criar matriz editorial (autor x tema x contexto),P0,M,PS-01,Matriz publicada com cobertura minima por celula,DONE
-SC-02,Stoic Content Curator,Curar 90 citacoes com fonte verificavel,P0,L,SC-01,100 por cento com referencia catalogada e validade,IN_PROGRESS
+SC-02,Stoic Content Curator,Curar 90 citacoes com fonte verificavel,P0,L,SC-01,100 por cento com referencia catalogada e validade,DONE
 SC-03,Stoic Content Curator,Criar 40 recomendacoes praticas vinculadas,P0,M,SC-01,Cada recomendacao com principio + acao + criterio,DONE
-SC-04,Stoic Content Curator,Revisao de integridade filosofica,P0,M,SC-02|SC-03,Checklist sem pendencias criticas,TODO
+SC-04,Stoic Content Curator,Revisao de integridade filosofica,P0,M,SC-02|SC-03,Checklist sem pendencias criticas,DONE
 SC-05,Stoic Content Curator,Expandir catalogo com autores estoicos adicionais (Zenao, Cleantes, Crisipo, Musonio Rufo, Hierocles, Posidonio),P2,L,SC-02,Autores adicionados com fonte canonica definida e 100 por cento das citacoes com referencia,TODO
 MA-01,Mobile Architect,Definir arquitetura de pastas e camadas,P0,S,-,Estrutura documentada com exemplos,DONE
 MA-02,Mobile Architect,Contratos de dados (Quote Recommendation Check-in),P0,M,MA-01|SC-01,Schemas versionados + validacoes minimas,DONE
