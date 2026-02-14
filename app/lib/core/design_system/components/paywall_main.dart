@@ -202,7 +202,7 @@ class _PlanSelector extends StatelessWidget {
         _PlanCard(
           title: 'Plano Anual',
           subtitle: '7 dias grátis',
-          price: 'R\$ 119,90/ano',
+          price: 'R\$ 149,00/ano',
           highlight: 'Melhor custo-benefício',
           selected: selectedPlan == SubscriptionPlan.annual,
           onTap: () => onPlanChange(SubscriptionPlan.annual),
@@ -240,7 +240,9 @@ class _PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? StoicColors.copper.withValues(alpha: 0.15) : StoicColors.stone,
+      color: selected
+          ? StoicColors.copper.withValues(alpha: 0.15)
+          : StoicColors.stone,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         onTap: onTap,
@@ -278,19 +280,20 @@ class _PlanCard extends StatelessWidget {
                     if (highlight != null) ...[
                       const SizedBox(height: 6),
                       Container(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: StoicColors.copper.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           highlight!,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: StoicColors.ivory,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: StoicColors.ivory,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                       ),
                     ],
@@ -338,7 +341,8 @@ class _ComparisonTable extends StatelessWidget {
           Row(
             children: [
               const Expanded(
-                child: Text('Recursos', style: TextStyle(color: StoicColors.sand)),
+                child:
+                    Text('Recursos', style: TextStyle(color: StoicColors.sand)),
               ),
               const SizedBox(width: 12),
               Text(

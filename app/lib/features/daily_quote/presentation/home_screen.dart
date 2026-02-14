@@ -4,6 +4,7 @@ import '../../../app_state.dart';
 import '../../../core/auth/auth_flow.dart';
 import '../../../core/auth/auth_models.dart';
 import '../../../core/design_system/components/components.dart';
+import '../../../core/paywall/paywall_flow.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -160,6 +161,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _maybeShowValueBasedPaywall(AppState state) async {
+    if (!state.canShowPaywallForTrigger(PaywallTrigger.valueBased)) return;
+    await Future.delayed(const Duration(milliseconds: 400));
+    if (!mounted) return;
+    await PaywallFlow.showPaywall(
+      context,
+      state: state,
+      trigger: PaywallTrigger.valueBased,
+    );
+  }
+
   Future<void> _toggleFavorite(
     AppState state,
     String quoteId,
@@ -231,6 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
       await _maybePromptLoginAfterCheckin(state);
+      await _maybeShowValueBasedPaywall(state);
     } catch (error) {
       if (!mounted) return;
       messenger.showSnackBar(

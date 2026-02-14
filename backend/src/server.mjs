@@ -106,6 +106,57 @@ const deleteFavorite = db.prepare(`
   where user_id = ? and quote_id = ?
 `);
 
+const selectSubscriptionProfileByUser = db.prepare(`
+  select
+    user_id,
+    status,
+    plan,
+    trial_started_at_utc,
+    trial_ends_at_utc,
+    next_billing_at_utc,
+    trial_used,
+    updated_at_utc
+  from subscription_profiles
+  where user_id = ?
+`);
+
+const upsertSubscriptionProfile = db.prepare(`
+  insert into subscription_profiles (
+    user_id,
+    status,
+    plan,
+    trial_started_at_utc,
+    trial_ends_at_utc,
+    next_billing_at_utc,
+    trial_used,
+    updated_at_utc
+  ) values (?, ?, ?, ?, ?, ?, ?, ?)
+  on conflict(user_id) do update set
+    status = excluded.status,
+    plan = excluded.plan,
+    trial_started_at_utc = excluded.trial_started_at_utc,
+    trial_ends_at_utc = excluded.trial_ends_at_utc,
+    next_billing_at_utc = excluded.next_billing_at_utc,
+    trial_used = excluded.trial_used,
+    updated_at_utc = excluded.updated_at_utc
+`);
+
+const selectRestoreRequestByUserAndKey = db.prepare(`
+  select restored, created_at_utc
+  from subscription_restore_requests
+  where user_id = ? and idempotency_key = ?
+`);
+
+const insertRestoreRequest = db.prepare(`
+  insert into subscription_restore_requests (
+    id,
+    user_id,
+    idempotency_key,
+    restored,
+    created_at_utc
+  ) values (?, ?, ?, ?, ?)
+`);
+
 const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -122,12 +173,71 @@ function normalizeCheckin(row) {
   return { ...row, applied: Boolean(row.applied) };
 }
 
-function appendAnalyticsEvent(eventName, properties) {
+function isSubscriptionPlan(value) {
+  return value === 'monthly' || value === 'annual';
+}
+
+function plusDays(days) {
+  const date = new Date();
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString();
+}
+
+function normalizeSubscriptionProfile(row) {
+  if (!row) return null;
+  return {
+    ...row,
+    trial_used: Boolean(row.trial_used)
+  };
+}
+
+function toEntitlement(userId, row) {
+  const profile = normalizeSubscriptionProfile(row);
+  const status = profile?.status ?? 'free';
+  const plan = profile?.plan ?? null;
+  const trialEligible = !Boolean(profile?.trial_used) && status === 'free';
+  return {
+    user_id: userId,
+    status,
+    plan,
+    trial_eligible: trialEligible,
+    trial_ends_at_utc: profile?.trial_ends_at_utc ?? null,
+    next_billing_at_utc: profile?.next_billing_at_utc ?? null
+  };
+}
+
+function persistSubscriptionProfile({
+  userId,
+  status,
+  plan,
+  trialStartedAtUtc = null,
+  trialEndsAtUtc = null,
+  nextBillingAtUtc = null,
+  trialUsed = false
+}) {
+  const now = new Date().toISOString();
+  upsertSubscriptionProfile.run(
+    userId,
+    status,
+    plan,
+    trialStartedAtUtc,
+    trialEndsAtUtc,
+    nextBillingAtUtc,
+    trialUsed ? 1 : 0,
+    now
+  );
+}
+
+function isPlainObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function appendAnalyticsEvent(eventName, properties, eventVersion = 1) {
   const now = new Date().toISOString();
   insertAnalyticsEvent.run(
     randomUUID(),
     eventName,
-    1,
+    eventVersion,
     now,
     JSON.stringify(properties ?? {})
   );
@@ -289,6 +399,177 @@ const server = createServer(async (req, res) => {
     }
   }
 
+  if (req.method === 'GET' && url.pathname === '/v1/subscription/entitlement') {
+    const session = requireSession(req);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+    const profile = selectSubscriptionProfileByUser.get(session.user_id);
+    return sendJson(res, 200, toEntitlement(session.user_id, profile));
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/subscription/trial/start') {
+    const session = requireSession(req);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const plan = body.plan ?? 'annual';
+      if (plan !== 'annual') {
+        return sendJson(res, 400, {
+          error: 'invalid_plan_for_trial',
+          message: 'trial is available only for annual plan'
+        });
+      }
+
+      const current = normalizeSubscriptionProfile(
+        selectSubscriptionProfileByUser.get(session.user_id)
+      );
+      if (current?.status === 'active' || current?.status === 'trial') {
+        return sendJson(res, 200, {
+          entitlement: toEntitlement(session.user_id, current)
+        });
+      }
+
+      if (current?.trial_used) {
+        return sendJson(res, 409, {
+          error: 'trial_already_used',
+          entitlement: toEntitlement(session.user_id, current)
+        });
+      }
+
+      const now = new Date().toISOString();
+      const trialEndsAtUtc = plusDays(7);
+      persistSubscriptionProfile({
+        userId: session.user_id,
+        status: 'trial',
+        plan: 'annual',
+        trialStartedAtUtc: now,
+        trialEndsAtUtc,
+        nextBillingAtUtc: null,
+        trialUsed: true
+      });
+
+      appendAnalyticsEvent('trial_started', {
+        user_id: session.user_id,
+        plan_selected: 'annual',
+        trial_eligible: true,
+        event_version: 1
+      });
+
+      const updated = selectSubscriptionProfileByUser.get(session.user_id);
+      return sendJson(res, 201, {
+        entitlement: toEntitlement(session.user_id, updated)
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/subscription/activate') {
+    const session = requireSession(req);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const plan = body.plan;
+      if (!isSubscriptionPlan(plan)) {
+        return sendJson(res, 400, {
+          error: 'invalid_plan',
+          message: 'plan must be monthly or annual'
+        });
+      }
+
+      const current = normalizeSubscriptionProfile(
+        selectSubscriptionProfileByUser.get(session.user_id)
+      );
+      const trialUsed = Boolean(current?.trial_used);
+      const nextBillingAtUtc = plusDays(plan === 'monthly' ? 30 : 365);
+
+      persistSubscriptionProfile({
+        userId: session.user_id,
+        status: 'active',
+        plan,
+        trialStartedAtUtc: null,
+        trialEndsAtUtc: null,
+        nextBillingAtUtc,
+        trialUsed
+      });
+
+      appendAnalyticsEvent('subscription_activated', {
+        user_id: session.user_id,
+        plan_selected: plan,
+        trial_eligible: !trialUsed && plan === 'annual',
+        event_version: 1
+      });
+
+      const updated = selectSubscriptionProfileByUser.get(session.user_id);
+      return sendJson(res, 200, {
+        entitlement: toEntitlement(session.user_id, updated)
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/subscription/restore') {
+    const session = requireSession(req);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const key =
+        typeof body.idempotency_key === 'string' ? body.idempotency_key.trim() : '';
+      if (key.length === 0 || key.length > 128) {
+        return sendJson(res, 400, {
+          error: 'invalid_idempotency_key',
+          message: 'idempotency_key must be non-empty string (<= 128 chars)'
+        });
+      }
+
+      const existing = selectRestoreRequestByUserAndKey.get(session.user_id, key);
+      if (existing) {
+        const current = selectSubscriptionProfileByUser.get(session.user_id);
+        return sendJson(res, 200, {
+          restored: Boolean(existing.restored),
+          idempotent: true,
+          entitlement: toEntitlement(session.user_id, current)
+        });
+      }
+
+      const current = normalizeSubscriptionProfile(
+        selectSubscriptionProfileByUser.get(session.user_id)
+      );
+      const restored = current?.status === 'active' || current?.status === 'trial';
+      const now = new Date().toISOString();
+
+      insertRestoreRequest.run(randomUUID(), session.user_id, key, restored ? 1 : 0, now);
+      appendAnalyticsEvent(
+        restored ? 'restore_purchase_success' : 'restore_purchase_failed',
+        {
+          user_id: session.user_id,
+          restored,
+          idempotency_key: key,
+          event_version: 1
+        }
+      );
+
+      return sendJson(res, 200, {
+        restored,
+        idempotent: false,
+        entitlement: toEntitlement(session.user_id, current)
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
   if (req.method === 'GET' && url.pathname === '/v1/daily-package') {
     const dateLocalParam = url.searchParams.get('date_local');
     const timezone = url.searchParams.get('timezone');
@@ -318,6 +599,53 @@ const server = createServer(async (req, res) => {
       context: pack.recommendation.context
     });
     return sendJson(res, 200, pack);
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/analytics/events') {
+    const session = requireSession(req);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const eventName = typeof body.event_name === 'string' ? body.event_name.trim() : '';
+      if (eventName.length === 0 || eventName.length > 64) {
+        return sendJson(res, 400, {
+          error: 'invalid_event_name',
+          message: 'event_name must be non-empty string (<= 64 chars)'
+        });
+      }
+
+      if (!isPlainObject(body.properties)) {
+        return sendJson(res, 400, {
+          error: 'invalid_properties',
+          message: 'properties must be a JSON object'
+        });
+      }
+
+      const requestedVersion = body.properties.event_version;
+      const eventVersion = requestedVersion === undefined ? 1 : Number(requestedVersion);
+      if (!Number.isInteger(eventVersion) || eventVersion < 1 || eventVersion > 999) {
+        return sendJson(res, 400, {
+          error: 'invalid_event_version',
+          message: 'event_version must be an integer between 1 and 999'
+        });
+      }
+
+      const normalizedProperties = {
+        ...body.properties,
+        user_id: session.user_id,
+        event_version: eventVersion
+      };
+      appendAnalyticsEvent(eventName, normalizedProperties, eventVersion);
+      return sendJson(res, 201, {
+        event_name: eventName,
+        event_version: eventVersion
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/checkins') {

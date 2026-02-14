@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app_state.dart';
@@ -20,6 +22,24 @@ class PaywallFlow {
     required AppState state,
     required PremiumFeature feature,
   }) async {
+    if (!state.canShowPaywallForTrigger(PaywallTrigger.featureBlock)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Conteúdo premium em preparação.')),
+      );
+      return;
+    }
+
+    unawaited(
+      state.trackEvent(
+        'premium_feature_blocked',
+        properties: {
+          'trigger_type': PaywallTrigger.featureBlock.name,
+          'feature': feature.name,
+          'trial_eligible': !state.isPro,
+        },
+      ),
+    );
+
     final action = await showModalBottomSheet<PremiumBlockAction>(
       context: context,
       backgroundColor: StoicColors.cardBackground,
@@ -35,14 +55,43 @@ class PaywallFlow {
     );
 
     if (action == null) return;
+    if (!context.mounted) return;
     switch (action) {
       case PremiumBlockAction.viewPlans:
-        await showPaywall(context, state: state);
+        unawaited(
+          state.trackEvent(
+            'paywall_cta_clicked',
+            properties: {
+              'trigger_type': PaywallTrigger.featureBlock.name,
+              'cta': 'view_plans',
+            },
+          ),
+        );
+        await showPaywall(
+          context,
+          state: state,
+          trigger: PaywallTrigger.featureBlock,
+        );
         break;
       case PremiumBlockAction.continueFree:
         state.markPaywallDismissed();
+        unawaited(
+          state.trackEvent(
+            'paywall_dismissed',
+            properties: {
+              'trigger_type': PaywallTrigger.featureBlock.name,
+              'dismiss_reason': 'continue_free',
+            },
+          ),
+        );
         break;
       case PremiumBlockAction.restorePurchase:
+        unawaited(
+          state.trackEvent(
+            'restore_purchase_started',
+            properties: {'trigger_type': PaywallTrigger.featureBlock.name},
+          ),
+        );
         await _showRestoreFlow(context, state: state);
         break;
     }
@@ -53,7 +102,7 @@ class PaywallFlow {
     required AppState state,
     PaywallTrigger trigger = PaywallTrigger.manual,
   }) async {
-    if (!state.canShowPaywall) {
+    if (!state.canShowPaywallForTrigger(trigger)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Paywall disponível novamente em breve.')),
       );
@@ -61,6 +110,18 @@ class PaywallFlow {
     }
 
     state.markPaywallViewed();
+    unawaited(
+      state.trackEvent(
+        'paywall_viewed',
+        properties: {
+          'paywall_variant': 'A',
+          'trigger_type': trigger.name,
+          'plan_selected': SubscriptionPlan.annual.name,
+          'price_displayed': _priceForPlan(SubscriptionPlan.annual),
+          'trial_eligible': !state.isPro,
+        },
+      ),
+    );
 
     SubscriptionPlan selectedPlan = SubscriptionPlan.annual;
 
@@ -77,14 +138,47 @@ class PaywallFlow {
               onPlanChange: (plan) => setState(() => selectedPlan = plan),
               onClose: () {
                 state.markPaywallDismissed();
+                unawaited(
+                  state.trackEvent(
+                    'paywall_dismissed',
+                    properties: {
+                      'trigger_type': trigger.name,
+                      'dismiss_reason': 'close',
+                    },
+                  ),
+                );
                 Navigator.of(context).pop();
               },
               onContinueFree: () {
                 state.markPaywallDismissed();
+                unawaited(
+                  state.trackEvent(
+                    'paywall_dismissed',
+                    properties: {
+                      'trigger_type': trigger.name,
+                      'dismiss_reason': 'continue_free',
+                    },
+                  ),
+                );
                 Navigator.of(context).pop();
               },
               onRestorePurchase: () async {
+                unawaited(
+                  state.trackEvent(
+                    'paywall_cta_clicked',
+                    properties: {
+                      'trigger_type': trigger.name,
+                      'cta': 'restore_purchase',
+                    },
+                  ),
+                );
                 Navigator.of(context).pop();
+                unawaited(
+                  state.trackEvent(
+                    'restore_purchase_started',
+                    properties: {'trigger_type': trigger.name},
+                  ),
+                );
                 await _showRestoreFlow(context, state: state);
               },
               onStartPlan: (plan) async {
@@ -99,8 +193,27 @@ class PaywallFlow {
                     return;
                   }
                 }
+                if (!context.mounted) return;
+                unawaited(
+                  state.trackEvent(
+                    'paywall_cta_clicked',
+                    properties: {
+                      'paywall_variant': 'A',
+                      'trigger_type': trigger.name,
+                      'cta': 'start_plan',
+                      'plan_selected': plan.name,
+                      'price_displayed': _priceForPlan(plan),
+                      'trial_eligible': plan == SubscriptionPlan.annual,
+                    },
+                  ),
+                );
                 Navigator.of(context).pop();
-                await _processPurchase(context, state: state, plan: plan);
+                await _processPurchase(
+                  context,
+                  state: state,
+                  plan: plan,
+                  trigger: trigger,
+                );
               },
             );
           },
@@ -120,6 +233,7 @@ class PaywallFlow {
     BuildContext context, {
     required AppState state,
     required SubscriptionPlan plan,
+    required PaywallTrigger trigger,
   }) async {
     showDialog<void>(
       context: context,
@@ -134,8 +248,30 @@ class PaywallFlow {
     final isTrial = plan == SubscriptionPlan.annual;
     if (isTrial) {
       state.startTrial(plan);
+      unawaited(
+        state.trackEvent(
+          'trial_started',
+          properties: {
+            'trigger_type': trigger.name,
+            'plan_selected': plan.name,
+            'price_displayed': _priceForPlan(plan),
+            'trial_eligible': true,
+          },
+        ),
+      );
     } else {
       state.activateSubscription(plan);
+      unawaited(
+        state.trackEvent(
+          'subscription_activated',
+          properties: {
+            'trigger_type': trigger.name,
+            'plan_selected': plan.name,
+            'price_displayed': _priceForPlan(plan),
+            'trial_eligible': false,
+          },
+        ),
+      );
     }
 
     if (!context.mounted) return;
@@ -164,9 +300,21 @@ class PaywallFlow {
           onClose: () => Navigator.of(dialogContext).pop(),
           onSuccess: () {
             state.restoreSubscription();
+            unawaited(
+              state.trackEvent(
+                'restore_purchase_success',
+                properties: {'restored': true},
+              ),
+            );
             Navigator.of(dialogContext).pop();
           },
           onContactSupport: () {
+            unawaited(
+              state.trackEvent(
+                'restore_purchase_failed',
+                properties: {'restored': false},
+              ),
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Suporte: suporte@estoicismo.app'),
@@ -176,5 +324,10 @@ class PaywallFlow {
         );
       },
     );
+  }
+
+  static String _priceForPlan(SubscriptionPlan plan) {
+    if (plan == SubscriptionPlan.monthly) return 'R\$ 19,90/mês';
+    return 'R\$ 149,00/ano';
   }
 }
