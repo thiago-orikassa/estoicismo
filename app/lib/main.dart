@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -5,7 +7,9 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'app_state.dart';
 import 'core/design_system/motion/motion.dart';
 import 'core/design_system/tokens/design_tokens.dart';
+import 'core/auth/session_service.dart';
 import 'core/networking/api_client.dart';
+import 'core/storage/secure_store.dart';
 import 'core/theme/app_theme.dart';
 import 'features/daily_quote/data/daily_repository.dart';
 import 'features/daily_quote/presentation/home_screen.dart';
@@ -13,13 +17,15 @@ import 'features/favorites/presentation/favorites_screen.dart';
 import 'features/history/presentation/history_screen.dart';
 import 'features/onboarding/presentation/onboarding_flow.dart';
 import 'features/settings/presentation/settings_screen.dart';
+import 'features/auth/presentation/auth_splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final api = ApiClient();
+  final sessionService = SessionService(api, SecureStore());
   final repo = DailyRepository(api);
-  final state = AppState(repo);
+  final state = AppState(repo, sessionService);
   await state.initialize();
   try {
     final deviceTimezone = await FlutterTimezone.getLocalTimezone();
@@ -47,9 +53,7 @@ class EstoicismoApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightMaterial(),
           scrollBehavior: const _NoOverscrollIndicatorBehavior(),
-          home: state.onboardingComplete
-              ? MainShell(state: state)
-              : OnboardingFlow(state: state),
+          home: SplashGate(state: state),
         );
       },
     );
@@ -66,6 +70,59 @@ class _NoOverscrollIndicatorBehavior extends MaterialScrollBehavior {
     ScrollableDetails details,
   ) {
     return child;
+  }
+}
+
+class SplashGate extends StatefulWidget {
+  const SplashGate({super.key, required this.state});
+
+  final AppState state;
+
+  @override
+  State<SplashGate> createState() => _SplashGateState();
+}
+
+class _SplashGateState extends State<SplashGate> {
+  bool _showSplash = true;
+  bool _showLoading = false;
+  Timer? _loadingTimer;
+  Timer? _transitionTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadingTimer = Timer(const Duration(milliseconds: 1200), () {
+      if (!mounted) return;
+      setState(() => _showLoading = true);
+    });
+    _transitionTimer = Timer(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
+      setState(() => _showSplash = false);
+    });
+  }
+
+  @override
+  void dispose() {
+    _loadingTimer?.cancel();
+    _transitionTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final content = _showSplash
+        ? AuthSplashScreen(showLoading: _showLoading)
+        : (widget.state.onboardingComplete
+            ? MainShell(state: widget.state)
+            : OnboardingFlow(state: widget.state));
+
+    return AnimatedSwitcher(
+      duration: MotionTokens.durationOrZero(context, MotionTokens.standard),
+      child: KeyedSubtree(
+        key: ValueKey<String>(_showSplash ? 'splash' : 'app'),
+        child: content,
+      ),
+    );
   }
 }
 
@@ -180,69 +237,52 @@ class _MainShellState extends State<MainShell> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: StoicColors.bottomBarBackground,
+        decoration: BoxDecoration(
+          color: StoicColors.bottomBarBackground,
+          border: Border(
+            top: BorderSide(
+              color: StoicColors.sand.withValues(alpha: 0.3),
+            ),
+          ),
+        ),
         child: SafeArea(
           top: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 80,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.75),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(tabs.length, (i) {
-                      final isSelected = i == _index;
-                      return SizedBox(
-                        width: 60,
-                        height: 44.5,
-                        child: InkResponse(
-                          onTap: () => setState(() => _index = i),
-                          radius: 32,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                tabs[i].icon,
-                                size: 24,
-                                color: isSelected
-                                    ? StoicColors.copper
-                                    : StoicColors.sand,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                tabs[i].label,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  height: 1.2,
-                                  fontWeight: FontWeight.w500,
-                                  color: isSelected
-                                      ? StoicColors.copper
-                                      : StoicColors.sand,
-                                ),
-                              ),
-                            ],
+          child: SizedBox(
+            height: 80,
+            child: Row(
+              children: List.generate(tabs.length, (i) {
+                final isSelected = i == _index;
+                final color = isSelected
+                    ? StoicColors.deepBlue
+                    : StoicColors.stone.withValues(alpha: 0.4);
+                return Expanded(
+                  child: InkResponse(
+                    onTap: () => setState(() => _index = i),
+                    radius: 32,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          tabs[i].icon,
+                          size: 24,
+                          color: color,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          tabs[i].label,
+                          style: TextStyle(
+                            fontSize: 11,
+                            height: 1.2,
+                            fontWeight: FontWeight.w500,
+                            color: color,
                           ),
                         ),
-                      );
-                    }),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                height: 20,
-                alignment: Alignment.center,
-                child: Container(
-                  width: 128,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: StoicColors.ivory.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(99),
-                  ),
-                ),
-              ),
-            ],
+                );
+              }),
+            ),
           ),
         ),
       ),

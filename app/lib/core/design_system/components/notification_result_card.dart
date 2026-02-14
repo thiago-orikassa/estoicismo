@@ -23,10 +23,10 @@ class NotificationResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (type == NotificationResultType.granted) {
       return Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: StoicColors.deepBlue.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(StoicRadius.lg),
           border: Border.all(
             color: StoicColors.deepBlue.withValues(alpha: 0.2),
           ),
@@ -56,6 +56,7 @@ class NotificationResultCard extends StatelessWidget {
                       Text(
                         'Lembrete diário ativado',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: StoicColors.deepBlue,
                             ),
@@ -64,6 +65,7 @@ class NotificationResultCard extends StatelessWidget {
                       Text(
                         'Você receberá um lembrete todos os dias.',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 13,
                               color: StoicColors.textMuted,
                             ),
                       ),
@@ -85,7 +87,7 @@ class NotificationResultCard extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(StoicRadius.md),
                     ),
                   ),
                   onPressed: onAdjustTime,
@@ -99,10 +101,10 @@ class NotificationResultCard extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: StoicColors.cardBackground,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(StoicRadius.lg),
         border: Border.all(color: StoicColors.border),
       ),
       child: Column(
@@ -131,6 +133,7 @@ class NotificationResultCard extends StatelessWidget {
                     Text(
                       'Sem problema',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: StoicColors.obsidian,
                           ),
@@ -139,8 +142,9 @@ class NotificationResultCard extends StatelessWidget {
                     Text(
                       'Você pode ativar lembretes depois em Ajustes.',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 13,
                             color: StoicColors.textMuted,
-                            height: 1.4,
+                            height: 1.5,
                           ),
                     ),
                   ],
@@ -158,7 +162,7 @@ class NotificationResultCard extends StatelessWidget {
                   foregroundColor: StoicColors.ivory,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(StoicRadius.md),
                   ),
                 ),
                 onPressed: onGoToSettings,

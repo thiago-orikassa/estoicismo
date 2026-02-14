@@ -1,8 +1,9 @@
 import { createServer } from 'node:http';
-import { readFileSync, writeFileSync } from 'node:fs';
-import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { createHash, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { db } from './db.mjs';
 
 const PORT = process.env.PORT || 8787;
 const HOST = process.env.HOST || '127.0.0.1';
@@ -10,9 +11,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const defaultDataDir = join(__dirname, '../data');
 const dataDir = process.env.STOIC_DATA_DIR ?? defaultDataDir;
 const seedPath = process.env.STOIC_SEED_PATH ?? join(dataDir, 'daily_seed.json');
-const checkinsPath = join(dataDir, 'checkins.json');
-const favoritesPath = join(dataDir, 'favorites.json');
-const analyticsPath = join(dataDir, 'analytics_events.json');
 
 const seed = JSON.parse(readFileSync(seedPath, 'utf-8'));
 
@@ -21,48 +19,137 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-function loadCheckins() {
-  try {
-    return JSON.parse(readFileSync(checkinsPath, 'utf-8'));
-  } catch {
-    return [];
-  }
+const insertAnalyticsEvent = db.prepare(`
+  insert into analytics_events (
+    id,
+    event_name,
+    event_version,
+    created_at_utc,
+    properties_json
+  ) values (?, ?, ?, ?, ?)
+`);
+
+const selectSessionByDeviceId = db.prepare(`
+  select user_id
+  from sessions
+  where device_id = ?
+`);
+
+const selectSessionByToken = db.prepare(`
+  select user_id
+  from sessions
+  where token_hash = ?
+`);
+
+const insertSession = db.prepare(`
+  insert into sessions (
+    id,
+    user_id,
+    device_id,
+    token_hash,
+    created_at_utc,
+    updated_at_utc
+  ) values (?, ?, ?, ?, ?, ?)
+`);
+
+const updateSessionToken = db.prepare(`
+  update sessions
+  set token_hash = ?, updated_at_utc = ?
+  where device_id = ?
+`);
+
+const selectCheckinByUserAndDate = db.prepare(`
+  select id, user_id, date_local, applied, note, timezone, created_at_utc, updated_at_utc
+  from checkins
+  where user_id = ? and date_local = ?
+`);
+
+const insertCheckin = db.prepare(`
+  insert into checkins (
+    id,
+    user_id,
+    date_local,
+    applied,
+    note,
+    timezone,
+    created_at_utc,
+    updated_at_utc
+  ) values (?, ?, ?, ?, ?, ?, ?, ?)
+`);
+
+const updateCheckin = db.prepare(`
+  update checkins
+  set applied = ?, note = ?, timezone = ?, updated_at_utc = ?
+  where id = ?
+`);
+
+const listFavoritesByUser = db.prepare(`
+  select id, user_id, quote_id, created_at_utc
+  from favorites
+  where user_id = ?
+  order by created_at_utc desc
+`);
+
+const selectFavorite = db.prepare(`
+  select id, user_id, quote_id, created_at_utc
+  from favorites
+  where user_id = ? and quote_id = ?
+`);
+
+const insertFavorite = db.prepare(`
+  insert into favorites (id, user_id, quote_id, created_at_utc)
+  values (?, ?, ?, ?)
+`);
+
+const deleteFavorite = db.prepare(`
+  delete from favorites
+  where user_id = ? and quote_id = ?
+`);
+
+const uuidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isUuid(value) {
+  return typeof value === 'string' && uuidRegex.test(value);
 }
 
-function saveCheckins(checkins) {
-  writeFileSync(checkinsPath, JSON.stringify(checkins, null, 2));
+function isIsoDate(value) {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
-function loadFavorites() {
-  try {
-    return JSON.parse(readFileSync(favoritesPath, 'utf-8'));
-  } catch {
-    return [];
-  }
-}
-
-function saveFavorites(favorites) {
-  writeFileSync(favoritesPath, JSON.stringify(favorites, null, 2));
-}
-
-function loadAnalyticsEvents() {
-  try {
-    return JSON.parse(readFileSync(analyticsPath, 'utf-8'));
-  } catch {
-    return [];
-  }
+function normalizeCheckin(row) {
+  if (!row) return null;
+  return { ...row, applied: Boolean(row.applied) };
 }
 
 function appendAnalyticsEvent(eventName, properties) {
-  const events = loadAnalyticsEvents();
-  events.push({
-    id: randomUUID(),
-    event_name: eventName,
-    event_version: 1,
-    created_at_utc: new Date().toISOString(),
-    ...properties
-  });
-  writeFileSync(analyticsPath, JSON.stringify(events, null, 2));
+  const now = new Date().toISOString();
+  insertAnalyticsEvent.run(
+    randomUUID(),
+    eventName,
+    1,
+    now,
+    JSON.stringify(properties ?? {})
+  );
+}
+
+function hashToken(token) {
+  return createHash('sha256').update(token).digest('hex');
+}
+
+function readBearerToken(req) {
+  const header = req.headers.authorization;
+  if (!header) return null;
+  const [scheme, token] = header.split(' ');
+  if (scheme !== 'Bearer' || !token) return null;
+  return token;
+}
+
+function requireSession(req) {
+  const token = readBearerToken(req);
+  if (!token) return null;
+  const tokenHash = hashToken(token);
+  return selectSessionByToken.get(tokenHash);
 }
 
 function stableHash(input) {
@@ -118,6 +205,15 @@ function localDateFromTimezone(timezone) {
   }
 }
 
+function isValidTimezone(timezone) {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone: timezone });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function resolveDateLocal(dateLocal, timezone) {
   if (dateLocal) return dateLocal;
   return localDateFromTimezone(timezone);
@@ -151,6 +247,46 @@ const server = createServer(async (req, res) => {
 
   if (req.method === 'GET' && url.pathname === '/health') {
     return sendJson(res, 200, { ok: true, service: 'estoicismo-backend' });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/session') {
+    try {
+      const body = await parseBody(req);
+      const deviceId = body.device_id;
+
+      if (typeof deviceId !== 'string' || deviceId.trim().length === 0) {
+        return sendJson(res, 400, {
+          error: 'invalid_device_id',
+          message: 'device_id must be non-empty string'
+        });
+      }
+
+      if (deviceId.length > 128) {
+        return sendJson(res, 400, {
+          error: 'invalid_device_id',
+          message: 'device_id must be <= 128 chars'
+        });
+      }
+
+      const existing = selectSessionByDeviceId.get(deviceId);
+      const token = randomUUID();
+      const tokenHash = hashToken(token);
+      const now = new Date().toISOString();
+
+      if (existing) {
+        updateSessionToken.run(tokenHash, now, deviceId);
+        return sendJson(res, 200, {
+          user_id: existing.user_id,
+          access_token: token
+        });
+      }
+
+      const userId = randomUUID();
+      insertSession.run(randomUUID(), userId, deviceId, tokenHash, now, now);
+      return sendJson(res, 201, { user_id: userId, access_token: token });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
   }
 
   if (req.method === 'GET' && url.pathname === '/v1/daily-package') {
@@ -194,32 +330,63 @@ const server = createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'missing_required_fields', missing });
       }
 
+      if (!isUuid(body.user_id)) {
+        return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
+      }
+
+      if (!isIsoDate(body.date_local)) {
+        return sendJson(res, 400, {
+          error: 'invalid_date_local',
+          message: 'date_local must be YYYY-MM-DD'
+        });
+      }
+
+      if (!isValidTimezone(body.timezone)) {
+        return sendJson(res, 400, {
+          error: 'invalid_timezone',
+          message: 'timezone must be a valid IANA timezone'
+        });
+      }
+
       if (typeof body.applied !== 'boolean') {
         return sendJson(res, 400, { error: 'invalid_applied', message: 'applied must be boolean' });
       }
 
-      const checkins = loadCheckins();
-      const existing = checkins.find(
-        (c) => c.user_id === body.user_id && c.date_local === body.date_local
+      const session = requireSession(req);
+      if (!session) {
+        return sendJson(res, 401, { error: 'unauthorized' });
+      }
+      if (session.user_id !== body.user_id) {
+        return sendJson(res, 403, { error: 'user_mismatch' });
+      }
+
+      const existing = selectCheckinByUserAndDate.get(body.user_id, body.date_local);
+      const now = new Date().toISOString();
+
+      if (existing) {
+        updateCheckin.run(
+          body.applied ? 1 : 0,
+          body.note ?? null,
+          body.timezone,
+          now,
+          existing.id
+        );
+      } else {
+        insertCheckin.run(
+          randomUUID(),
+          body.user_id,
+          body.date_local,
+          body.applied ? 1 : 0,
+          body.note ?? null,
+          body.timezone,
+          now,
+          now
+        );
+      }
+
+      const stored = normalizeCheckin(
+        selectCheckinByUserAndDate.get(body.user_id, body.date_local)
       );
-
-      const now = new Date();
-      const entry = {
-        id: existing?.id ?? randomUUID(),
-        user_id: body.user_id,
-        date_local: body.date_local,
-        applied: body.applied,
-        note: body.note ?? null,
-        timezone: body.timezone,
-        created_at_utc: existing?.created_at_utc ?? now.toISOString(),
-        updated_at_utc: now.toISOString()
-      };
-
-      const next = existing
-        ? checkins.map((c) => (c.id === existing.id ? entry : c))
-        : [...checkins, entry];
-
-      saveCheckins(next);
       appendAnalyticsEvent('checkin_submitted', {
         user_id: body.user_id,
         date_local: body.date_local,
@@ -227,7 +394,7 @@ const server = createServer(async (req, res) => {
         applied: body.applied
       });
 
-      return sendJson(res, existing ? 200 : 201, entry);
+      return sendJson(res, existing ? 200 : 201, stored);
     } catch {
       return sendJson(res, 400, { error: 'invalid_json' });
     }
@@ -238,8 +405,19 @@ const server = createServer(async (req, res) => {
     if (!userId) {
       return sendJson(res, 400, { error: 'missing_required_query_params', required: ['user_id'] });
     }
+    if (!isUuid(userId)) {
+      return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
+    }
 
-    const favorites = loadFavorites().filter((f) => f.user_id === userId);
+    const session = requireSession(req);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+    if (session.user_id !== userId) {
+      return sendJson(res, 403, { error: 'user_mismatch' });
+    }
+
+    const favorites = listFavoritesByUser.all(userId);
     return sendJson(res, 200, { items: favorites });
   }
 
@@ -251,28 +429,34 @@ const server = createServer(async (req, res) => {
       if (missing.length > 0) {
         return sendJson(res, 400, { error: 'missing_required_fields', missing });
       }
+      if (!isUuid(body.user_id)) {
+        return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
+      }
+      if (typeof body.quote_id !== 'string' || body.quote_id.trim().length === 0) {
+        return sendJson(res, 400, { error: 'invalid_quote_id', message: 'quote_id must be string' });
+      }
+
+      const session = requireSession(req);
+      if (!session) {
+        return sendJson(res, 401, { error: 'unauthorized' });
+      }
+      if (session.user_id !== body.user_id) {
+        return sendJson(res, 403, { error: 'user_mismatch' });
+      }
 
       const quoteExists = seed.quotes.some((q) => q.id === body.quote_id);
       if (!quoteExists) {
         return sendJson(res, 404, { error: 'quote_not_found' });
       }
 
-      const favorites = loadFavorites();
-      const existing = favorites.find(
-        (f) => f.user_id === body.user_id && f.quote_id === body.quote_id
-      );
+      const existing = selectFavorite.get(body.user_id, body.quote_id);
       if (existing) {
         return sendJson(res, 200, existing);
       }
 
       const now = new Date().toISOString();
-      const entry = {
-        id: randomUUID(),
-        user_id: body.user_id,
-        quote_id: body.quote_id,
-        created_at_utc: now
-      };
-      saveFavorites([...favorites, entry]);
+      insertFavorite.run(randomUUID(), body.user_id, body.quote_id, now);
+      const entry = selectFavorite.get(body.user_id, body.quote_id);
       appendAnalyticsEvent('quote_favorited', {
         user_id: body.user_id,
         quote_id: body.quote_id
@@ -292,11 +476,20 @@ const server = createServer(async (req, res) => {
         required: ['user_id', 'quote_id']
       });
     }
+    if (!isUuid(userId)) {
+      return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
+    }
 
-    const favorites = loadFavorites();
-    const next = favorites.filter((f) => !(f.user_id === userId && f.quote_id === quoteId));
-    const removed = favorites.length - next.length;
-    saveFavorites(next);
+    const session = requireSession(req);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+    if (session.user_id !== userId) {
+      return sendJson(res, 403, { error: 'user_mismatch' });
+    }
+
+    const result = deleteFavorite.run(userId, quoteId);
+    const removed = result?.changes ?? 0;
     if (removed > 0) {
       appendAnalyticsEvent('quote_unfavorited', {
         user_id: userId,

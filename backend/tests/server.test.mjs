@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 let server;
 let baseUrl;
 let seed;
+let testUserId;
+let authToken;
 
 before(async () => {
   const dataDir = mkdtempSync(join(tmpdir(), 'estoicismo-test-'));
@@ -17,6 +19,7 @@ before(async () => {
   writeFileSync(join(dataDir, 'daily_seed.json'), JSON.stringify(seed, null, 2));
 
   process.env.STOIC_DATA_DIR = dataDir;
+  process.env.STOIC_DB_PATH = join(dataDir, 'estoicismo.db');
 
   const mod = await import('../src/server.mjs');
   server = mod.server;
@@ -24,6 +27,15 @@ before(async () => {
   await new Promise((resolve) => server.on('listening', resolve));
   const { port } = server.address();
   baseUrl = `http://127.0.0.1:${port}`;
+
+  const sessionRes = await fetch(`${baseUrl}/v1/session`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ device_id: 'test-device-001' })
+  });
+  const sessionData = await sessionRes.json();
+  testUserId = sessionData.user_id;
+  authToken = sessionData.access_token;
 });
 
 after(async () => {
@@ -59,8 +71,11 @@ test('GET /v1/daily-package retorna pacote diário', async () => {
 test('POST /v1/checkins valida payload', async () => {
   const res = await fetch(`${baseUrl}/v1/checkins`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ user_id: 'u1' })
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
+    body: JSON.stringify({ user_id: testUserId })
   });
   assert.equal(res.status, 400);
   const data = await res.json();
@@ -70,9 +85,12 @@ test('POST /v1/checkins valida payload', async () => {
 test('POST /v1/checkins cria check-in', async () => {
   const res = await fetch(`${baseUrl}/v1/checkins`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
     body: JSON.stringify({
-      user_id: 'u1',
+      user_id: testUserId,
       date_local: '2026-02-14',
       applied: true,
       timezone: 'America/Sao_Paulo'
@@ -81,14 +99,17 @@ test('POST /v1/checkins cria check-in', async () => {
   assert.equal(res.status, 201);
   const data = await res.json();
   assert.equal(data.applied, true);
-  assert.equal(data.user_id, 'u1');
+  assert.equal(data.user_id, testUserId);
 });
 
 test('POST /v1/favorites exige quote existente', async () => {
   const res = await fetch(`${baseUrl}/v1/favorites`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ user_id: 'u1', quote_id: 'quote-inexistente' })
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
+    body: JSON.stringify({ user_id: testUserId, quote_id: 'quote-inexistente' })
   });
   assert.equal(res.status, 404);
   const data = await res.json();
@@ -101,12 +122,19 @@ test('POST /v1/favorites cria favorito e lista', async () => {
 
   const createRes = await fetch(`${baseUrl}/v1/favorites`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ user_id: 'u1', quote_id: quoteId })
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
+    body: JSON.stringify({ user_id: testUserId, quote_id: quoteId })
   });
   assert.equal(createRes.status, 201);
 
-  const listRes = await fetch(`${baseUrl}/v1/favorites?user_id=u1`);
+  const listRes = await fetch(`${baseUrl}/v1/favorites?user_id=${testUserId}`, {
+    headers: {
+      authorization: `Bearer ${authToken}`
+    }
+  });
   assert.equal(listRes.status, 200);
   const data = await listRes.json();
   assert.equal(data.items.length, 1);

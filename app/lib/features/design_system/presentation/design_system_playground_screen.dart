@@ -32,6 +32,12 @@ class _DesignSystemPlaygroundScreenState
 
   @override
   Widget build(BuildContext context) {
+    final sectionLabelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
+          fontSize: 11,
+          letterSpacing: 0.8,
+          color: StoicColors.stone.withValues(alpha: 0.4),
+        );
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -73,76 +79,84 @@ class _DesignSystemPlaygroundScreenState
             ],
           ),
         ),
-        const StoicSection(
-          title: 'QuoteCard',
-          child: SizedBox.shrink(),
-        ),
-        QuoteCard(
-          quoteText:
-              'A felicidade de sua vida depende da qualidade de seus pensamentos.',
-          author: 'Marco Aurélio',
-          sourceWork: 'Meditações',
-          sourceRef: '5.16',
-          behaviorIntent: 'Observar antes de reagir.',
-          contextTags: const ['foco', 'ansiedade', 'trabalho'],
-          favorite: _isFavorite,
-          favoriteLoading: false,
-          onToggleFavorite: () => setState(() => _isFavorite = !_isFavorite),
-        ),
-        const StoicSection(
-          title: 'PracticeCard',
-          child: SizedBox.shrink(),
-        ),
-        const PracticeCard(
-          title: 'Pausa de 2 minutos',
-          quoteLinkExplanation:
-              'Para criar espaço entre impulso e ação quando surgir pressão.',
-          context: 'trabalho',
-          minutes: 2,
-          steps: [
-            'Respire profundamente por 30 segundos.',
-            'Nomeie o impulso sem agir.',
-            'Escolha a próxima ação com intenção.',
+        StoicSection(
+          spacing: StoicSectionSpacing.normal,
+          children: [
+            Text('QuoteCard', style: sectionLabelStyle),
+            QuoteCard(
+              quoteText:
+                  'A felicidade de sua vida depende da qualidade de seus pensamentos.',
+              author: 'Marco Aurélio',
+              sourceWork: 'Meditações',
+              sourceRef: '5.16',
+              behaviorIntent: 'Observar antes de reagir.',
+              contextTags: const ['foco', 'ansiedade', 'trabalho'],
+              favorite: _isFavorite,
+              favoriteLoading: false,
+              onToggleFavorite: () => setState(() => _isFavorite = !_isFavorite),
+            ),
           ],
-          expectedOutcome: 'Resposta mais racional.',
-          completionCriteria: 'Você pausou antes de agir.',
-          journalPrompt: 'O que mudou ao pausar?',
         ),
-        const StoicSection(
-          title: 'Check-in Card',
-          child: SizedBox.shrink(),
+        StoicSection(
+          spacing: StoicSectionSpacing.normal,
+          children: [
+            Text('PracticeCard', style: sectionLabelStyle),
+            const PracticeCard(
+              title: 'Pausa de 2 minutos',
+              quoteLinkExplanation:
+                  'Para criar espaço entre impulso e ação quando surgir pressão.',
+              practiceContext: 'trabalho',
+              minutes: 2,
+              steps: [
+                'Respire profundamente por 30 segundos.',
+                'Nomeie o impulso sem agir.',
+                'Escolha a próxima ação com intenção.',
+              ],
+              expectedOutcome: 'Resposta mais racional.',
+              completionCriteria: 'Você pausou antes de agir.',
+              journalPrompt: 'O que mudou ao pausar?',
+            ),
+          ],
         ),
-        StoicCheckinCard(
-          noteController: _noteController,
-          reflectionPrompt: 'Reflexão do dia: Onde você escolheu agir com mais intenção?',
-          status: _checkinStatus,
-          isSubmitting: _ctaLoading,
-          savedNote: _noteController.text,
-          onApplied: () => setState(() => _checkinStatus = StoicCheckinStatus.applied),
-          onNotApplied: () =>
-              setState(() => _checkinStatus = StoicCheckinStatus.notApplied),
+        StoicSection(
+          spacing: StoicSectionSpacing.normal,
+          children: [
+            Text('Check-in Card', style: sectionLabelStyle),
+            StoicCheckinCard(
+              noteController: _noteController,
+              reflectionPrompt:
+                  'Reflexão do dia: Onde você escolheu agir com mais intenção?',
+              status: _checkinStatus,
+              isSubmitting: _ctaLoading,
+              savedNote: _noteController.text,
+              onApplied: () =>
+                  setState(() => _checkinStatus = StoicCheckinStatus.applied),
+              onNotApplied: () =>
+                  setState(() => _checkinStatus = StoicCheckinStatus.notApplied),
+            ),
+          ],
         ),
-        const StoicSection(
-          title: 'Estados de Tela',
-          child: SizedBox.shrink(),
+        StoicSection(
+          spacing: StoicSectionSpacing.normal,
+          children: [
+            Text('Estados de Tela', style: sectionLabelStyle),
+            if (_showLoading) const StoicLoadingState(),
+            if (_showEmpty)
+              const StoicEmptyState(
+                title: 'Nenhum item encontrado.',
+                description: 'Adicione favoritos para preencher esta área.',
+              ),
+            if (_showError)
+              StoicErrorState(
+                message: 'Falha ao carregar dados. Tente novamente.',
+                onRetry: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Retry acionado.')),
+                  );
+                },
+              ),
+          ],
         ),
-        if (_showLoading) const StoicLoadingState(),
-        if (_showLoading) const SizedBox(height: StoicSpacing.sm),
-        if (_showEmpty)
-          const StoicEmptyState(
-            title: 'Nenhum item encontrado.',
-            description: 'Adicione favoritos para preencher esta área.',
-          ),
-        if (_showEmpty) const SizedBox(height: StoicSpacing.sm),
-        if (_showError)
-          StoicErrorState(
-            message: 'Falha ao carregar dados. Tente novamente.',
-            onRetry: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Retry acionado.')),
-              );
-            },
-          ),
       ],
     );
   }
