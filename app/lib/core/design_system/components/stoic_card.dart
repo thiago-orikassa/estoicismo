@@ -26,16 +26,11 @@ class StoicCard extends StatelessWidget {
       StoicCardVariant.subtle =>
         StoicColors.cardBackground.withValues(alpha: 0.5),
     };
-  final borderColor = switch (variant) {
-      StoicCardVariant.defaultCard => Colors.transparent,
-      StoicCardVariant.subtle => Colors.transparent,
-    };
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(StoicRadius.lg),
-        border: Border.all(color: borderColor),
       ),
       child: Padding(
         padding: padding,

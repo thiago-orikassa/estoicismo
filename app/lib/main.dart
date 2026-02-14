@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 
 import 'app_state.dart';
@@ -154,7 +155,10 @@ class _MainShellState extends State<MainShell> {
         onNavigateToSettings: () => setState(() => _index = 3),
       ),
       HistoryScreen(state: widget.state),
-      FavoritesScreen(state: widget.state),
+      FavoritesScreen(
+        state: widget.state,
+        onExploreToday: () => setState(() => _index = 0),
+      ),
       SettingsScreen(state: widget.state),
     ];
 
@@ -177,49 +181,53 @@ class _MainShellState extends State<MainShell> {
       child: pages[_index],
     );
 
-    return Scaffold(
-      backgroundColor: StoicColors.obsidian,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            if (widget.state.error != null && !widget.state.offline)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: StoicColors.error.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: StoicColors.error.withValues(alpha: 0.25),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: StoicColors.screenBackground,
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              if (widget.state.error != null && !widget.state.offline)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: StoicColors.copper.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: StoicColors.copper.withValues(alpha: 0.25),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            widget.state.error!,
-                            style: const TextStyle(
-                              color: StoicColors.ivory,
-                              fontSize: 12,
-                              height: 1.4,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.state.error!,
+                              style: const TextStyle(
+                                color: StoicColors.obsidian,
+                                fontSize: 12,
+                                height: 1.4,
+                              ),
                             ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: widget.state.bootstrap,
-                          child: const Text('Repetir'),
-                        ),
-                      ],
+                          TextButton(
+                            onPressed: widget.state.bootstrap,
+                            child: const Text('Repetir'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            Expanded(
-              child: Container(
-                color: StoicColors.screenBackground,
+              Expanded(
                 child: PageTransitionSwitcher(
                   duration: transitionDuration,
                   transitionBuilder: (child, primary, secondary) {
@@ -232,56 +240,58 @@ class _MainShellState extends State<MainShell> {
                   child: currentPage,
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: StoicColors.bottomBarBackground,
-          border: Border(
-            top: BorderSide(
-              color: StoicColors.sand.withValues(alpha: 0.3),
-            ),
+            ],
           ),
         ),
-        child: SafeArea(
-          top: false,
-          child: SizedBox(
-            height: 80,
-            child: Row(
-              children: List.generate(tabs.length, (i) {
-                final isSelected = i == _index;
-                final color = isSelected
-                    ? StoicColors.deepBlue
-                    : StoicColors.stone.withValues(alpha: 0.4);
-                return Expanded(
-                  child: InkResponse(
-                    onTap: () => setState(() => _index = i),
-                    radius: 32,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          tabs[i].icon,
-                          size: 24,
-                          color: color,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          tabs[i].label,
-                          style: TextStyle(
-                            fontSize: 11,
-                            height: 1.2,
-                            fontWeight: FontWeight.w500,
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            color: StoicColors.bottomBarBackground,
+            border: Border(
+              top: BorderSide(
+                color: StoicColors.bottomBarBorder,
+              ),
+            ),
+          ),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 80,
+              child: Row(
+                children: List.generate(tabs.length, (i) {
+                  final isSelected = i == _index;
+                  final color = isSelected
+                      ? StoicColors.deepBlue
+                      : StoicColors.textSubtle;
+                  return Expanded(
+                    child: InkResponse(
+                      onTap: () => setState(() => _index = i),
+                      radius: 32,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            tabs[i].icon,
+                            size: 24,
                             color: color,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 4),
+                          Text(
+                            tabs[i].label,
+                            style: TextStyle(
+                              fontSize: 11,
+                              height: 1.2,
+                              fontWeight: isSelected
+                                  ? FontWeight.w500
+                                  : FontWeight.w400,
+                              color: color,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                }),
+              ),
             ),
           ),
         ),

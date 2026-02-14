@@ -23,7 +23,7 @@ class AuthLoadingSpinner extends StatelessWidget {
       case AuthSpinnerSize.md:
         return 24;
       case AuthSpinnerSize.lg:
-        return 32;
+        return 40;
     }
   }
 
@@ -32,7 +32,7 @@ class AuthLoadingSpinner extends StatelessWidget {
       case AuthSpinnerColor.light:
         return StoicColors.ivory;
       case AuthSpinnerColor.dark:
-        return StoicColors.stone;
+        return StoicColors.deepBlue;
     }
   }
 

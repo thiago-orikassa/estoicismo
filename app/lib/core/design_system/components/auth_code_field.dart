@@ -244,7 +244,7 @@ class _AuthCodeFieldState extends State<AuthCodeField> {
                 ),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontSize: 24,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       color: textColor,
                     ),
               ),

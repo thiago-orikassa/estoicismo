@@ -41,8 +41,9 @@ class AuthButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(StoicRadius.md),
               ),
               textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
             ),
             child: Text(label),
@@ -116,7 +117,7 @@ class _AuthButtonColors {
           border: StoicColors.deepBlue,
         );
       case AuthButtonVariant.secondary:
-        return _AuthButtonColors(
+        return const _AuthButtonColors(
           background: Colors.transparent,
           foreground: StoicColors.stone,
           border: Colors.transparent,
