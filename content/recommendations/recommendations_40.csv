@@ -1,41 +1,41 @@
 recommendation_id,linked_catalog_id,context,action_title,action_steps,estimated_minutes,journal_prompt
-REC-001,SEN-1,trabalho,Planejamento do controlavel,"Liste 3 acoes sob seu controle;Defina 1 primeira acao de 10 min;Execute agora",10,O que mudou quando foquei no controlavel?
-REC-002,SEN-2,ansiedade,Nomear o medo,"Escreva o que teme em 1 frase;Separe fato de interpretacao;Escolha uma resposta objetiva",8,Qual parte era fato e qual era imaginacao?
-REC-003,SEN-3,foco,Bloco sem distração,"Ative 25 min sem notificacoes;Escolha uma unica tarefa;Finalize um entregavel pequeno",25,O que permitiu manter atencao unica?
-REC-004,SEN-4,relacionamentos,Resposta sem impulso,"Pause 60 segundos antes de responder;Reescreva a mensagem com respeito;Envie apenas o essencial",6,Como a pausa mudou meu tom?
-REC-005,SEN-5,decisao_dificil,Criterio de virtude,"Liste 2 opcoes;Avalie por justica e coragem;Escolha a opcao mais integra",10,Escolhi o facil ou o correto?
-REC-006,SEN-6,trabalho,Limite de agenda,"Remova 1 compromisso nao essencial;Proteja 1 bloco profundo;Comunique o novo limite",12,Que custo evitei ao dizer nao?
-REC-007,SEN-7,ansiedade,Premeditatio breve,"Imagine o pior plausivel;Planeje sua resposta racional;Volte ao presente",7,Estou preparado ou apenas preocupado?
-REC-008,SEN-8,foco,Uma coisa de cada vez,"Feche abas excedentes;Defina meta de 1 entrega;Conclua antes de abrir nova tarefa",15,Qual ganho tive ao reduzir contexto?
-REC-009,SEN-9,relacionamentos,Escuta justa,"Escute 3 minutos sem interromper;Repita o ponto da outra pessoa;Responda ao ponto real",8,Eu ouvi para entender ou para vencer?
-REC-010,SEN-10,decisao_dificil,Teste da posteridade,"Pergunte se aprovaria essa decisao em 1 ano;Anote risco moral;Decida",9,Essa decisao honraria meus valores no futuro?
-REC-011,EPI-1,trabalho,Dicotomia no inicio do dia,"Escreva 2 colunas: controlavel e nao controlavel;Risque a segunda;Aja na primeira",10,Quanto da minha energia foi para o inutil?
-REC-012,EPI-2,ansiedade,Reenquadrar julgamento,"Detecte pensamento automatico;Troque por descricao neutra;Escolha atitude util",8,Qual julgamento me enfraquecia?
-REC-013,EPI-3,foco,Disciplina de entrada,"Defina criterio de inicio claro;Comece sem esperar motivacao;Cronometre 10 min",10,O que acontece quando inicio sem negociar?
-REC-014,EPI-4,relacionamentos,Controle da reatividade,"Nao discuta no pico emocional;Respire 4 ciclos lentos;Retome com linguagem factual",6,Que conflito evitei ao regular a reacao?
-REC-015,EPI-5,decisao_dificil,Escolha pelo papel,"Defina seu papel (lider pai amigo);Aja conforme esse papel virtuoso;Registre",9,Atuei conforme meu papel ou meu ego?
+REC-001,SEN-1,trabalho,Planejamento do controlavel,Liste 3 acoes sob seu controle;Defina 1 primeira acao de 10 min;Execute agora,10,O que mudou quando foquei no controlavel?
+REC-002,SEN-2,ansiedade,Nomear o medo,Escreva o que teme em 1 frase;Separe fato de interpretacao;Escolha uma resposta objetiva,8,Qual parte era fato e qual era imaginacao?
+REC-003,SEN-3,foco,Bloco sem distração,Ative 25 min sem notificacoes;Escolha uma unica tarefa;Finalize um entregavel pequeno,25,O que permitiu manter atencao unica?
+REC-004,SEN-4,relacionamentos,Resposta sem impulso,Pause 60 segundos antes de responder;Reescreva a mensagem com respeito;Envie apenas o essencial,6,Como a pausa mudou meu tom?
+REC-005,SEN-5,decisao_dificil,Criterio de virtude,Liste 2 opcoes;Avalie por justica e coragem;Escolha a opcao mais integra,10,Escolhi o facil ou o correto?
+REC-006,SEN-6,trabalho,Limite de agenda,Remova 1 compromisso nao essencial;Proteja 1 bloco profundo;Comunique o novo limite,12,Que custo evitei ao dizer nao?
+REC-007,SEN-11,ansiedade,Premeditatio breve,Imagine o pior plausivel;Planeje sua resposta racional;Volte ao presente,7,Estou preparado ou apenas preocupado?
+REC-008,SEN-12,foco,Uma coisa de cada vez,Feche abas excedentes;Defina meta de 1 entrega;Conclua antes de abrir nova tarefa,15,Qual ganho tive ao reduzir contexto?
+REC-009,SEN-9,relacionamentos,Escuta justa,Escute 3 minutos sem interromper;Repita o ponto da outra pessoa;Responda ao ponto real,8,Eu ouvi para entender ou para vencer?
+REC-010,SEN-10,decisao_dificil,Teste da posteridade,Pergunte se aprovaria essa decisao em 1 ano;Anote risco moral;Decida,9,Essa decisao honraria meus valores no futuro?
+REC-011,EPI-1,trabalho,Dicotomia no inicio do dia,Escreva 2 colunas: controlavel e nao controlavel;Risque a segunda;Aja na primeira,10,Quanto da minha energia foi para o inutil?
+REC-012,EPI-2,ansiedade,Reenquadrar julgamento,Detecte pensamento automatico;Troque por descricao neutra;Escolha atitude util,8,Qual julgamento me enfraquecia?
+REC-013,EPI-3,foco,Disciplina de entrada,Defina criterio de inicio claro;Comece sem esperar motivacao;Cronometre 10 min,10,O que acontece quando inicio sem negociar?
+REC-014,EPI-4,relacionamentos,Controle da reatividade,Nao discuta no pico emocional;Respire 4 ciclos lentos;Retome com linguagem factual,6,Que conflito evitei ao regular a reacao?
+REC-015,EPI-5,decisao_dificil,Escolha pelo papel,Defina seu papel (lider pai amigo);Aja conforme esse papel virtuoso;Registre,9,Atuei conforme meu papel ou meu ego?
 REC-016,EPI-6,trabalho,Compromisso com o processo,"Escolha meta de processo, nao de aplauso;Execute etapa de hoje;Revise sem autocondenação",12,Executei o processo independentemente de reconhecimento?
-REC-017,EPI-7,ansiedade,Prova de realidade,"Escreva previsao catastrofica;Busque 2 evidencias contra;Adote acao proporcional",9,Meu medo era evidencia ou suposicao?
-REC-018,EPI-8,foco,Higiene mental,"Bloqueie notificacoes por 30 min;Afaste gatilhos de comparacao;Volte ao trabalho escolhido",30,Quais gatilhos roubam minha atencao?
-REC-019,EPI-9,relacionamentos,Expectativas realistas,"Defina o que depende de voce na conversa;Aceite o que depende do outro;Conduza com clareza",10,Tentei controlar o outro ou minha conduta?
-REC-020,EPI-10,decisao_dificil,Clareza de perda aceitavel,"Liste pior perda aceitavel;Defina limite de risco;Decida dentro do limite",11,Qual limite protegeu minha integridade?
-REC-021,EPI-11,trabalho,Fechar ciclo curto,"Escolha tarefa de 20 min;Entregue versao imperfeita;Colete feedback rapido",20,Progresso hoje foi melhor que perfeccionismo?
-REC-022,EPI-12,ansiedade,Aceitacao ativa,"Nomeie o evento inevitavel;Defina resposta digna;Execute o primeiro passo",7,Resisti ao inevitavel ou respondi com dignidade?
-REC-023,EPI-13,foco,Contrato de prioridade,"Escreva prioridade unica do dia;Compartilhe com 1 pessoa;Preste contas no fim",8,O compromisso publico melhorou minha constancia?
-REC-024,EPI-14,relacionamentos,Correcao sem humilhar,"Descreva fato observavel;Explique impacto;Peça ajuste especifico",9,Consegui firmeza sem agressao?
-REC-025,EPI-15,decisao_dificil,Separar valor de resultado,"Defina a decisao correta;Execute;Aceite resultado externo",10,O resultado externo alterou meu compromisso interno?
-REC-026,EPI-16,trabalho,Rotina anti-procrastinacao,"Quebre tarefa em 3 partes;Faça apenas a parte 1 agora;Marque conclusao",12,Que desculpa caiu quando comecei pequeno?
-REC-027,EPI-17,ansiedade,Reduzir antecipacao,"Limite planejamento a 15 min;Pare de simular cenarios;Volte ao presente",15,Planejei para agir ou para me distrair?
-REC-028,EPI-18,foco,Atenção ao presente,"Faça 5 respiracoes conscientes;Defina proxima acao fisica;Execute imediatamente",5,Qual acao concreta me trouxe ao presente?
-REC-029,EPI-19,relacionamentos,Autodomínio em critica,"Ouça a critica inteira;Extraia 1 ponto util;Descarte o resto sem rancor",7,Que parte da critica me fez crescer?
-REC-030,EPI-20,decisao_dificil,Ensaiar objecoes,"Liste 3 objecoes a sua decisao;Responda cada uma com fatos;Reavalie",12,Minha decisao suportou objecoes fortes?
-REC-031,MAR-1,trabalho,Dever da manhã,"Defina dever principal de hoje;Comece antes de abrir mensagens;Conclua bloco inicial",20,Honrei meu dever antes do ruido?
-REC-032,MAR-2,ansiedade,Lembrar impermanencia,"Escreva: isto tambem passa;Nomeie 1 acao correta agora;Execute",6,Como a impermanencia reduziu meu medo?
-REC-033,MAR-3,foco,Simplicidade deliberada,"Remova 1 tarefa secundaria;Mantenha apenas o essencial;Finalize o essencial",15,O que ficou melhor ao simplificar?
-REC-034,MAR-4,relacionamentos,Benevolencia firme,"Assuma boa intencao inicial;Corrija com clareza;Mantenha respeito",8,Consegui ser firme e benevolente ao mesmo tempo?
-REC-035,MAR-5,decisao_dificil,Agir segundo natureza racional,"Escolha a opcao mais racional e justa;Evite vaidade;Aja",10,Minha escolha serviu ao bem comum?
-REC-036,MAR-6,trabalho,Disciplina silenciosa,"Trabalhe 30 min sem anunciar;Registre resultado objetivo;Repita",30,Quanto produzi quando parei de performar?
-REC-037,MAR-7,ansiedade,Retorno ao corpo,"Descruze ombros e mandibula;Respire profundo 1 min;Retome com calma",5,Meu corpo estava alimentando a ansiedade?
-REC-038,MAR-8,foco,Presença sem pressa,"Defina ritmo sustentavel;Evite multitarefa;Conclua 1 ciclo completo",18,Que qualidade surgiu com ritmo constante?
-REC-039,MAR-9,relacionamentos,Cooperação humana,"Pergunte como pode ajudar concretamente;Ofereca 1 apoio real hoje;Cumpra",10,Minha acao fortaleceu cooperacao?
-REC-040,MAR-10,decisao_dificil,Noite de revisão,"Revise 3 escolhas do dia;Marque 1 ajuste para amanha;Comprometa-se",12,Qual ajuste de carater levo para amanha?
+REC-017,EPI-7,ansiedade,Prova de realidade,Escreva previsao catastrofica;Busque 2 evidencias contra;Adote acao proporcional,9,Meu medo era evidencia ou suposicao?
+REC-018,EPI-8,foco,Higiene mental,Bloqueie notificacoes por 30 min;Afaste gatilhos de comparacao;Volte ao trabalho escolhido,30,Quais gatilhos roubam minha atencao?
+REC-019,EPI-9,relacionamentos,Expectativas realistas,Defina o que depende de voce na conversa;Aceite o que depende do outro;Conduza com clareza,10,Tentei controlar o outro ou minha conduta?
+REC-020,EPI-10,decisao_dificil,Clareza de perda aceitavel,Liste pior perda aceitavel;Defina limite de risco;Decida dentro do limite,11,Qual limite protegeu minha integridade?
+REC-021,EPI-11,trabalho,Fechar ciclo curto,Escolha tarefa de 20 min;Entregue versao imperfeita;Colete feedback rapido,20,Progresso hoje foi melhor que perfeccionismo?
+REC-022,EPI-21,ansiedade,Aceitacao ativa,Nomeie o evento inevitavel;Defina resposta digna;Execute o primeiro passo,7,Resisti ao inevitavel ou respondi com dignidade?
+REC-023,EPI-13,foco,Contrato de prioridade,Escreva prioridade unica do dia;Compartilhe com 1 pessoa;Preste contas no fim,8,O compromisso publico melhorou minha constancia?
+REC-024,EPI-14,relacionamentos,Correcao sem humilhar,Descreva fato observavel;Explique impacto;Peça ajuste especifico,9,Consegui firmeza sem agressao?
+REC-025,EPI-15,decisao_dificil,Separar valor de resultado,Defina a decisao correta;Execute;Aceite resultado externo,10,O resultado externo alterou meu compromisso interno?
+REC-026,EPI-16,trabalho,Rotina anti-procrastinacao,Quebre tarefa em 3 partes;Faça apenas a parte 1 agora;Marque conclusao,12,Que desculpa caiu quando comecei pequeno?
+REC-027,EPI-17,ansiedade,Reduzir antecipacao,Limite planejamento a 15 min;Pare de simular cenarios;Volte ao presente,15,Planejei para agir ou para me distrair?
+REC-028,EPI-23,foco,Atenção ao presente,Faça 5 respiracoes conscientes;Defina proxima acao fisica;Execute imediatamente,5,Qual acao concreta me trouxe ao presente?
+REC-029,EPI-19,relacionamentos,Autodomínio em critica,Ouça a critica inteira;Extraia 1 ponto util;Descarte o resto sem rancor,7,Que parte da critica me fez crescer?
+REC-030,EPI-20,decisao_dificil,Ensaiar objecoes,Liste 3 objecoes a sua decisao;Responda cada uma com fatos;Reavalie,12,Minha decisao suportou objecoes fortes?
+REC-031,MAR-1,trabalho,Dever da manhã,Defina dever principal de hoje;Comece antes de abrir mensagens;Conclua bloco inicial,20,Honrei meu dever antes do ruido?
+REC-032,MAR-2,ansiedade,Lembrar impermanencia,Escreva: isto tambem passa;Nomeie 1 acao correta agora;Execute,6,Como a impermanencia reduziu meu medo?
+REC-033,MAR-3,foco,Simplicidade deliberada,Remova 1 tarefa secundaria;Mantenha apenas o essencial;Finalize o essencial,15,O que ficou melhor ao simplificar?
+REC-034,MAR-4,relacionamentos,Benevolencia firme,Assuma boa intencao inicial;Corrija com clareza;Mantenha respeito,8,Consegui ser firme e benevolente ao mesmo tempo?
+REC-035,MAR-5,decisao_dificil,Agir segundo natureza racional,Escolha a opcao mais racional e justa;Evite vaidade;Aja,10,Minha escolha serviu ao bem comum?
+REC-036,MAR-11,trabalho,Disciplina silenciosa,Trabalhe 30 min sem anunciar;Registre resultado objetivo;Repita,30,Quanto produzi quando parei de performar?
+REC-037,MAR-7,ansiedade,Retorno ao corpo,Descruze ombros e mandibula;Respire profundo 1 min;Retome com calma,5,Meu corpo estava alimentando a ansiedade?
+REC-038,MAR-8,foco,Presença sem pressa,Defina ritmo sustentavel;Evite multitarefa;Conclua 1 ciclo completo,18,Que qualidade surgiu com ritmo constante?
+REC-039,MAR-9,relacionamentos,Cooperação humana,Pergunte como pode ajudar concretamente;Ofereca 1 apoio real hoje;Cumpra,10,Minha acao fortaleceu cooperacao?
+REC-040,MAR-12,decisao_dificil,Noite de revisão,Revise 3 escolhas do dia;Marque 1 ajuste para amanha;Comprometa-se,12,Qual ajuste de carater levo para amanha?

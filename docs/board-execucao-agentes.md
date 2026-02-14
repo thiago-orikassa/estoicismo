@@ -21,9 +21,9 @@ Baseado em:
 | PS-03 | Product Strategist | Priorizar backlog por impacto x risco | P0 | S | PS-01 | Ranking de tarefas P0/P1 aprovado | DONE |
 | PS-04 | Product Strategist | Consolidar regras de monetização no MVP (gatilhos, frequência e guardrails de retenção) | P0 | S | PS-01, PS-02 | Regras publicadas e alinhadas no board + escopo MVP | DONE |
 | SC-01 | Stoic Content Curator | Criar matriz editorial (autor x tema x contexto) | P0 | M | PS-01 | Matriz publicada com cobertura mínima por célula | DONE |
-| SC-02 | Stoic Content Curator | Curar 90 citações com fonte verificável | P0 | L | SC-01 | 100% com referência catalogada e validade | IN PROGRESS |
+| SC-02 | Stoic Content Curator | Curar 90 citações com fonte verificável | P0 | L | SC-01 | 100% com referência catalogada e validade | DONE |
 | SC-03 | Stoic Content Curator | Criar 40 recomendações práticas vinculadas | P0 | M | SC-01 | Cada recomendação com princípio + ação + critério | DONE |
-| SC-04 | Stoic Content Curator | Revisão de integridade filosófica | P0 | M | SC-02, SC-03 | Checklist sem pendências críticas | TODO |
+| SC-04 | Stoic Content Curator | Revisão de integridade filosófica | P0 | M | SC-02, SC-03 | Checklist sem pendências críticas | DONE |
 | SC-05 | Stoic Content Curator | Expandir catálogo com autores estoicos adicionais (Zenão, Cleantes, Crisipo, Musônio Rufo, Hierócles, Posidônio) | P2 | L | SC-02 | Autores adicionados com fonte canônica definida e 100% das citações com referência | TODO |
 | MA-01 | Mobile Architect | Definir arquitetura de pastas e camadas | P0 | S | PS-01 | Estrutura documentada com exemplos | DONE |
 | MA-02 | Mobile Architect | Contratos de dados (Quote, Recommendation, Check-in) | P0 | M | MA-01, SC-01 | Schemas versionados + validações mínimas | DONE |
@@ -53,10 +53,9 @@ Baseado em:
 | QA-05 | QA and Analytics Lead | Testes E2E de monetização com guardrails de retenção | P0 | M | MA-05, BE-07, AN-04, IOS-04 | Fluxo paywall/trial/restore sem quebra do ritual diário free | TODO |
 | QA-06 | QA and Analytics Lead | Dashboard e alertas de monetização (trial, conversão, impacto em D7/check-in) | P0 | S | BE-08, QA-05 | Painel ativo com regras de corte automatizáveis | TODO |
 
-## 2) Board Kanban inicial (Sprint 1-2)
+## 2) Board Kanban Atual (Release MVP)
 
 ## TODO
-- SC-04
 - SC-05
 - BE-06
 - AN-02
@@ -72,7 +71,6 @@ Baseado em:
 
 ## IN PROGRESS
 - BE-01
-- SC-02
 - MA-05
 
 ## BLOCKED
@@ -83,51 +81,52 @@ Baseado em:
 
 ## DONE
 - PS-01, PS-02, PS-03, PS-04
-- SC-01, SC-03
+- SC-01, SC-02, SC-03, SC-04
 - MA-01, MA-02, MA-03, MA-04
 - BE-02, BE-03, BE-04, BE-05, BE-07, BE-08
 - QA-01, QA-02
 - AN-01, IOS-01
 
-## 3) Plano tático de 4 semanas
+## 3) Plano de passagem para release MVP (2026-02-14)
 
-## Semana 1 (fundação e conteúdo)
-- Product: PS-01, PS-02, PS-03
-- Editorial: SC-01 + começo SC-02
-- Arquitetura: MA-01, MA-02, MA-03
-- Backend: BE-01 e rascunho de BE-02/BE-04
-- Mobile: AN-01 e IOS-01 (estrutura base de telas)
-- QA: QA-01, QA-02
+## Bloco A (2026-02-16 a 2026-02-20) - Base e conteúdo
+- SC-02 (curadoria final das 90 citações com fonte).
+- SC-04 (revisão de integridade filosófica).
+- BE-01 (provisionamento dev/stage e migrações).
+- BE-06 (telemetria backend e logs estruturados).
 
-Meta da semana 1:
-- Plataforma pronta para integrar dados reais sem retrabalho estrutural.
+Meta do bloco A:
+- Conteúdo e infraestrutura fechados para iniciar E2E sem ambiguidades.
 
-## Semana 2 (integração e fluxo diário)
-- Editorial: concluir SC-02, SC-03 e SC-04
-- Backend: BE-02, BE-03, BE-04, BE-05
-- Mobile: AN-02, IOS-02 e ligação com APIs
-- QA: QA-03
+## Bloco B (2026-02-23 a 2026-02-27) - Push e ritual diário
+- AN-02 (push Android com deeplink).
+- IOS-02 (push iOS com deeplink).
+- QA-03 (execução de 7 dias simulados do fluxo diário).
 
-Meta da semana 2:
-- Fluxo de valor completo: receber push, abrir citação diária, executar check-in, registrar evento.
+Meta do bloco B:
+- Ritual diário comprovado em iOS/Android com push entregue e abertura correta.
 
-## Semana 3 (monetização MVP - base)
-- Product: PS-04 (concluir guardrails e critérios de corte)
-- Arquitetura: MA-04, MA-05
-- Backend: BE-07, BE-08
-- Mobile: AN-04, IOS-04 (trial/compra/restore com retorno ao contexto)
-- QA: QA-05 (roteiros E2E de monetização)
+## Bloco C (2026-03-02 a 2026-03-06) - Monetização E2E e gate beta
+- MA-05 (validação final de gatilhos A/B/C com frequência e cooldown).
+- AN-04 e IOS-04 (trial/compra/restore com retorno ao contexto de bloqueio).
+- QA-05 (E2E monetização sem regressão do fluxo free).
+- QA-06 (dashboards e alertas de monetização/guardrails).
+- QA-04 (gate de release beta: go/no-go).
 
-Meta da semana 3:
-- Monetização operando em staging sem bloquear fluxo diário free.
+Meta do bloco C:
+- Release Candidate pronto em 2026-03-06.
 
-## Semana 4 (monitoração e hardening)
-- Backend/QA: BE-08, QA-06 (dashboards e alertas)
-- Mobile/QA: correções de fricção, copy e estabilidade do funil
-- Product: revisão de corte por retenção/check-in com dados reais
+## Janela de release
+- Beta fechado: 2026-03-09 a 2026-03-11 (condicionado ao QA-04 aprovado).
 
-Meta da semana 4:
-- Release gate de monetização pronto com guardrails ativos.
+## Gate de Go/No-Go (obrigatório)
+- SC-02 e SC-04 concluídos sem pendências críticas.
+- QA-03 validado em 7/7 ciclos sem erro crítico.
+- AN-02 e IOS-02 com push + deeplink funcionando.
+- AN-04 e IOS-04 com trial/compra/restore estáveis.
+- QA-05 e QA-06 concluídos com monitoramento ativo.
+- Crash-free > 99,5% no beta.
+- Sem queda acima dos limites de guardrail (D7 e check-in) definidos em PS-04.
 
 ## 4) Rituais de operação entre agentes
 - Daily (15 min): bloqueios e dependências por ID.
@@ -148,9 +147,11 @@ Uma tarefa só vai para `DONE` quando tiver:
 - Evidência (print, log, teste, dashboard ou PR).
 - Sem regressão conhecida no fluxo diário.
 
-## 7) Evidências recentes (2026-02-14 - playbook paywall)
+## 7) Evidências recentes (2026-02-14)
 - App (feature flags + gatilhos): `app/lib/app_state.dart`, `app/lib/core/paywall/paywall_flow.dart`, `app/lib/features/daily_quote/presentation/home_screen.dart`, `app/lib/features/daily_quote/data/daily_repository.dart`.
 - Backend (eventos versionados): `backend/src/server.mjs`, `backend/tests/server.test.mjs`, `backend/openapi/daily-package.openapi.yaml`.
 - Backend (contrato de assinatura): `GET /v1/subscription/entitlement`, `POST /v1/subscription/trial/start`, `POST /v1/subscription/activate`, `POST /v1/subscription/restore` em `backend/src/server.mjs`.
+- UI/design system alinhado ao Figma MCP: PR #5 (`feat(ui): alinhar design system Flutter ao Figma MCP`).
+- Conteúdo editorial SC-02/SC-04: `content/catalog/quotes_catalog_90.csv` finalizado (`40 verified` / `50 rejected`); remapeamento de recomendações em `content/recommendations/recommendations_40.csv`; seed editorial final em `content/seeds/quotes_seed_verified_v2.json`; seed de produção em `backend/data/daily_seed.json`; logs em `docs/execution/sc-02-log-verificacao-2026-02-14.md` e `docs/execution/sc-04-log-integridade-2026-02-14.md`.
 - Testes executados: `npm test --prefix backend` (13/13 passando), `cd app && flutter test` (1/1 passando).
 - Observação de qualidade: `cd app && flutter analyze` segue falhando por lints informativos históricos (sem erro de compilação).
