@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/auth/session_service.dart';
 import 'features/daily_quote/data/daily_repository.dart';
 import 'features/daily_quote/domain/models.dart';
 import 'core/domain/authors.dart';
@@ -16,9 +17,10 @@ enum NotificationPermissionStatus {
 }
 
 class AppState extends ChangeNotifier {
-  AppState(this._repo);
+  AppState(this._repo, this._sessionService);
 
   final DailyRepository _repo;
+  final SessionService _sessionService;
   SharedPreferences? _prefs;
 
   static const _onboardingKey = 'onboarding_complete';
@@ -29,6 +31,9 @@ class AppState extends ChangeNotifier {
   static const _remindersEnabledKey = 'reminders_enabled';
   static const _notificationPermissionKey = 'notification_permission';
   static const _checkinsKey = 'checkins';
+  static const _hasCompletedFirstCheckinKey = 'has_completed_first_checkin';
+  static const _hasShownFavoritePromptKey = 'has_shown_favorite_prompt';
+  static const _authLoggedInKey = 'auth_logged_in';
   static const _subscriptionStatusKey = 'subscription_status';
   static const _subscriptionPlanKey = 'subscription_plan';
   static const _trialEndsAtKey = 'trial_ends_at';
@@ -36,7 +41,7 @@ class AppState extends ChangeNotifier {
   static const _lastPaywallViewKey = 'last_paywall_view';
   static const _lastPaywallDismissKey = 'last_paywall_dismiss';
 
-  final String userId = '11111111-1111-1111-1111-111111111111';
+  String userId = '';
   String timezone = 'America/Sao_Paulo';
   String preferredContext = 'trabalho';
   Set<String> preferredAuthors = kStoicAuthors.toSet();
@@ -46,6 +51,11 @@ class AppState extends ChangeNotifier {
       NotificationPermissionStatus.unknown;
   bool onboardingComplete = false;
   bool offline = false;
+  bool sessionReady = false;
+  bool isAuthenticated = false;
+  bool hasCompletedFirstCheckin = false;
+  bool hasShownFavoritePrompt = false;
+  bool hasShownLoginPromptThisSession = false;
 
   SubscriptionStatus subscriptionStatus = SubscriptionStatus.free;
   SubscriptionPlan subscriptionPlan = SubscriptionPlan.annual;
@@ -71,11 +81,15 @@ class AppState extends ChangeNotifier {
     timezone = _prefs?.getString(_timezoneKey) ?? timezone;
     preferredContext =
         _prefs?.getString(_preferredContextKey) ?? preferredContext;
-    preferredAuthors =
-        _prefs?.getStringList(_preferredAuthorsKey)?.toSet() ??
-            preferredAuthors;
+    preferredAuthors = _prefs?.getStringList(_preferredAuthorsKey)?.toSet() ??
+        preferredAuthors;
     reminderTime = _prefs?.getString(_reminderTimeKey);
     remindersEnabled = _prefs?.getBool(_remindersEnabledKey) ?? false;
+    isAuthenticated = _prefs?.getBool(_authLoggedInKey) ?? false;
+    hasCompletedFirstCheckin =
+        _prefs?.getBool(_hasCompletedFirstCheckinKey) ?? false;
+    hasShownFavoritePrompt =
+        _prefs?.getBool(_hasShownFavoritePromptKey) ?? false;
     final permissionRaw = _prefs?.getString(_notificationPermissionKey);
     if (permissionRaw != null) {
       notificationPermission = NotificationPermissionStatus.values.firstWhere(
@@ -113,7 +127,22 @@ class AppState extends ChangeNotifier {
     if (lastDismissRaw != null) {
       lastPaywallDismissed = DateTime.tryParse(lastDismissRaw);
     }
+    await _initializeSession();
     _loadCheckins();
+  }
+
+  Future<void> _initializeSession() async {
+    try {
+      final session = await _sessionService.ensureSession();
+      userId = session.userId;
+      sessionReady = true;
+    } catch (e) {
+      error = e.toString();
+      if (e is SocketException) {
+        offline = true;
+      }
+      sessionReady = false;
+    }
   }
 
   void setTimezone(String value) {
@@ -160,6 +189,41 @@ class AppState extends ChangeNotifier {
     }
     _prefs?.setString(_notificationPermissionKey, value.name);
     notifyListeners();
+  }
+
+  bool get canShowLoginPrompt =>
+      !isAuthenticated && !hasShownLoginPromptThisSession;
+
+  bool get shouldPromptAfterCheckin =>
+      canShowLoginPrompt && !hasCompletedFirstCheckin;
+
+  bool get shouldPromptAfterFavorite =>
+      canShowLoginPrompt && !hasShownFavoritePrompt;
+
+  void markAuthenticated(bool value) {
+    isAuthenticated = value;
+    _prefs?.setBool(_authLoggedInKey, value);
+    notifyListeners();
+  }
+
+  void markLoginPromptShown() {
+    hasShownLoginPromptThisSession = true;
+  }
+
+  void markLoginPromptDismissed() {
+    hasShownLoginPromptThisSession = true;
+  }
+
+  void markFirstCheckinCompleted() {
+    if (hasCompletedFirstCheckin) return;
+    hasCompletedFirstCheckin = true;
+    _prefs?.setBool(_hasCompletedFirstCheckinKey, true);
+  }
+
+  void markFavoritePromptShown() {
+    if (hasShownFavoritePrompt) return;
+    hasShownFavoritePrompt = true;
+    _prefs?.setBool(_hasShownFavoritePromptKey, true);
   }
 
   bool get isPro => subscriptionStatus != SubscriptionStatus.free;
@@ -244,6 +308,10 @@ class AppState extends ChangeNotifier {
     reminderTime = null;
     remindersEnabled = false;
     notificationPermission = NotificationPermissionStatus.unknown;
+    isAuthenticated = false;
+    hasCompletedFirstCheckin = false;
+    hasShownFavoritePrompt = false;
+    hasShownLoginPromptThisSession = false;
     subscriptionStatus = SubscriptionStatus.free;
     subscriptionPlan = SubscriptionPlan.annual;
     trialEndsAt = null;
@@ -257,6 +325,9 @@ class AppState extends ChangeNotifier {
     await _prefs?.remove(_reminderTimeKey);
     await _prefs?.remove(_remindersEnabledKey);
     await _prefs?.remove(_notificationPermissionKey);
+    await _prefs?.remove(_authLoggedInKey);
+    await _prefs?.remove(_hasCompletedFirstCheckinKey);
+    await _prefs?.remove(_hasShownFavoritePromptKey);
     await _prefs?.remove(_subscriptionStatusKey);
     await _prefs?.remove(_subscriptionPlanKey);
     await _prefs?.remove(_trialEndsAtKey);
@@ -355,6 +426,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> loadFavorites() async {
+    if (userId.isEmpty) return;
     loadingFavorites = true;
     notifyListeners();
     try {
@@ -376,6 +448,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> toggleFavorite(String quoteId) async {
+    if (userId.isEmpty) return;
     if (isFavorited(quoteId)) {
       await _repo.removeFavorite(userId: userId, quoteId: quoteId);
     } else {
@@ -398,6 +471,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> submitCheckin({required bool applied, String? note}) async {
+    if (userId.isEmpty) return;
     final dateLocal =
         daily?.dateLocal ?? DateTime.now().toIso8601String().split('T').first;
     await _repo.submitCheckin(

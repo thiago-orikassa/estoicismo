@@ -29,7 +29,7 @@ class PracticeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoicCard(
-      variant: StoicCardVariant.subtle,
+      variant: StoicCardVariant.defaultCard,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

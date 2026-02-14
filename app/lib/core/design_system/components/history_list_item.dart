@@ -56,10 +56,10 @@ class HistoryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: StoicColors.cardBackground,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(StoicRadius.md),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(StoicRadius.md),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -76,7 +76,7 @@ class HistoryListItem extends StatelessWidget {
                           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                 fontSize: 11,
                                 letterSpacing: 0.6,
-                                color: StoicColors.textSubtle,
+                                color: StoicColors.stone.withValues(alpha: 0.5),
                                 fontWeight: FontWeight.w500,
                               ),
                         ),
@@ -124,7 +124,7 @@ class HistoryListItem extends StatelessWidget {
               const SizedBox(width: 12),
               Icon(
                 Icons.chevron_right_rounded,
-                color: StoicColors.textSubtle,
+                color: StoicColors.stone.withValues(alpha: 0.3),
                 size: 20,
               ),
             ],
@@ -148,7 +148,7 @@ class CheckinStatusChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
             color: StoicColors.deepBlue.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -159,14 +159,14 @@ class CheckinStatusChip extends StatelessWidget {
                 color: StoicColors.deepBlue,
               ),
               const SizedBox(width: 4),
-              Text(
-                'Feito',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                Text(
+                  'Feito',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 10,
                       color: StoicColors.deepBlue,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
-              ),
+                ),
             ],
           ),
         );
@@ -175,14 +175,14 @@ class CheckinStatusChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
             color: StoicColors.stone.withValues(alpha: 0.06),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
             'Pulado',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontSize: 10,
-                  color: StoicColors.textSubtle,
-                  fontWeight: FontWeight.w600,
+                  color: StoicColors.stone.withValues(alpha: 0.5),
+                  fontWeight: FontWeight.w500,
                 ),
           ),
         );

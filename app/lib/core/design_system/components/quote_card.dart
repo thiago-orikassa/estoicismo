@@ -100,7 +100,7 @@ class QuoteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoicCard(
-      variant: StoicCardVariant.subtle,
+      variant: StoicCardVariant.defaultCard,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,8 +134,8 @@ class QuoteCard extends StatelessWidget {
                       duration: MotionTokens.micro,
                       curve: MotionTokens.curveTransition,
                       child: Icon(
-                        favorite ? Icons.star_rounded : Icons.star_border_rounded,
-                        color: StoicColors.copper,
+                        favorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        color: favorite ? StoicColors.copper : StoicColors.stone,
                       ),
                     ),
                   ),

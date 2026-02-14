@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../app_state.dart';
+import '../auth/auth_flow.dart';
+import '../auth/auth_models.dart';
 import '../design_system/components/components.dart';
 import '../design_system/tokens/design_tokens.dart';
 import '../domain/subscription.dart';
@@ -86,6 +88,17 @@ class PaywallFlow {
                 await _showRestoreFlow(context, state: state);
               },
               onStartPlan: (plan) async {
+                if (!state.isAuthenticated) {
+                  final loggedIn = await AuthFlow.showLoginPrompt(
+                    context,
+                    state: state,
+                    contextType: AuthPromptContext.subscription,
+                    force: true,
+                  );
+                  if (!loggedIn) {
+                    return;
+                  }
+                }
                 Navigator.of(context).pop();
                 await _processPurchase(context, state: state, plan: plan);
               },
