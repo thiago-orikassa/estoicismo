@@ -1,0 +1,276 @@
+import 'package:flutter/material.dart';
+
+import '../tokens/design_tokens.dart';
+import 'history_types.dart';
+
+class DayDetailSheet extends StatelessWidget {
+  const DayDetailSheet({
+    super.key,
+    required this.date,
+    required this.quoteText,
+    required this.author,
+    required this.work,
+    required this.reference,
+    required this.practiceTitle,
+    required this.practiceDescription,
+    required this.status,
+    this.checkInNote,
+    required this.onClose,
+  });
+
+  final DateTime date;
+  final String quoteText;
+  final String author;
+  final String work;
+  final String reference;
+  final String practiceTitle;
+  final String practiceDescription;
+  final HistoryCheckinStatus status;
+  final String? checkInNote;
+  final VoidCallback onClose;
+
+  String _formatLongDate(DateTime value) {
+    const weekdays = <String>[
+      'segunda-feira',
+      'terça-feira',
+      'quarta-feira',
+      'quinta-feira',
+      'sexta-feira',
+      'sábado',
+      'domingo',
+    ];
+    const months = <String>[
+      'janeiro',
+      'fevereiro',
+      'março',
+      'abril',
+      'maio',
+      'junho',
+      'julho',
+      'agosto',
+      'setembro',
+      'outubro',
+      'novembro',
+      'dezembro',
+    ];
+
+    final weekday = weekdays[value.weekday - 1];
+    final month = months[value.month - 1];
+    return '$weekday, ${value.day} de $month de ${value.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final note = checkInNote?.trim() ?? '';
+
+    return Container(
+      decoration: BoxDecoration(
+        color: StoicColors.cardBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 48,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: StoicColors.textSubtle.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                ),
+              ),
+              Text(
+                _formatLongDate(date).toUpperCase(),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontSize: 10,
+                      letterSpacing: 1.1,
+                      color: StoicColors.textSubtle,
+                    ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Prática do dia',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      fontFamily: 'Cormorant Garamond',
+                      fontSize: 32,
+                      fontStyle: FontStyle.italic,
+                      color: StoicColors.obsidian,
+                      height: 1.1,
+                    ),
+              ),
+              if (status != HistoryCheckinStatus.none) ...[
+                const SizedBox(height: 12),
+                _StatusBadge(status: status),
+              ],
+              const SizedBox(height: 20),
+              Text(
+                'CITAÇÃO',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      letterSpacing: 1,
+                      fontSize: 10,
+                      color: StoicColors.textSubtle,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '"$quoteText"',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontFamily: 'Cormorant Garamond',
+                      fontSize: 20,
+                      fontStyle: FontStyle.italic,
+                      color: StoicColors.obsidian,
+                      height: 1.5,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '$author • $work${reference.isNotEmpty ? ' • $reference' : ''}',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: StoicColors.textMuted,
+                      height: 1.4,
+                    ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'PRÁTICA APLICADA',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      letterSpacing: 1,
+                      fontSize: 10,
+                      color: StoicColors.textSubtle,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: StoicColors.border.withValues(alpha: 0.6)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      practiceTitle,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: StoicColors.obsidian,
+                          ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      practiceDescription,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: StoicColors.textMuted,
+                            height: 1.5,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              if (note.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                Text(
+                  'SUA REFLEXÃO',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        letterSpacing: 1,
+                        fontSize: 10,
+                        color: StoicColors.textSubtle,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: StoicColors.border.withValues(alpha: 0.6)),
+                  ),
+                  child: Text(
+                    note,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: StoicColors.obsidian,
+                          height: 1.5,
+                        ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: StoicColors.deepBlue,
+                    foregroundColor: StoicColors.ivory,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  onPressed: onClose,
+                  child: const Text('Fechar'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.status});
+
+  final HistoryCheckinStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final isCompleted = status == HistoryCheckinStatus.completed;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: isCompleted
+            ? StoicColors.deepBlue.withValues(alpha: 0.1)
+            : StoicColors.stone.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isCompleted
+              ? StoicColors.deepBlue.withValues(alpha: 0.2)
+              : StoicColors.stone.withValues(alpha: 0.1),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isCompleted)
+            const Icon(
+              Icons.check_rounded,
+              size: 16,
+              color: StoicColors.deepBlue,
+            ),
+          if (isCompleted) const SizedBox(width: 6),
+          Text(
+            isCompleted ? 'Prática concluída' : 'Prática pulada',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: isCompleted
+                      ? StoicColors.deepBlue
+                      : StoicColors.textSubtle,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}

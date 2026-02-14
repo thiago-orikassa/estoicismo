@@ -1,0 +1,218 @@
+openapi: 3.0.3
+info:
+  title: Estoicismo API
+  version: 1.4.0
+servers:
+  - url: http://localhost:8787
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: ok
+  /v1/daily-package:
+    get:
+      summary: Retorna pacote diário por timezone
+      parameters:
+        - in: query
+          name: date_local
+          schema: { type: string, format: date }
+          required: false
+        - in: query
+          name: timezone
+          schema: { type: string }
+          required: true
+        - in: query
+          name: user_context
+          schema: { type: string, enum: [trabalho, relacionamentos, ansiedade, foco, decisao_dificil] }
+          required: false
+      responses:
+        '200':
+          description: Pacote diário
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DailyPackage' }
+        '400':
+          description: Parâmetros inválidos ou ausentes
+  /v1/checkins:
+    post:
+      summary: Registra ou atualiza check-in diário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CheckinInput' }
+      responses:
+        '201':
+          description: Check-in criado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Checkin' }
+        '200':
+          description: Check-in atualizado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Checkin' }
+  /v1/favorites:
+    get:
+      summary: Lista favoritos do usuário
+      parameters:
+        - in: query
+          name: user_id
+          schema: { type: string, format: uuid }
+          required: true
+      responses:
+        '200':
+          description: Favoritos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Favorite' }
+    post:
+      summary: Adiciona favorito
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FavoriteInput' }
+      responses:
+        '201':
+          description: Favorito criado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Favorite' }
+        '200':
+          description: Favorito já existente
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Favorite' }
+    delete:
+      summary: Remove favorito
+      parameters:
+        - in: query
+          name: user_id
+          schema: { type: string, format: uuid }
+          required: true
+        - in: query
+          name: quote_id
+          schema: { type: string }
+          required: true
+      responses:
+        '200':
+          description: Remoção aplicada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  removed: { type: integer }
+  /v1/history:
+    get:
+      summary: Lista histórico diário (até 30 dias)
+      parameters:
+        - in: query
+          name: timezone
+          schema: { type: string }
+          required: true
+        - in: query
+          name: date_local
+          schema: { type: string, format: date }
+          required: false
+        - in: query
+          name: days
+          schema: { type: integer, minimum: 1, maximum: 30, default: 30 }
+        - in: query
+          name: user_context
+          schema: { type: string, enum: [trabalho, relacionamentos, ansiedade, foco, decisao_dificil] }
+          required: false
+      responses:
+        '200':
+          description: Histórico diário
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/DailyPackage' }
+components:
+  schemas:
+    Quote:
+      type: object
+      required: [id, author, text, source_work, source_ref, language, theme_primary, behavior_intent, context_tags, authenticity_level]
+      properties:
+        id: { type: string }
+        author: { type: string, enum: [seneca, epictetus, marcus_aurelius] }
+        text: { type: string }
+        source_work: { type: string }
+        source_ref: { type: string }
+        language: { type: string, enum: [pt, en, es] }
+        theme_primary: { type: string }
+        behavior_intent: { type: string }
+        context_tags:
+          type: array
+          items: { type: string }
+        authenticity_level: { type: string, enum: [verified, probable] }
+    DailyRecommendation:
+      type: object
+      required: [id, quote_id, context, action_title, quote_link_explanation, action_steps, estimated_minutes, expected_outcome, completion_criteria, journal_prompt]
+      properties:
+        id: { type: string }
+        quote_id: { type: string }
+        context: { type: string, enum: [trabalho, relacionamentos, ansiedade, foco, decisao_dificil] }
+        action_title: { type: string }
+        quote_link_explanation: { type: string }
+        action_steps:
+          type: array
+          items: { type: string }
+        estimated_minutes: { type: integer, minimum: 1, maximum: 30 }
+        expected_outcome: { type: string }
+        completion_criteria: { type: string }
+        journal_prompt: { type: string }
+    DailyPackage:
+      type: object
+      required: [date_local, timezone, quote, recommendation]
+      properties:
+        date_local: { type: string, format: date }
+        timezone: { type: string }
+        user_context: { type: string, nullable: true }
+        quote: { $ref: '#/components/schemas/Quote' }
+        recommendation: { $ref: '#/components/schemas/DailyRecommendation' }
+    CheckinInput:
+      type: object
+      required: [user_id, date_local, applied, timezone]
+      properties:
+        user_id: { type: string, format: uuid }
+        date_local: { type: string, format: date }
+        applied: { type: boolean }
+        note: { type: string }
+        timezone: { type: string }
+    Checkin:
+      allOf:
+        - $ref: '#/components/schemas/CheckinInput'
+        - type: object
+          required: [id, created_at_utc, updated_at_utc]
+          properties:
+            id: { type: string, format: uuid }
+            created_at_utc: { type: string, format: date-time }
+            updated_at_utc: { type: string, format: date-time }
+    FavoriteInput:
+      type: object
+      required: [user_id, quote_id]
+      properties:
+        user_id: { type: string, format: uuid }
+        quote_id: { type: string }
+    Favorite:
+      allOf:
+        - $ref: '#/components/schemas/FavoriteInput'
+        - type: object
+          required: [id, created_at_utc]
+          properties:
+            id: { type: string, format: uuid }
+            created_at_utc: { type: string, format: date-time }

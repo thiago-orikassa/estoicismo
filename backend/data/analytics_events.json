@@ -1,0 +1,360 @@
+[
+  {
+    "id": "d168d384-d160-467f-be29-fa313d35cc7d",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T00:37:50.581Z",
+    "date_local": "2026-02-14",
+    "timezone": "America/Sao_Paulo",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "983e1048-2b54-47f3-a0b4-86777f8236e2",
+    "event_name": "checkin_submitted",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T00:37:50.619Z",
+    "user_id": "11111111-1111-1111-1111-111111111111",
+    "date_local": "2026-02-14",
+    "timezone": "America/Sao_Paulo",
+    "applied": true
+  },
+  {
+    "id": "e99e0a38-75ff-4d86-9eaa-2c64ac4a104c",
+    "event_name": "quote_favorited",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T00:37:55.751Z",
+    "user_id": "11111111-1111-1111-1111-111111111111",
+    "quote_id": "q-mar-4"
+  },
+  {
+    "id": "243b09e2-e3e9-474a-a57d-a6959c3fb8d8",
+    "event_name": "quote_unfavorited",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T00:38:00.400Z",
+    "user_id": "11111111-1111-1111-1111-111111111111",
+    "quote_id": "q-mar-4"
+  },
+  {
+    "id": "81daf1c6-9fe9-47aa-baf1-064e6fae7236",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:28:30.786Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "34a2a611-c126-4b81-85e7-e92de3483a5d",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:28:52.454Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "15b2fb8a-5457-4a95-9ec3-46704079d906",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:32:52.533Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "c1c5aa19-209d-4037-96fd-64f863082a29",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:33:10.585Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "f26951d5-2534-499d-bf87-050ad43bdcc5",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:33:16.132Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "6e2d056b-492f-4f2b-ba21-b90a8ee32ba9",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:35:48.439Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "e45fc9eb-120d-4b9c-96d4-8d5985b4ed8f",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:35:52.044Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "960efb5f-a3f4-402c-ac38-8f0885a757a7",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:42:43.802Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "foco",
+    "author": "marcus_aurelius",
+    "context": "ansiedade",
+    "principle_key": "retiro_interno"
+  },
+  {
+    "id": "57121dfc-3064-4899-aa8c-534b577182e1",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:43:04.034Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade",
+    "principle_key": "retiro_interno"
+  },
+  {
+    "id": "158ebd1e-9729-468c-a37f-45044a9d0a50",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:45:49.506Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade",
+    "principle_key": "retiro_interno"
+  },
+  {
+    "id": "5ef4c202-6406-4384-97d5-ff2f0647c7ca",
+    "event_name": "checkin_submitted",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:48:23.693Z",
+    "user_id": "11111111-1111-1111-1111-111111111111",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "applied": true
+  },
+  {
+    "id": "1d7a7e2a-0783-4669-a7e8-d1920092515a",
+    "event_name": "checkin_submitted",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:48:23.698Z",
+    "user_id": "11111111-1111-1111-1111-111111111111",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "applied": false
+  },
+  {
+    "id": "de64e023-751b-49cb-ae0b-e3812a95a6f9",
+    "event_name": "quote_favorited",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:48:29.600Z",
+    "user_id": "11111111-1111-1111-1111-111111111111",
+    "quote_id": "q-mar-2"
+  },
+  {
+    "id": "02ecf7bf-f559-41d5-910c-2741d5f2bc51",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:48:37.791Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade",
+    "principle_key": "retiro_interno"
+  },
+  {
+    "id": "1684323d-d74d-4478-8efb-84e303f61f13",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:50:36.291Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade",
+    "principle_key": "retiro_interno"
+  },
+  {
+    "id": "c3bb95a3-63af-4ba1-86d9-951a5dfeba66",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:55:51.712Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade",
+    "principle_key": "retiro_interno"
+  },
+  {
+    "id": "2d1d5bd8-abb8-469e-af96-ecbba5b62ef4",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:56:00.848Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": null,
+    "author": "epictetus",
+    "context": "decisao_dificil",
+    "principle_key": "foco_no_controlavel"
+  },
+  {
+    "id": "d1037aa3-5929-4852-a980-72e2c647a178",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:58:37.441Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "ansiedade",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "59d4dccc-d948-4416-8a20-830a809ae72b",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T01:58:53.817Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "4ea01e11-bc78-4945-922f-26e2e7075be1",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T02:01:44.424Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "92073eb9-ee01-4cd3-b063-d2c5669fccbc",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T02:10:25.751Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "8a581f89-3c98-4da6-813c-f2eefd66665b",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T02:10:27.122Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "5ef37249-5554-4737-be54-d47c6cd1528d",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T02:10:28.191Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "d65e028a-5b24-4eb1-bd49-428bc63ee9f8",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T02:13:06.411Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "043f3af1-f75f-4f07-b240-f5b1d6ff49cd",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T02:14:47.248Z",
+    "date_local": "2026-02-13",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "marcus_aurelius",
+    "context": "ansiedade"
+  },
+  {
+    "id": "8c0ed94b-a693-4527-8dcf-2d6644eeec72",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T03:37:24.061Z",
+    "date_local": "2026-02-14",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "05a7c71a-2393-44fb-8785-a73198ca0011",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T04:40:04.412Z",
+    "date_local": "2026-02-14",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "de5321c3-5798-4116-9316-4d8c5bf1f03f",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T04:40:07.647Z",
+    "date_local": "2026-02-14",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "seneca",
+    "context": "trabalho"
+  },
+  {
+    "id": "07cffde5-dc4d-4b20-9a0e-efb115e60f78",
+    "event_name": "quote_favorited",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T04:40:11.425Z",
+    "user_id": "11111111-1111-1111-1111-111111111111",
+    "quote_id": "q-sen-1"
+  },
+  {
+    "id": "dcd7243a-954d-41c5-875b-409b64f18936",
+    "event_name": "daily_package_viewed",
+    "event_version": 1,
+    "created_at_utc": "2026-02-14T04:40:59.576Z",
+    "date_local": "2026-02-14",
+    "timezone": "America/Sao_Paulo",
+    "user_context": "trabalho",
+    "author": "seneca",
+    "context": "trabalho"
+  }
+]

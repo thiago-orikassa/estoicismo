@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estoicismo DS Lab</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>Estoicismo Design System Lab</h1>
+        <p>Playground local para testar componentes e estados</p>
+      </div>
+      <button id="toggle-accent" class="btn btn-tonal" type="button">Trocar acento</button>
+    </header>
+
+    <main class="layout">
+      <aside class="panel">
+        <h2>Controles</h2>
+        <label><input id="ctl-loading" type="checkbox" /> Loading</label>
+        <label><input id="ctl-empty" type="checkbox" /> Empty state</label>
+        <label><input id="ctl-error" type="checkbox" /> Error state</label>
+        <label><input id="ctl-cta" type="checkbox" /> CTA loading</label>
+      </aside>
+
+      <section class="content">
+        <article class="panel">
+          <h2>QuoteCard</h2>
+          <p class="quote">"A felicidade de sua vida depende da qualidade de seus pensamentos."</p>
+          <p class="meta">Marco Aurélio • Meditações 5.16</p>
+          <p class="intent">Intenção: observar antes de reagir.</p>
+          <div class="chips">
+            <span class="chip">foco</span>
+            <span class="chip">ansiedade</span>
+            <span class="chip">trabalho</span>
+          </div>
+          <button id="btn-favorite" class="btn btn-tonal" type="button">Favoritar</button>
+        </article>
+
+        <article class="panel">
+          <h2>PracticeCard</h2>
+          <h3>Pausa de 2 minutos</h3>
+          <p><strong>Por que esta prática?</strong> Para criar espaço entre impulso e ação quando surgir pressão.</p>
+          <p class="meta">Contexto: trabalho • Duração: 2 min</p>
+          <ol>
+            <li>Respire profundamente por 30 segundos.</li>
+            <li>Nomeie o impulso sem agir.</li>
+            <li>Escolha a próxima ação com intenção.</li>
+          </ol>
+          <p>Resultado esperado: resposta mais racional.</p>
+        </article>
+
+        <article class="panel">
+          <h2>Inputs e ações</h2>
+          <label class="field-label" for="note">Nota de check-in</label>
+          <textarea id="note" rows="3">Hoje escolhi pausar antes de reagir.</textarea>
+
+          <label class="field-label" for="context">Contexto preferencial</label>
+          <select id="context">
+            <option>trabalho</option>
+            <option>foco</option>
+            <option>ansiedade</option>
+          </select>
+
+          <div class="actions">
+            <button id="btn-primary" class="btn btn-primary" type="button">Apliquei hoje</button>
+            <button id="btn-secondary" class="btn btn-secondary" type="button">Não apliquei</button>
+          </div>
+          <button id="btn-sync" class="btn btn-tonal" type="button">Sincronizar agora</button>
+        </article>
+
+        <article class="panel" id="panel-states">
+          <h2>Estados de tela</h2>
+          <div id="state-loading" class="state hidden">Carregando conteúdo...</div>
+          <div id="state-empty" class="state hidden">Nenhum item encontrado. Adicione favoritos para preencher esta área.</div>
+          <div id="state-error" class="state hidden">Falha ao carregar dados. <button id="btn-retry" class="btn btn-inline" type="button">Tentar novamente</button></div>
+        </article>
+      </section>
+    </main>
+
+    <section id="toast" class="toast hidden" aria-live="polite"></section>
+
+    <footer class="footer">
+      <p>Docs migradas para <code>design-system-lab/docs/</code>.</p>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

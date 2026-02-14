@@ -1,0 +1,4 @@
+#!/bin/sh
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+export PATH="$SCRIPT_DIR:$PATH"
+exec /opt/homebrew/share/flutter/bin/flutter "$@"

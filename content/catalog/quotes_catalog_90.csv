@@ -1,0 +1,91 @@
+catalog_id,author,source_work,source_ref,source_url,quote_text,status_verification
+SEN-1,seneca,Moral Letters to Lucilius,Letter 1,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius/Letter_1,"Nada, Lucílio, é nosso, exceto o tempo.",verified
+SEN-2,seneca,Moral Letters to Lucilius,Letter 2,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius/Letter_2,"Estar em toda parte é não estar em lugar nenhum.",verified
+SEN-3,seneca,Moral Letters to Lucilius,Letter 3,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-4,seneca,Moral Letters to Lucilius,Letter 4,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-5,seneca,Moral Letters to Lucilius,Letter 5,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-6,seneca,Moral Letters to Lucilius,Letter 6,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-7,seneca,Moral Letters to Lucilius,Letter 7,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-8,seneca,Moral Letters to Lucilius,Letter 8,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-9,seneca,Moral Letters to Lucilius,Letter 9,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius/Letter_9,"O sábio é autossuficiente; ainda assim, deseja amigos.",verified
+SEN-10,seneca,Moral Letters to Lucilius,Letter 10,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-11,seneca,Moral Letters to Lucilius,Letter 11,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-12,seneca,Moral Letters to Lucilius,Letter 12,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-13,seneca,Moral Letters to Lucilius,Letter 13,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-14,seneca,Moral Letters to Lucilius,Letter 14,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-15,seneca,Moral Letters to Lucilius,Letter 15,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-16,seneca,Moral Letters to Lucilius,Letter 16,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-17,seneca,Moral Letters to Lucilius,Letter 17,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-18,seneca,Moral Letters to Lucilius,Letter 18,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-19,seneca,Moral Letters to Lucilius,Letter 19,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-20,seneca,Moral Letters to Lucilius,Letter 20,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-21,seneca,Moral Letters to Lucilius,Letter 21,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-22,seneca,Moral Letters to Lucilius,Letter 22,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-23,seneca,Moral Letters to Lucilius,Letter 23,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-24,seneca,Moral Letters to Lucilius,Letter 24,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-25,seneca,Moral Letters to Lucilius,Letter 25,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-26,seneca,Moral Letters to Lucilius,Letter 26,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-27,seneca,Moral Letters to Lucilius,Letter 27,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-28,seneca,Moral Letters to Lucilius,Letter 28,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-29,seneca,Moral Letters to Lucilius,Letter 29,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+SEN-30,seneca,Moral Letters to Lucilius,Letter 30,https://en.wikisource.org/wiki/Moral_letters_to_Lucilius,,pending_literal_extraction
+EPI-1,epictetus,Enchiridion,Section 1,https://en.wikisource.org/wiki/The_Discourses_of_Epictetus%3B_with_the_Encheiridion_and_Fragments/The_Encheiridion_or_Manual,"Algumas coisas dependem de nós; outras não.",verified
+EPI-2,epictetus,Enchiridion,Section 2,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-3,epictetus,Enchiridion,Section 3,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-4,epictetus,Enchiridion,Section 4,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-5,epictetus,Enchiridion,Section 5,https://en.wikisource.org/wiki/The_Discourses_of_Epictetus%3B_with_the_Encheiridion_and_Fragments/The_Encheiridion_or_Manual,"Os homens não se perturbam pelas coisas que acontecem, mas pelas opiniões sobre elas.",verified
+EPI-6,epictetus,Enchiridion,Section 6,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-7,epictetus,Enchiridion,Section 7,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-8,epictetus,Enchiridion,Section 8,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-9,epictetus,Enchiridion,Section 9,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-10,epictetus,Enchiridion,Section 10,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-11,epictetus,Enchiridion,Section 11,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-12,epictetus,Enchiridion,Section 12,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-13,epictetus,Enchiridion,Section 13,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-14,epictetus,Enchiridion,Section 14,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-15,epictetus,Enchiridion,Section 15,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-16,epictetus,Enchiridion,Section 16,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-17,epictetus,Enchiridion,Section 17,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-18,epictetus,Enchiridion,Section 18,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-19,epictetus,Enchiridion,Section 19,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-20,epictetus,Enchiridion,Section 20,https://en.wikisource.org/wiki/The_Discourses_of_Epictetus%3B_with_the_Encheiridion_and_Fragments/The_Encheiridion_or_Manual,"Lembre-se: não é quem o insulta ou fere que o ofende, mas a sua opinião de que isso é insulto.",verified
+EPI-21,epictetus,Enchiridion,Section 21,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-22,epictetus,Enchiridion,Section 22,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-23,epictetus,Enchiridion,Section 23,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-24,epictetus,Enchiridion,Section 24,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-25,epictetus,Enchiridion,Section 25,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-26,epictetus,Enchiridion,Section 26,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-27,epictetus,Enchiridion,Section 27,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-28,epictetus,Enchiridion,Section 28,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-29,epictetus,Enchiridion,Section 29,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+EPI-30,epictetus,Enchiridion,Section 30,https://en.wikisource.org/wiki/The_Enchiridion_of_Epictetus,,pending_literal_extraction
+MAR-1,marcus_aurelius,Meditations,Book 2.1,https://en.wikisource.org/wiki/The_Thoughts_of_the_Emperor_Marcus_Aurelius_Antoninus/Book_II,"Ao começar a manhã, diga a si mesmo: encontrarei o intrometido, o ingrato, o arrogante, o enganador, o invejoso e o insociável.",verified
+MAR-2,marcus_aurelius,Meditations,Book 4.3,https://en.wikisource.org/wiki/The_Thoughts_of_the_Emperor_Marcus_Aurelius_Antoninus/Book_IV,"Em nenhum lugar o homem se recolhe com mais tranquilidade e liberdade de perturbação do que na própria alma.",verified
+MAR-3,marcus_aurelius,Meditations,Book 6.19,https://en.wikisource.org/wiki/The_Thoughts_of_the_Emperor_Marcus_Aurelius_Antoninus/Book_VI,"Se algo é difícil para ti, não penses que é impossível ao homem; se é possível ao homem e conforme à sua natureza, considera que também está ao teu alcance.",verified
+MAR-4,marcus_aurelius,Meditations,Book 5.16,https://en.wikisource.org/wiki/The_Thoughts_of_the_Emperor_Marcus_Aurelius_Antoninus/Book_V,"A mente assume o caráter dos pensamentos habituais; a alma é tingida por eles.",verified
+MAR-5,marcus_aurelius,Meditations,Book 2.5,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-6,marcus_aurelius,Meditations,Book 2.6,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-7,marcus_aurelius,Meditations,Book 2.7,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-8,marcus_aurelius,Meditations,Book 2.8,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-9,marcus_aurelius,Meditations,Book 2.9,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-10,marcus_aurelius,Meditations,Book 2.10,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-11,marcus_aurelius,Meditations,Book 2.11,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-12,marcus_aurelius,Meditations,Book 2.12,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-13,marcus_aurelius,Meditations,Book 2.13,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-14,marcus_aurelius,Meditations,Book 2.14,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-15,marcus_aurelius,Meditations,Book 2.15,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-16,marcus_aurelius,Meditations,Book 2.16,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-17,marcus_aurelius,Meditations,Book 2.17,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-18,marcus_aurelius,Meditations,Book 2.18,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-19,marcus_aurelius,Meditations,Book 2.19,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-20,marcus_aurelius,Meditations,Book 2.20,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-21,marcus_aurelius,Meditations,Book 2.21,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-22,marcus_aurelius,Meditations,Book 2.22,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-23,marcus_aurelius,Meditations,Book 2.23,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-24,marcus_aurelius,Meditations,Book 2.24,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-25,marcus_aurelius,Meditations,Book 2.25,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-26,marcus_aurelius,Meditations,Book 2.26,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-27,marcus_aurelius,Meditations,Book 2.27,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-28,marcus_aurelius,Meditations,Book 2.28,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-29,marcus_aurelius,Meditations,Book 2.29,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction
+MAR-30,marcus_aurelius,Meditations,Book 2.30,https://en.wikisource.org/wiki/Meditations,,pending_literal_extraction

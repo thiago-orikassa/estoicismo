@@ -1,0 +1,26 @@
+#!/bin/sh
+# Wrapper to bypass codesign for simulator artifacts (provenance xattrs cause failures).
+sign_identity=""
+path_arg=""
+
+prev=""
+for arg in "$@"; do
+  if [ "$prev" = "--sign" ]; then
+    sign_identity="$arg"
+  fi
+  prev="$arg"
+  path_arg="$arg"
+done
+
+case "$sign_identity" in
+  "-")
+    case "$path_arg" in
+      *"/build/ios/"*iphonesimulator/*)
+        echo "codesign wrapper: skipping simulator codesign for $path_arg" >&2
+        exit 0
+        ;;
+    esac
+    ;;
+esac
+
+exec /usr/bin/codesign "$@"

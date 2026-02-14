@@ -1,0 +1,229 @@
+[
+  {
+    "id": "674bc8d4-e91f-43bd-befa-671bca9930f4",
+    "created_at_utc": "2026-02-14T00:36:54.673Z",
+    "date_local": "2026-02-14",
+    "timezone": "America/Sao_Paulo",
+    "quote": {
+      "id": "q-mar-4",
+      "author": "marcus_aurelius",
+      "text": "A mente assume o caráter dos seus pensamentos habituais; a alma é tingida por eles.",
+      "source_work": "Meditations",
+      "source_ref": "Book 5.16",
+      "language": "pt",
+      "theme_primary": "emocao",
+      "context_tags": [
+        "ansiedade"
+      ],
+      "authenticity_level": "verified"
+    },
+    "recommendation": {
+      "id": "r-010",
+      "quote_id": "q-mar-4",
+      "context": "ansiedade",
+      "action_title": "Retorno ao presente",
+      "action_steps": [
+        "Relaxe ombros e mandibula",
+        "Respire 1 minuto",
+        "Aja no proximo passo concreto"
+      ],
+      "estimated_minutes": 5,
+      "journal_prompt": "Qual acao concreta me trouxe ao presente?"
+    }
+  },
+  {
+    "id": "dc139d58-241d-42b4-86cd-25c7c800d3a1",
+    "created_at_utc": "2026-02-14T00:36:54.673Z",
+    "date_local": "2026-02-15",
+    "timezone": "America/Sao_Paulo",
+    "quote": {
+      "id": "q-mar-1",
+      "author": "marcus_aurelius",
+      "text": "Ao começar a manhã, diga a si mesmo: encontrarei o intrometido, o ingrato, o arrogante, o enganador, o invejoso e o insociável.",
+      "source_work": "Meditations",
+      "source_ref": "Book 2.1",
+      "language": "pt",
+      "theme_primary": "dever",
+      "context_tags": [
+        "trabalho"
+      ],
+      "authenticity_level": "verified"
+    },
+    "recommendation": {
+      "id": "r-005",
+      "quote_id": "q-mar-1",
+      "context": "trabalho",
+      "action_title": "Dever da manha",
+      "action_steps": [
+        "Defina dever principal",
+        "Comece antes das mensagens",
+        "Conclua primeiro bloco"
+      ],
+      "estimated_minutes": 20,
+      "journal_prompt": "Honrei meu dever antes do ruido?"
+    }
+  },
+  {
+    "id": "0fc7d135-f7ef-48ee-b9bc-9766b687b802",
+    "created_at_utc": "2026-02-14T00:36:54.673Z",
+    "date_local": "2026-02-16",
+    "timezone": "America/Sao_Paulo",
+    "quote": {
+      "id": "q-epi-2",
+      "author": "epictetus",
+      "text": "Os homens não se perturbam pelas coisas que acontecem, mas pelas opiniões sobre elas.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 5",
+      "language": "pt",
+      "theme_primary": "julgamento",
+      "context_tags": [
+        "relacionamentos"
+      ],
+      "authenticity_level": "verified"
+    },
+    "recommendation": {
+      "id": "r-004",
+      "quote_id": "q-epi-2",
+      "context": "relacionamentos",
+      "action_title": "Resposta sem reatividade",
+      "action_steps": [
+        "Pause 60 segundos",
+        "Reescreva em tom factual",
+        "Responda apenas ao essencial"
+      ],
+      "estimated_minutes": 6,
+      "journal_prompt": "Minha resposta foi util ou impulsiva?"
+    }
+  },
+  {
+    "id": "d912c6ae-54a6-4485-9d8b-db974b18c312",
+    "created_at_utc": "2026-02-14T00:36:54.673Z",
+    "date_local": "2026-02-17",
+    "timezone": "America/Sao_Paulo",
+    "quote": {
+      "id": "q-epi-1",
+      "author": "epictetus",
+      "text": "Algumas coisas dependem de nós; outras não.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 1",
+      "language": "pt",
+      "theme_primary": "controle",
+      "context_tags": [
+        "ansiedade",
+        "decisao_dificil"
+      ],
+      "authenticity_level": "verified"
+    },
+    "recommendation": {
+      "id": "r-003",
+      "quote_id": "q-epi-1",
+      "context": "decisao_dificil",
+      "action_title": "Dicotomia de controle",
+      "action_steps": [
+        "Divida em controlavel e nao controlavel",
+        "Descarte o nao controlavel",
+        "Aja no primeiro passo"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "Onde desperdicei energia hoje?"
+    }
+  },
+  {
+    "id": "c44cb707-6c65-4780-8b20-54362e919ecd",
+    "created_at_utc": "2026-02-14T00:36:54.673Z",
+    "date_local": "2026-02-18",
+    "timezone": "America/Sao_Paulo",
+    "quote": {
+      "id": "q-sen-2",
+      "author": "seneca",
+      "text": "Estar em toda parte é não estar em lugar nenhum.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 2",
+      "language": "pt",
+      "theme_primary": "controle",
+      "context_tags": [
+        "ansiedade"
+      ],
+      "authenticity_level": "verified"
+    },
+    "recommendation": {
+      "id": "r-002",
+      "quote_id": "q-sen-2",
+      "context": "ansiedade",
+      "action_title": "Nomear o medo",
+      "action_steps": [
+        "Escreva o medo em 1 frase",
+        "Separe fato de interpretacao",
+        "Escolha resposta objetiva"
+      ],
+      "estimated_minutes": 8,
+      "journal_prompt": "Qual parte era fato e qual era imaginacao?"
+    }
+  },
+  {
+    "id": "f969c006-6336-4378-afba-327303b53318",
+    "created_at_utc": "2026-02-14T00:36:54.673Z",
+    "date_local": "2026-02-19",
+    "timezone": "America/Sao_Paulo",
+    "quote": {
+      "id": "q-sen-1",
+      "author": "seneca",
+      "text": "Nada, Lucílio, é nosso, exceto o tempo.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 1",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
+      "authenticity_level": "verified"
+    },
+    "recommendation": {
+      "id": "r-001",
+      "quote_id": "q-sen-1",
+      "context": "trabalho",
+      "action_title": "Planejamento do controlavel",
+      "action_steps": [
+        "Liste 3 acoes sob seu controle",
+        "Defina 1 primeira acao",
+        "Execute agora"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "O que mudou quando foquei no controlavel?"
+    }
+  },
+  {
+    "id": "08910510-5ff4-40ad-8a6d-57511dff6b04",
+    "created_at_utc": "2026-02-14T00:36:54.673Z",
+    "date_local": "2026-02-20",
+    "timezone": "America/Sao_Paulo",
+    "quote": {
+      "id": "q-mar-3",
+      "author": "marcus_aurelius",
+      "text": "Se algo é difícil para ti, não penses que é impossível ao homem; se é possível ao homem e conforme à sua natureza, considera que também está ao teu alcance.",
+      "source_work": "Meditations",
+      "source_ref": "Book 6.19",
+      "language": "pt",
+      "theme_primary": "proposito",
+      "context_tags": [
+        "trabalho",
+        "decisao_dificil"
+      ],
+      "authenticity_level": "verified"
+    },
+    "recommendation": {
+      "id": "r-009",
+      "quote_id": "q-mar-3",
+      "context": "decisao_dificil",
+      "action_title": "Escolha pelo bem comum",
+      "action_steps": [
+        "Liste 2 opcoes",
+        "Avalie por justica",
+        "Decida e execute"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "Minha decisao serviu ao bem comum?"
+    }
+  }
+]
