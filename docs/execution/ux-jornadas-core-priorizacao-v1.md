@@ -42,9 +42,9 @@ Escala:
 | P0 | J-04 | Favoritar e revisitar valor | Reforcar utilidade na primeira semana | `quote_favorited`, first-week value | API favoritos, lista de favoritos usavel |
 | P1 | J-05 | Historico de progresso pessoal | Dar continuidade e reflexao ao usuario recorrente | depth de historico, retorno semanal | API historico, UX de timeline clara |
 | P1 | J-06 | Permissao de notificacao no momento certo | Maximizar opt-in sem interromper valor inicial | push opt-in rate, push opened | Pre-prompt, fluxo push Android/iOS |
-| P2 | J-07 | Intent paywall em feature premium | Monetizar em intencao real sem quebrar free | `premium_feature_blocked`, `trial_started` | Flags de paywall, entitlement |
-| P2 | J-08 | Value paywall apos valor comprovado | Converter com base em evidencia de engajamento | `paywall_viewed` -> `trial_started` | Regra 3 check-ins/3o dia ativo |
-| P2 | J-09 | Trial, assinatura e restaurar compra | Reduzir atrito de pagamento e suporte | `subscription_activated`, restore success | Integracao stores, backend assinatura |
+| P1 | J-07 | Intent paywall em feature premium | Monetizar em intencao real sem quebrar free | `premium_feature_blocked`, `trial_started` | Flags de paywall, entitlement |
+| P1 | J-08 | Value paywall apos valor comprovado | Converter com base em evidencia de engajamento | `paywall_viewed` -> `trial_started` | Regra 3 check-ins/3o dia ativo |
+| P1 | J-09 | Trial, assinatura e restaurar compra | Reduzir atrito de pagamento e suporte | `subscription_activated`, restore success | Integracao stores, backend assinatura |
 
 ## 4. Blueprint resumido por jornada
 
@@ -116,7 +116,7 @@ Boas praticas UX:
 - Nao bloquear uso se negar.
 - Re-prompt apenas em momentos de valor.
 
-## J-07/J-08/J-09 (P2) - Monetizacao
+## J-07/J-08/J-09 (P1) - Monetizacao
 Fluxo ideal:
 1. Trigger por intencao real ou valor comprovado.
 2. Paywall com proposta objetiva e transparencia de preco.
@@ -139,11 +139,12 @@ Sprint A (P0):
 Sprint B (P1):
 - J-05 historico.
 - J-06 permissao de push no timing correto.
-
-Sprint C (P2):
 - J-07 intent paywall.
 - J-08 value paywall.
 - J-09 trial, assinatura e restaurar compra.
+
+Sprint C (P2):
+- Otimizacoes de conversao e reducao de friccao (copy, variantes e refinamento de gatilhos).
 
 ## 6. Gates de qualidade por prioridade
 
@@ -155,7 +156,7 @@ Para fechar P0:
 Para liberar P1:
 - D1 e D7 sem regressao relevante apos ajustes de onboarding e loop.
 
-Para liberar P2:
+Para liberar monetizacao do MVP (P1):
 - Guardrails de retencao ativos.
 - Copy de monetizacao clara e sem ambiguidade.
 - Regra de frequencia de paywall validada.
@@ -164,7 +165,7 @@ Para liberar P2:
 
 - Priorizar backlog por jornada (nao por tela isolada).
 - Toda task nova deve declarar a jornada impactada.
-- Sem entrar em monetizacao antes de concluir os gates de P0/P1.
+- Monetizacao entra no MVP somente apos concluir gates de P0 e validar guardrails de impacto em retencao/check-in.
 
 ## 8. Resultado esperado
 

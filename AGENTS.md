@@ -78,3 +78,8 @@ Garantir qualidade em produção e aprendizado rápido.
 - Sem citação sem fonte.
 - Sem release sem telemetria mínima.
 - Sem feature nova se fluxo diário básico estiver instável.
+
+## 10. Playbook Operacional (MVP com Paywall)
+- Referência operacional por agente: `/Users/thiagoorikassa/Documents/Estoicismo/docs/execution/agentes-operacionais-mvp-paywall-v1.md`
+- O board oficial de execução permanece em: `/Users/thiagoorikassa/Documents/Estoicismo/docs/board-execucao-agentes.md`
+- Regra: sempre executar com handoff documentado, evidência e gate de qualidade.
