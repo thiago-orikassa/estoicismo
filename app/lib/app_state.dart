@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/auth/session_service.dart';
+import 'core/design_system/components/paywall_types.dart';
 import 'features/daily_quote/data/daily_repository.dart';
 import 'features/daily_quote/domain/models.dart';
 import 'core/domain/authors.dart';
@@ -40,6 +41,11 @@ class AppState extends ChangeNotifier {
   static const _nextBillingKey = 'next_billing_at';
   static const _lastPaywallViewKey = 'last_paywall_view';
   static const _lastPaywallDismissKey = 'last_paywall_dismiss';
+  static const _paywallEnabledKey = 'paywall_enabled';
+  static const _paywallTriggerFeatureBlockKey = 'paywall_trigger_feature_block';
+  static const _paywallTriggerValueBasedKey = 'paywall_trigger_value_based';
+  static const _paywallTriggerManualKey = 'paywall_trigger_manual';
+  static const _activeDaysKey = 'active_days';
 
   String userId = '';
   String timezone = 'America/Sao_Paulo';
@@ -63,6 +69,11 @@ class AppState extends ChangeNotifier {
   DateTime? nextBillingDate;
   DateTime? lastPaywallView;
   DateTime? lastPaywallDismissed;
+  bool paywallEnabled = true;
+  bool paywallTriggerFeatureBlockEnabled = true;
+  bool paywallTriggerValueBasedEnabled = true;
+  bool paywallTriggerManualEnabled = true;
+  final Set<String> _activeDays = {};
 
   bool loadingDaily = false;
   bool loadingHistory = false;
@@ -127,6 +138,16 @@ class AppState extends ChangeNotifier {
     if (lastDismissRaw != null) {
       lastPaywallDismissed = DateTime.tryParse(lastDismissRaw);
     }
+    paywallEnabled = _prefs?.getBool(_paywallEnabledKey) ?? true;
+    paywallTriggerFeatureBlockEnabled =
+        _prefs?.getBool(_paywallTriggerFeatureBlockKey) ?? true;
+    paywallTriggerValueBasedEnabled =
+        _prefs?.getBool(_paywallTriggerValueBasedKey) ?? true;
+    paywallTriggerManualEnabled =
+        _prefs?.getBool(_paywallTriggerManualKey) ?? true;
+    _activeDays
+      ..clear()
+      ..addAll(_prefs?.getStringList(_activeDaysKey) ?? const <String>[]);
     await _initializeSession();
     _loadCheckins();
   }
@@ -230,7 +251,21 @@ class AppState extends ChangeNotifier {
 
   bool get isTrial => subscriptionStatus == SubscriptionStatus.trial;
 
+  int get activeDaysCount => _activeDays.length;
+
+  int get completedCheckinsCount =>
+      _checkinsByDate.values.where((record) => record.applied).length;
+
+  bool get hasValueBasedMilestone =>
+      completedCheckinsCount >= 3 || activeDaysCount >= 3;
+
+  bool get _isFirstSessionBlocked =>
+      activeDaysCount <= 1 && completedCheckinsCount == 0;
+
   bool get canShowPaywall {
+    if (!paywallEnabled || isPro) return false;
+    if (_isFirstSessionBlocked) return false;
+
     final now = DateTime.now();
     if (lastPaywallView != null &&
         now.difference(lastPaywallView!) < const Duration(hours: 24)) {
@@ -241,6 +276,16 @@ class AppState extends ChangeNotifier {
       return false;
     }
     return true;
+  }
+
+  bool canShowPaywallForTrigger(PaywallTrigger trigger) {
+    if (!canShowPaywall) return false;
+    return switch (trigger) {
+      PaywallTrigger.featureBlock => paywallTriggerFeatureBlockEnabled,
+      PaywallTrigger.valueBased =>
+        paywallTriggerValueBasedEnabled && hasValueBasedMilestone,
+      PaywallTrigger.manual => paywallTriggerManualEnabled,
+    };
   }
 
   void markPaywallViewed() {
@@ -254,6 +299,48 @@ class AppState extends ChangeNotifier {
       _lastPaywallDismissKey,
       lastPaywallDismissed!.toIso8601String(),
     );
+  }
+
+  void setPaywallFlags({
+    bool? enabled,
+    bool? featureBlockTrigger,
+    bool? valueBasedTrigger,
+    bool? manualTrigger,
+  }) {
+    if (enabled != null) paywallEnabled = enabled;
+    if (featureBlockTrigger != null) {
+      paywallTriggerFeatureBlockEnabled = featureBlockTrigger;
+    }
+    if (valueBasedTrigger != null) {
+      paywallTriggerValueBasedEnabled = valueBasedTrigger;
+    }
+    if (manualTrigger != null) paywallTriggerManualEnabled = manualTrigger;
+    _persistPaywallFlags();
+    notifyListeners();
+  }
+
+  Future<void> trackEvent(
+    String eventName, {
+    Map<String, dynamic>? properties,
+  }) async {
+    if (userId.isEmpty) return;
+    final dateLocal =
+        daily?.dateLocal ?? DateTime.now().toIso8601String().split('T').first;
+
+    final merged = <String, dynamic>{
+      ...?properties,
+      'user_id': userId,
+      'date_local': properties?['date_local'] ?? dateLocal,
+      'timezone': properties?['timezone'] ?? timezone,
+      'context': properties?['context'] ?? preferredContext,
+      'event_version': 1,
+    };
+
+    try {
+      await _repo.trackEvent(eventName: eventName, properties: merged);
+    } catch (_) {
+      // Analytics is best effort and must not break core flow.
+    }
   }
 
   void startTrial(SubscriptionPlan plan) {
@@ -280,13 +367,11 @@ class AppState extends ChangeNotifier {
 
   void restoreSubscription() {
     subscriptionStatus = SubscriptionStatus.active;
-    if (nextBillingDate == null) {
-      nextBillingDate = DateTime.now().add(
-        subscriptionPlan == SubscriptionPlan.monthly
-            ? const Duration(days: 30)
-            : const Duration(days: 365),
-      );
-    }
+    nextBillingDate ??= DateTime.now().add(
+      subscriptionPlan == SubscriptionPlan.monthly
+          ? const Duration(days: 30)
+          : const Duration(days: 365),
+    );
     _persistSubscription();
     notifyListeners();
   }
@@ -318,6 +403,11 @@ class AppState extends ChangeNotifier {
     nextBillingDate = null;
     lastPaywallView = null;
     lastPaywallDismissed = null;
+    paywallEnabled = true;
+    paywallTriggerFeatureBlockEnabled = true;
+    paywallTriggerValueBasedEnabled = true;
+    paywallTriggerManualEnabled = true;
+    _activeDays.clear();
 
     await _prefs?.remove(_onboardingKey);
     await _prefs?.remove(_preferredContextKey);
@@ -334,6 +424,11 @@ class AppState extends ChangeNotifier {
     await _prefs?.remove(_nextBillingKey);
     await _prefs?.remove(_lastPaywallViewKey);
     await _prefs?.remove(_lastPaywallDismissKey);
+    await _prefs?.remove(_paywallEnabledKey);
+    await _prefs?.remove(_paywallTriggerFeatureBlockKey);
+    await _prefs?.remove(_paywallTriggerValueBasedKey);
+    await _prefs?.remove(_paywallTriggerManualKey);
+    await _prefs?.remove(_activeDaysKey);
 
     notifyListeners();
   }
@@ -378,6 +473,26 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  void _persistPaywallFlags() {
+    _prefs?.setBool(_paywallEnabledKey, paywallEnabled);
+    _prefs?.setBool(
+      _paywallTriggerFeatureBlockKey,
+      paywallTriggerFeatureBlockEnabled,
+    );
+    _prefs?.setBool(
+      _paywallTriggerValueBasedKey,
+      paywallTriggerValueBasedEnabled,
+    );
+    _prefs?.setBool(_paywallTriggerManualKey, paywallTriggerManualEnabled);
+  }
+
+  void _markActiveDay(String dateLocal) {
+    if (dateLocal.trim().isEmpty) return;
+    if (_activeDays.add(dateLocal)) {
+      _prefs?.setStringList(_activeDaysKey, _activeDays.toList()..sort());
+    }
+  }
+
   Future<void> bootstrap() async {
     error = null;
     await Future.wait([loadDaily(), loadHistory(), loadFavorites()]);
@@ -392,6 +507,9 @@ class AppState extends ChangeNotifier {
         dateLocal: dateLocal,
         userContext: preferredContext,
       );
+      if (daily != null) {
+        _markActiveDay(daily!.dateLocal);
+      }
       offline = false;
     } catch (e) {
       error = e.toString();
@@ -488,6 +606,7 @@ class AppState extends ChangeNotifier {
       createdAtUtc: DateTime.now().toUtc().toIso8601String(),
     );
     _checkinsByDate[dateLocal] = record;
+    _markActiveDay(dateLocal);
     await _saveCheckins();
     notifyListeners();
   }
