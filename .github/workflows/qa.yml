@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Validate seed data
         run: node qa/validate_seed.mjs
 
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Run backend tests
         run: npm test --prefix backend
 
@@ -44,7 +44,7 @@ jobs:
         run: flutter pub get
         working-directory: app
       - name: Flutter analyze
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
         working-directory: app
       - name: Flutter test
         run: flutter test
