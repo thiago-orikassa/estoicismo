@@ -54,80 +54,91 @@ class HistoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: StoicColors.cardBackground,
-      borderRadius: BorderRadius.circular(StoicRadius.md),
-      child: InkWell(
-        onTap: onTap,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: StoicColors.cardBackground,
         borderRadius: BorderRadius.circular(StoicRadius.md),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          _formatShortDate(date).toUpperCase(),
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                fontSize: 11,
-                                letterSpacing: 0.6,
-                                color: StoicColors.stone.withValues(alpha: 0.5),
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                        const SizedBox(width: 8),
-                        if (status != HistoryCheckinStatus.none)
-                          CheckinStatusChip(status: status),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      quotePreview,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontFamily: 'Cormorant Garamond',
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
-                            color: StoicColors.obsidian,
-                            height: 1.3,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(StoicRadius.md),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(StoicRadius.md),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            _formatShortDate(date).toUpperCase(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  fontSize: 11,
+                                  letterSpacing: 0.4,
+                                  color: StoicColors.textMuted,
+                                  fontWeight: FontWeight.w400,
+                                ),
                           ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          author,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                fontSize: 12,
-                                color: StoicColors.textMuted,
-                              ),
-                        ),
-                        if (hasNote) ...[
-                          const SizedBox(width: 6),
-                          Icon(
-                            Icons.edit_rounded,
-                            size: 14,
-                            color: StoicColors.copper,
-                          ),
+                          const SizedBox(width: 8),
+                          if (status != HistoryCheckinStatus.none)
+                            CheckinStatusChip(status: status),
                         ],
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        quotePreview,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontFamily: 'Inter',
+                              fontSize: 15,
+                              color: StoicColors.obsidian,
+                              height: 1.4,
+                            ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            author,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  fontSize: 12,
+                                  color: StoicColors.textSecondarySoft,
+                                ),
+                          ),
+                          if (hasNote) ...[
+                            const SizedBox(width: 6),
+                            const Icon(
+                              Icons.edit_rounded,
+                              size: 14,
+                              color: StoicColors.copper,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: StoicColors.stone.withValues(alpha: 0.3),
-                size: 20,
-              ),
-            ],
+                const SizedBox(width: 12),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: StoicColors.textSubtle,
+                  size: 20,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -159,14 +170,14 @@ class CheckinStatusChip extends StatelessWidget {
                 color: StoicColors.deepBlue,
               ),
               const SizedBox(width: 4),
-                Text(
-                  'Feito',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              Text(
+                'Feito',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 10,
                       color: StoicColors.deepBlue,
                       fontWeight: FontWeight.w500,
                     ),
-                ),
+              ),
             ],
           ),
         );

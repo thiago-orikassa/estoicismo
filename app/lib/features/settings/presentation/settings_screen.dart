@@ -162,7 +162,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         value: _selectedAuthors.contains(author),
                         dense: true,
                         activeColor: StoicColors.deepBlue,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 4),
                         title: Text(
                           author,
                           style: const TextStyle(
@@ -274,7 +275,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     contentPadding: EdgeInsets.zero,
                     title: Text(labelBuilder(option)),
                     trailing: option == currentValue
-                        ? const Icon(Icons.check_rounded, color: StoicColors.copper)
+                        ? const Icon(Icons.check_rounded,
+                            color: StoicColors.copper)
                         : null,
                     onTap: () => Navigator.of(context).pop(option),
                   ),
@@ -290,8 +292,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final reminderTime = widget.state.reminderTime ?? '08:00';
-    final permissionDenied =
-        widget.state.notificationPermission == NotificationPermissionStatus.denied;
+    final permissionDenied = widget.state.notificationPermission ==
+        NotificationPermissionStatus.denied;
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
       children: [
@@ -362,11 +364,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onManage: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Gerencie sua assinatura na App Store/Play Store.'),
+                  content:
+                      Text('Gerencie sua assinatura na App Store/Play Store.'),
                 ),
               );
             },
-            onRestore: () => PaywallFlow.showRestore(context, state: widget.state),
+            onRestore: () =>
+                PaywallFlow.showRestore(context, state: widget.state),
           ),
         ),
         const SizedBox(height: 32),
@@ -391,13 +395,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onOpenSystemSettings: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Abra as configurações do sistema para permitir notificações.'),
+                      content: Text(
+                          'Abra as configurações do sistema para permitir notificações.'),
                     ),
                   );
                 },
               ),
               const Divider(height: 1, color: StoicColors.rowDivider),
-              _SettingsRow(
+              const _SettingsRow(
                 icon: Icons.verified_outlined,
                 title: 'Fontes Verificadas',
                 trailing: 'Sempre',
@@ -562,8 +567,9 @@ class _SettingsRow extends StatelessWidget {
             : null,
       ),
       child: Row(
-        crossAxisAlignment:
-            subtitle == null ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment: subtitle == null
+            ? CrossAxisAlignment.center
+            : CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 16),

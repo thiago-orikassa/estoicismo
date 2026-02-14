@@ -23,11 +23,14 @@ class _StoicButtonSpec {
 _StoicButtonSpec _specFor(StoicButtonSize size) {
   switch (size) {
     case StoicButtonSize.small:
-      return const _StoicButtonSpec(height: 40, horizontalPadding: 16, fontSize: 13);
+      return const _StoicButtonSpec(
+          height: 40, horizontalPadding: 16, fontSize: 13);
     case StoicButtonSize.medium:
-      return const _StoicButtonSpec(height: 48, horizontalPadding: 24, fontSize: 14);
+      return const _StoicButtonSpec(
+          height: 48, horizontalPadding: 24, fontSize: 14);
     case StoicButtonSize.large:
-      return const _StoicButtonSpec(height: 56, horizontalPadding: 32, fontSize: 15);
+      return const _StoicButtonSpec(
+          height: 56, horizontalPadding: 32, fontSize: 15);
   }
 }
 
@@ -56,6 +59,8 @@ class StoicPrimaryButton extends StatelessWidget {
         style: FilledButton.styleFrom(
           backgroundColor: StoicColors.deepBlue,
           foregroundColor: StoicColors.ivory,
+          disabledBackgroundColor: StoicColors.deepBlue.withValues(alpha: 0.4),
+          disabledForegroundColor: StoicColors.ivory.withValues(alpha: 0.75),
           padding: EdgeInsets.symmetric(horizontal: spec.horizontalPadding),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(StoicRadius.md),
@@ -97,7 +102,11 @@ class StoicSecondaryButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: StoicColors.stone,
           backgroundColor: Colors.white.withValues(alpha: 0.6),
-          side: const BorderSide(color: StoicColors.sand),
+          disabledForegroundColor: StoicColors.stone.withValues(alpha: 0.5),
+          disabledBackgroundColor: Colors.white.withValues(alpha: 0.35),
+          side: const BorderSide(
+            color: StoicColors.sand,
+          ),
           padding: EdgeInsets.symmetric(horizontal: spec.horizontalPadding),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(StoicRadius.md),
@@ -139,6 +148,8 @@ class StoicTonalButton extends StatelessWidget {
         style: FilledButton.styleFrom(
           backgroundColor: StoicColors.copper.withValues(alpha: 0.1),
           foregroundColor: StoicColors.copper,
+          disabledBackgroundColor: StoicColors.copper.withValues(alpha: 0.06),
+          disabledForegroundColor: StoicColors.copper.withValues(alpha: 0.5),
           padding: EdgeInsets.symmetric(horizontal: spec.horizontalPadding),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(StoicRadius.md),

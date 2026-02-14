@@ -64,9 +64,8 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
     final borderColor = hasError
         ? StoicColors.copper
         : (_focused ? StoicColors.deepBlue : StoicColors.sand);
-    final fillColor = hasError
-        ? StoicColors.copper.withValues(alpha: 0.05)
-        : StoicColors.ivory;
+    final fillColor =
+        hasError ? StoicColors.copper.withValues(alpha: 0.05) : Colors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,26 +76,32 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
             borderRadius: BorderRadius.circular(StoicRadius.md),
             border: Border.all(color: borderColor, width: 2),
           ),
-          child: TextField(
-            focusNode: _focusNode,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) => widget.onSubmitted?.call(),
-            onChanged: widget.onChanged,
-            controller: _controller,
-            decoration: InputDecoration(
-              hintText: widget.placeholder,
-              hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: StoicColors.textSubtle,
+          child: SizedBox(
+            height: 52,
+            child: TextField(
+              focusNode: _focusNode,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.done,
+              textCapitalization: TextCapitalization.none,
+              autocorrect: false,
+              enableSuggestions: false,
+              onSubmitted: (_) => widget.onSubmitted?.call(),
+              onChanged: widget.onChanged,
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: widget.placeholder,
+                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: StoicColors.textSubtle,
+                    ),
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: StoicColors.obsidian,
+                    fontSize: 16,
                   ),
-              border: InputBorder.none,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             ),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: StoicColors.obsidian,
-                  fontSize: 16,
-                ),
           ),
         ),
         if (hasError)

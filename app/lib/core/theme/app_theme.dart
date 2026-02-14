@@ -23,11 +23,11 @@ class AppTheme {
       onError: Colors.white,
       errorContainer: Color(0xFFF9DEDC),
       onErrorContainer: Color(0xFF410E0B),
-      surface: StoicColors.cardBackground,
+      surface: StoicColors.screenBackground,
       onSurface: StoicColors.textPrimary,
-      onSurfaceVariant: StoicColors.textMuted,
-      outline: StoicColors.border,
-      outlineVariant: Color(0xFFE6DFD4),
+      onSurfaceVariant: StoicColors.textSubtle,
+      outline: StoicColors.cardOutline,
+      outlineVariant: StoicColors.bottomBarBorder,
       shadow: Color(0x26000000),
       scrim: Color(0x52000000),
       inverseSurface: StoicColors.obsidian,
@@ -37,38 +37,38 @@ class AppTheme {
     );
 
     final baseText = Typography.material2021().black.apply(
-      bodyColor: StoicColors.textPrimary,
-      displayColor: StoicColors.textPrimary,
-      fontFamily: 'Inter',
-    );
+          bodyColor: StoicColors.textPrimary,
+          displayColor: StoicColors.textPrimary,
+          fontFamily: 'Inter',
+        );
 
     final textTheme = baseText.copyWith(
       displayLarge: baseText.displayLarge?.copyWith(
         fontFamily: 'Cormorant Garamond',
-        fontSize: 48,
+        fontSize: 56,
         fontStyle: FontStyle.italic,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         height: 1.1,
       ),
       displayMedium: baseText.displayMedium?.copyWith(
         fontFamily: 'Cormorant Garamond',
-        fontSize: 28,
+        fontSize: 48,
         fontStyle: FontStyle.italic,
-        fontWeight: FontWeight.w400,
-        height: 1.4,
+        fontWeight: FontWeight.w500,
+        height: 1.1,
       ),
       displaySmall: baseText.displaySmall?.copyWith(
         fontFamily: 'Cormorant Garamond',
-        fontSize: 18,
+        fontSize: 32,
         fontStyle: FontStyle.italic,
-        fontWeight: FontWeight.w400,
-        height: 1.5,
+        fontWeight: FontWeight.w500,
+        height: 1.15,
       ),
       titleLarge: baseText.titleLarge?.copyWith(
         fontFamily: 'Inter',
         fontSize: 22,
         fontWeight: FontWeight.w500,
-        height: 1.4,
+        height: 1.3,
       ),
       titleMedium: baseText.titleMedium?.copyWith(
         fontFamily: 'Inter',
@@ -78,8 +78,8 @@ class AppTheme {
       ),
       headlineSmall: baseText.headlineSmall?.copyWith(
         fontFamily: 'Inter',
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
         height: 1.4,
       ),
       bodyLarge: baseText.bodyLarge?.copyWith(
@@ -102,15 +102,15 @@ class AppTheme {
       ),
       labelLarge: baseText.labelLarge?.copyWith(
         fontFamily: 'Inter',
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: FontWeight.w500,
-        letterSpacing: 0.8,
+        letterSpacing: 0.2,
       ),
       labelSmall: baseText.labelSmall?.copyWith(
         fontFamily: 'Inter',
         fontSize: 11,
         fontWeight: FontWeight.w500,
-        letterSpacing: 0.8,
+        letterSpacing: 0.9,
       ),
     );
 
@@ -134,7 +134,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: StoicColors.cardBackground,
+        fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(StoicRadius.md),
           borderSide: const BorderSide(color: StoicColors.border),
@@ -151,7 +151,8 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: StoicColors.chipBackground,
         selectedColor: StoicColors.chipBackground,
-        side: const BorderSide(color: StoicColors.border),
+        side:
+            BorderSide(color: StoicColors.cardOutline.withValues(alpha: 0.45)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(StoicRadius.pill),
         ),
@@ -201,13 +202,13 @@ class AppTheme {
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       bannerTheme: MaterialBannerThemeData(
-        backgroundColor: const Color(0xFFE8D4C6),
+        backgroundColor: const Color(0xFFE7DDD1),
         contentTextStyle: textTheme.bodyMedium?.copyWith(
           color: StoicColors.obsidian,
         ),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: StoicColors.stone,
+        backgroundColor: StoicColors.deepBlue,
         contentTextStyle: textTheme.bodyMedium?.copyWith(color: Colors.white),
       ),
     );

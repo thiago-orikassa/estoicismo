@@ -22,7 +22,7 @@ class SourceMeta extends StatelessWidget {
       style: Theme.of(context).textTheme.labelSmall?.copyWith(
             color: StoicColors.textSubtle,
             fontSize: 11,
-            letterSpacing: 0.55,
+            letterSpacing: 0.7,
             fontWeight: FontWeight.w400,
           ),
     );
@@ -46,15 +46,14 @@ class TagGroup extends StatelessWidget {
           .map(
             (tag) => Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              constraints: const BoxConstraints(minHeight: 30),
               decoration: BoxDecoration(
-                color: StoicColors.chipBackground,
+                color: StoicColors.deepBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(StoicRadius.pill),
               ),
               child: Text(
                 contextLabel(tag).toLowerCase(),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: StoicColors.chipText,
+                      color: StoicColors.deepBlue,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
@@ -93,7 +92,9 @@ class QuoteCard extends StatelessWidget {
   String _authorInitials(String value) {
     final parts = value.trim().split(RegExp(r'\s+'));
     if (parts.isEmpty || parts.first.isEmpty) return '?';
-    if (parts.length == 1 || parts.last.isEmpty) return parts.first[0].toUpperCase();
+    if (parts.length == 1 || parts.last.isEmpty) {
+      return parts.first[0].toUpperCase();
+    }
     return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
   }
 
@@ -123,7 +124,9 @@ class QuoteCard extends StatelessWidget {
                 height: 44,
                 child: IconButton(
                   onPressed: favoriteLoading ? null : onToggleFavorite,
-                  tooltip: favorite ? 'Remover dos favoritos' : 'Salvar nos favoritos',
+                  tooltip: favorite
+                      ? 'Remover dos favoritos'
+                      : 'Salvar nos favoritos',
                   iconSize: 24,
                   icon: AnimatedScale(
                     scale: favorite ? 1.0 : MotionTokens.emphasisScale,
@@ -134,8 +137,11 @@ class QuoteCard extends StatelessWidget {
                       duration: MotionTokens.micro,
                       curve: MotionTokens.curveTransition,
                       child: Icon(
-                        favorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                        color: favorite ? StoicColors.copper : StoicColors.stone,
+                        favorite
+                            ? Icons.favorite_rounded
+                            : Icons.favorite_border_rounded,
+                        color:
+                            favorite ? StoicColors.copper : StoicColors.stone,
                       ),
                     ),
                   ),
@@ -160,6 +166,7 @@ class QuoteCard extends StatelessWidget {
               Container(
                 width: 40,
                 height: 40,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: StoicColors.avatarBackground,
                   shape: BoxShape.circle,
@@ -186,7 +193,7 @@ class QuoteCard extends StatelessWidget {
                             fontSize: 16,
                             height: 1.5,
                             fontWeight: FontWeight.w500,
-                            letterSpacing: 0.4,
+                            letterSpacing: 0.2,
                           ),
                     ),
                     const SizedBox(height: 2),

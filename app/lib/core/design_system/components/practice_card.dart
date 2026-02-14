@@ -56,7 +56,7 @@ class PracticeCard extends StatelessWidget {
           _BulletInfo(
             label: 'Situação',
             value: contextLabel(practiceContext),
-            bulletSize: const Size(5, 8),
+            bulletSize: const Size(8, 8),
             bulletRadius: 99,
           ),
           const SizedBox(height: 12),
@@ -85,7 +85,6 @@ class PracticeCard extends StatelessWidget {
                       Container(
                         width: 24,
                         height: 24,
-                        margin: const EdgeInsets.only(top: 2),
                         decoration: const BoxDecoration(
                           color: StoicColors.deepBlue,
                           shape: BoxShape.circle,
@@ -93,7 +92,10 @@ class PracticeCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             '${entry.key + 1}',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
                                   color: StoicColors.ivory,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -105,10 +107,12 @@ class PracticeCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           entry.value,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                height: 1.6,
-                                fontSize: 14,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    height: 1.6,
+                                    fontSize: 14,
+                                    color: StoicColors.obsidian,
+                                  ),
                         ),
                       ),
                     ],

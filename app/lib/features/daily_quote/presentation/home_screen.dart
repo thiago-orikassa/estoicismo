@@ -25,9 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _noteController = TextEditingController();
   bool _isTogglingFavorite = false;
   bool _isSubmittingCheckin = false;
-  bool _isGeneratingTestQuote = false;
   StoicCheckinStatus _checkinStatus = StoicCheckinStatus.pending;
-  int _testDayOffset = 0;
   bool _showNotificationNudge = false;
   NotificationResultType? _notificationResult;
   String? _savedCheckinNote;
@@ -256,44 +254,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _generateTestQuote(AppState state) async {
-    if (_isGeneratingTestQuote) return;
-    final messenger = ScaffoldMessenger.of(context);
-    setState(() => _isGeneratingTestQuote = true);
-
-    try {
-      _testDayOffset += 1;
-      final now = DateTime.now();
-      final baseDate = DateTime(now.year, now.month, now.day);
-      final targetDate = baseDate.add(Duration(days: _testDayOffset));
-      final dateLocal = targetDate.toIso8601String().split('T').first;
-
-      await state.loadDaily(dateLocal: dateLocal);
-      await state.loadHistory();
-
-      if (!mounted) return;
-      _noteController.clear();
-      setState(() {
-        _checkinStatus = StoicCheckinStatus.pending;
-        _showNotificationNudge = false;
-        _notificationResult = null;
-        _savedCheckinNote = null;
-      });
-      messenger.showSnackBar(
-        SnackBar(content: Text('Conteúdo de teste carregado: $dateLocal')),
-      );
-    } catch (error) {
-      if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text(_errorMessage(error))),
-      );
-    } finally {
-      if (mounted) {
-        setState(() => _isGeneratingTestQuote = false);
-      }
-    }
-  }
-
   @override
   void dispose() {
     _noteController.dispose();
@@ -320,6 +280,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: StoicEmptyState(
             title: 'Você está offline.',
             description: 'Conecte-se para sincronizar o conteúdo diário.',
+            icon: const Icon(
+              Icons.wifi_off_rounded,
+              size: 32,
+              color: StoicColors.deepBlue,
+            ),
             actionLabel: 'Sincronizar',
             onAction: state.bootstrap,
           ),
@@ -347,6 +312,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: StoicEmptyState(
             title: 'Sem conteúdo diário disponível.',
             description: 'Tente sincronizar novamente em instantes.',
+            icon: Icon(
+              Icons.auto_stories_rounded,
+              size: 32,
+              color: StoicColors.textSubtle,
+            ),
           ),
         ),
       );
@@ -409,23 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
             StoicOfflineBanner(onSync: state.bootstrap),
             const SizedBox(height: 16),
           ],
-          OutlinedButton.icon(
-            onPressed:
-                _isGeneratingTestQuote ? null : () => _generateTestQuote(state),
-            icon: const Icon(Icons.auto_awesome),
-            label: Text(
-              _isGeneratingTestQuote ? 'Gerando...' : 'Gerar citação (teste)',
-            ),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: StoicColors.deepBlue,
-              side: const BorderSide(color: StoicColors.deepBlue, width: 1.2),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 2),
           QuoteCard(
             quoteText: daily.quote.text,
             author: daily.quote.author,

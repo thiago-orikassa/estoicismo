@@ -55,7 +55,7 @@ class StoicCheckinCard extends StatelessWidget {
               reflectionPrompt,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     color: StoicColors.obsidian,
                   ),
             ),
@@ -64,7 +64,7 @@ class StoicCheckinCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(StoicRadius.md),
-                border: Border.all(color: StoicColors.border),
+                border: Border.all(color: StoicColors.sand),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               child: TextField(
@@ -75,12 +75,14 @@ class StoicCheckinCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
                       height: 1.5,
+                      color: StoicColors.obsidian,
                     ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Opcional: registre suas reflexões aqui...',
                   hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: StoicColors.textSubtle,
+                        fontSize: 14,
                       ),
                 ),
               ),
@@ -100,10 +102,10 @@ class StoicCheckinCard extends StatelessWidget {
                         switchInCurve: MotionTokens.curveEntry,
                         switchOutCurve: MotionTokens.curveTransition,
                         child: isSubmitting
-                            ? Row(
-                                key: const ValueKey('loading'),
+                            ? const Row(
+                                key: ValueKey('loading'),
                                 mainAxisSize: MainAxisSize.min,
-                                children: const [
+                                children: [
                                   SizedBox(
                                     width: 14,
                                     height: 14,
@@ -143,9 +145,9 @@ class StoicCheckinCard extends StatelessWidget {
           ] else ...[
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: StoicColors.deepBlue.withValues(alpha: 0.08),
+                color: StoicColors.deepBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(StoicRadius.md),
                 border: Border.all(
                   color: StoicColors.deepBlue.withValues(alpha: 0.2),
@@ -156,30 +158,32 @@ class StoicCheckinCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.check_circle_rounded,
-                        size: 18,
+                      const Icon(
+                        Icons.check_rounded,
+                        size: 20,
                         color: StoicColors.deepBlue,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 8),
                       Text(
                         'Check-in registrado',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 14,
                               color: StoicColors.deepBlue,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                             ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   Text(
                     status == StoicCheckinStatus.applied
                         ? 'Você aplicou a prática de hoje.'
                         : 'Registrado. Tente novamente amanhã.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: StoicColors.textMuted,
-                          height: 1.45,
+                          fontSize: 13,
+                          color: StoicColors.textSecondarySoft,
+                          height: 1.5,
                         ),
                   ),
                 ],
@@ -193,16 +197,18 @@ class StoicCheckinCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(StoicRadius.md),
-                  border: Border.all(color: StoicColors.border),
+                  border: Border.all(
+                    color: StoicColors.sand.withValues(alpha: 0.5),
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Sua reflexão',
+                      'Sua reflexão'.toUpperCase(),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             fontSize: 11,
-                            letterSpacing: 0.5,
+                            letterSpacing: 0.8,
                             color: StoicColors.textSubtle,
                           ),
                     ),
@@ -223,6 +229,7 @@ class StoicCheckinCard extends StatelessWidget {
               'Retorne amanhã para nova prática.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 13,
                     color: StoicColors.textMuted,
                   ),
             ),

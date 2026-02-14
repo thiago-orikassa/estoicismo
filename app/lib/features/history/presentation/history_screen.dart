@@ -98,29 +98,62 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state.loadingHistory && state.history.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: StoicLoadingState(),
+    final header = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Histórico',
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontFamily: 'Cormorant Garamond',
+                fontSize: 48,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w500,
+                color: StoicColors.obsidian,
+                height: 1.1,
+              ),
         ),
+        const SizedBox(height: 16),
+      ],
+    );
+
+    if (state.loadingHistory && state.history.isEmpty) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+        children: [
+          header,
+          if (state.offline) ...[
+            StoicOfflineBanner(onSync: state.bootstrap),
+            const SizedBox(height: 12),
+          ],
+          const StoicLoadingState(),
+        ],
       );
     }
 
     if (state.history.isEmpty) {
       final offline = state.offline;
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: StoicEmptyState(
-            title: offline ? 'Você está offline.' : 'Nenhuma prática registrada',
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+        children: [
+          header,
+          if (offline) ...[
+            StoicOfflineBanner(onSync: state.bootstrap),
+            const SizedBox(height: 12),
+          ],
+          StoicEmptyState(
+            title: offline ? 'Você está offline.' : 'Nenhum registro ainda',
             description: offline
                 ? 'Conecte-se para sincronizar seu histórico.'
                 : 'Complete sua primeira prática para ver o histórico.',
+            icon: Icon(
+              offline ? Icons.wifi_off_rounded : Icons.history_rounded,
+              size: 32,
+              color: offline ? StoicColors.deepBlue : StoicColors.textSubtle,
+            ),
             actionLabel: offline ? 'Sincronizar' : null,
             onAction: offline ? state.bootstrap : null,
           ),
-        ),
+        ],
       );
     }
 
@@ -130,23 +163,7 @@ class HistoryScreen extends StatelessWidget {
     final showUpsell = !isPro && state.history.length > items.length;
 
     final entries = <Widget>[
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Histórico',
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontFamily: 'Cormorant Garamond',
-                  fontSize: 48,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w500,
-                  color: StoicColors.obsidian,
-                  height: 1.1,
-                ),
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
+      header,
       if (state.offline) StoicOfflineBanner(onSync: state.bootstrap),
       if (state.offline) const SizedBox(height: 4),
       ...items.map((item) {
