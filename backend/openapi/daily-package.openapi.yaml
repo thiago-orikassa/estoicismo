@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Estoicismo API
-  version: 1.4.0
+  version: 1.6.0
 servers:
   - url: http://localhost:8787
 paths:
@@ -184,6 +184,94 @@ paths:
                   items:
                     type: array
                     items: { $ref: '#/components/schemas/DailyPackage' }
+  /v1/subscription/entitlement:
+    get:
+      summary: Retorna entitlement de assinatura do usuário autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Entitlement atual
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Entitlement' }
+        '401':
+          description: Não autenticado
+  /v1/subscription/trial/start:
+    post:
+      summary: Inicia trial do plano anual
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TrialStartInput' }
+      responses:
+        '201':
+          description: Trial iniciado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EntitlementEnvelope' }
+        '200':
+          description: Usuário já possui assinatura ativa/trial
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EntitlementEnvelope' }
+        '409':
+          description: Trial já utilizado
+  /v1/subscription/activate:
+    post:
+      summary: Ativa assinatura (simulação de confirmação de compra)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SubscriptionActivateInput' }
+      responses:
+        '200':
+          description: Assinatura ativa
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EntitlementEnvelope' }
+  /v1/subscription/restore:
+    post:
+      summary: Restaura assinatura com idempotência por chave
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SubscriptionRestoreInput' }
+      responses:
+        '200':
+          description: Resultado da restauração
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SubscriptionRestoreResult' }
+  /v1/analytics/events:
+    post:
+      summary: Registra evento de analytics versionado
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnalyticsEventInput' }
+      responses:
+        '201':
+          description: Evento registrado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AnalyticsEventAccepted' }
+        '400':
+          description: Payload inválido
+        '401':
+          description: Não autenticado
 components:
   securitySchemes:
     bearerAuth:
@@ -264,3 +352,70 @@ components:
           properties:
             id: { type: string, format: uuid }
             created_at_utc: { type: string, format: date-time }
+    AnalyticsEventInput:
+      type: object
+      required: [event_name, properties]
+      properties:
+        event_name: { type: string, maxLength: 64 }
+        properties:
+          type: object
+          additionalProperties: true
+    AnalyticsEventAccepted:
+      type: object
+      required: [event_name, event_version]
+      properties:
+        event_name: { type: string }
+        event_version: { type: integer, minimum: 1, maximum: 999 }
+    Entitlement:
+      type: object
+      required: [user_id, status, trial_eligible]
+      properties:
+        user_id: { type: string, format: uuid }
+        status: { type: string, enum: [free, trial, active, canceled] }
+        plan:
+          type: string
+          nullable: true
+          enum: [monthly, annual]
+        trial_eligible: { type: boolean }
+        trial_ends_at_utc:
+          type: string
+          format: date-time
+          nullable: true
+        next_billing_at_utc:
+          type: string
+          format: date-time
+          nullable: true
+    EntitlementEnvelope:
+      type: object
+      required: [entitlement]
+      properties:
+        entitlement: { $ref: '#/components/schemas/Entitlement' }
+    TrialStartInput:
+      type: object
+      properties:
+        plan:
+          type: string
+          enum: [annual]
+          default: annual
+    SubscriptionActivateInput:
+      type: object
+      required: [plan]
+      properties:
+        plan:
+          type: string
+          enum: [monthly, annual]
+    SubscriptionRestoreInput:
+      type: object
+      required: [idempotency_key]
+      properties:
+        idempotency_key:
+          type: string
+          minLength: 1
+          maxLength: 128
+    SubscriptionRestoreResult:
+      type: object
+      required: [restored, idempotent, entitlement]
+      properties:
+        restored: { type: boolean }
+        idempotent: { type: boolean }
+        entitlement: { $ref: '#/components/schemas/Entitlement' }

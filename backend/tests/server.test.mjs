@@ -4,12 +4,23 @@ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { DatabaseSync } from 'node:sqlite';
 
 let server;
 let baseUrl;
 let seed;
 let testUserId;
 let authToken;
+
+async function createSession(deviceId) {
+  const sessionRes = await fetch(`${baseUrl}/v1/session`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ device_id: deviceId })
+  });
+  assert.ok(sessionRes.status === 200 || sessionRes.status === 201);
+  return sessionRes.json();
+}
 
 before(async () => {
   const dataDir = mkdtempSync(join(tmpdir(), 'estoicismo-test-'));
@@ -28,12 +39,7 @@ before(async () => {
   const { port } = server.address();
   baseUrl = `http://127.0.0.1:${port}`;
 
-  const sessionRes = await fetch(`${baseUrl}/v1/session`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ device_id: 'test-device-001' })
-  });
-  const sessionData = await sessionRes.json();
+  const sessionData = await createSession('test-device-001');
   testUserId = sessionData.user_id;
   authToken = sessionData.access_token;
 });
@@ -100,6 +106,144 @@ test('POST /v1/checkins cria check-in', async () => {
   const data = await res.json();
   assert.equal(data.applied, true);
   assert.equal(data.user_id, testUserId);
+});
+
+test('GET /v1/subscription/entitlement retorna estado free inicial', async () => {
+  const session = await createSession('test-device-subscription-entitlement');
+  const res = await fetch(`${baseUrl}/v1/subscription/entitlement`, {
+    headers: {
+      authorization: `Bearer ${session.access_token}`
+    }
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.user_id, session.user_id);
+  assert.equal(data.status, 'free');
+  assert.equal(data.plan, null);
+  assert.equal(data.trial_eligible, true);
+});
+
+test('POST /v1/subscription/trial/start cria trial anual', async () => {
+  const session = await createSession('test-device-subscription-trial');
+  const res = await fetch(`${baseUrl}/v1/subscription/trial/start`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ plan: 'annual' })
+  });
+  assert.equal(res.status, 201);
+  const data = await res.json();
+  assert.equal(data.entitlement.user_id, session.user_id);
+  assert.equal(data.entitlement.status, 'trial');
+  assert.equal(data.entitlement.plan, 'annual');
+  assert.equal(data.entitlement.trial_eligible, false);
+  assert.ok(data.entitlement.trial_ends_at_utc);
+});
+
+test('POST /v1/subscription/activate e restore com idempotência', async () => {
+  const session = await createSession('test-device-subscription-restore');
+
+  const activateRes = await fetch(`${baseUrl}/v1/subscription/activate`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ plan: 'monthly' })
+  });
+  assert.equal(activateRes.status, 200);
+  const activateData = await activateRes.json();
+  assert.equal(activateData.entitlement.status, 'active');
+  assert.equal(activateData.entitlement.plan, 'monthly');
+  assert.ok(activateData.entitlement.next_billing_at_utc);
+
+  const firstRestore = await fetch(`${baseUrl}/v1/subscription/restore`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ idempotency_key: 'restore-key-001' })
+  });
+  assert.equal(firstRestore.status, 200);
+  const firstRestoreData = await firstRestore.json();
+  assert.equal(firstRestoreData.restored, true);
+  assert.equal(firstRestoreData.idempotent, false);
+  assert.equal(firstRestoreData.entitlement.status, 'active');
+
+  const secondRestore = await fetch(`${baseUrl}/v1/subscription/restore`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ idempotency_key: 'restore-key-001' })
+  });
+  assert.equal(secondRestore.status, 200);
+  const secondRestoreData = await secondRestore.json();
+  assert.equal(secondRestoreData.restored, true);
+  assert.equal(secondRestoreData.idempotent, true);
+});
+
+test('POST /v1/analytics/events exige autenticação', async () => {
+  const res = await fetch(`${baseUrl}/v1/analytics/events`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      event_name: 'paywall_viewed',
+      properties: { event_version: 1 }
+    })
+  });
+  assert.equal(res.status, 401);
+  const data = await res.json();
+  assert.equal(data.error, 'unauthorized');
+});
+
+test('POST /v1/analytics/events persiste evento versionado', async () => {
+  const res = await fetch(`${baseUrl}/v1/analytics/events`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
+    body: JSON.stringify({
+      event_name: 'paywall_viewed',
+      properties: {
+        user_id: 'spoofed-user',
+        event_version: 2,
+        trigger_type: 'feature_block',
+        paywall_variant: 'A',
+        plan_selected: 'annual',
+        price_displayed: 'R$ 149,00/ano',
+        trial_eligible: true
+      }
+    })
+  });
+  assert.equal(res.status, 201);
+  const payload = await res.json();
+  assert.equal(payload.event_name, 'paywall_viewed');
+  assert.equal(payload.event_version, 2);
+
+  const analyticsDb = new DatabaseSync(process.env.STOIC_DB_PATH);
+  const row = analyticsDb
+    .prepare(
+      `select event_name, event_version, properties_json
+       from analytics_events
+       where event_name = ?
+       order by created_at_utc desc
+       limit 1`
+    )
+    .get('paywall_viewed');
+  analyticsDb.close();
+
+  assert.equal(row.event_name, 'paywall_viewed');
+  assert.equal(row.event_version, 2);
+  const properties = JSON.parse(row.properties_json);
+  assert.equal(properties.user_id, testUserId);
+  assert.equal(properties.trigger_type, 'feature_block');
+  assert.equal(properties.event_version, 2);
 });
 
 test('POST /v1/favorites exige quote existente', async () => {
