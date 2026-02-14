@@ -136,15 +136,15 @@ class AppTheme {
         filled: true,
         fillColor: StoicColors.cardBackground,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(StoicRadius.md),
           borderSide: const BorderSide(color: StoicColors.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(StoicRadius.md),
           borderSide: const BorderSide(color: StoicColors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(StoicRadius.md),
           borderSide: const BorderSide(color: StoicColors.deepBlue, width: 1.5),
         ),
       ),
@@ -217,8 +217,8 @@ class AppTheme {
     return const CupertinoThemeData(
       brightness: Brightness.light,
       primaryColor: StoicColors.deepBlue,
-      scaffoldBackgroundColor: StoicColors.ivory,
-      barBackgroundColor: StoicColors.ivory,
+      scaffoldBackgroundColor: StoicColors.screenBackground,
+      barBackgroundColor: StoicColors.screenBackground,
       textTheme: CupertinoTextThemeData(
         primaryColor: StoicColors.textPrimary,
       ),

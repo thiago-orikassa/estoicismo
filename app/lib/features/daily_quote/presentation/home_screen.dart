@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_state.dart';
+import '../../../core/auth/auth_flow.dart';
+import '../../../core/auth/auth_models.dart';
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 
@@ -87,16 +89,17 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       barrierDismissible: false,
       barrierLabel: 'Notificações',
-      barrierColor:
-          platform == NotificationPromptPlatform.ios ? Colors.black38 : Colors.black54,
+      barrierColor: platform == NotificationPromptPlatform.ios
+          ? Colors.black38
+          : Colors.black54,
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (_, __, ___) {
         return NotificationPromptDialog(
           platform: platform,
-          onAllow: () => Navigator.of(context)
-              .pop(NotificationPermissionStatus.granted),
-          onDeny: () => Navigator.of(context)
-              .pop(NotificationPermissionStatus.denied),
+          onAllow: () =>
+              Navigator.of(context).pop(NotificationPermissionStatus.granted),
+          onDeny: () =>
+              Navigator.of(context).pop(NotificationPermissionStatus.denied),
         );
       },
       transitionBuilder: (_, animation, __, child) {
@@ -131,6 +134,32 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _maybePromptLoginAfterCheckin(AppState state) async {
+    if (!state.shouldPromptAfterCheckin) return;
+    state.markFirstCheckinCompleted();
+
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (!mounted) return;
+    await AuthFlow.showLoginPrompt(
+      context,
+      state: state,
+      contextType: AuthPromptContext.checkin,
+    );
+  }
+
+  Future<void> _maybePromptLoginAfterFavorite(AppState state) async {
+    if (!state.shouldPromptAfterFavorite) return;
+    state.markFavoritePromptShown();
+
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+    await AuthFlow.showLoginPrompt(
+      context,
+      state: state,
+      contextType: AuthPromptContext.favorite,
+    );
+  }
+
   Future<void> _toggleFavorite(
     AppState state,
     String quoteId,
@@ -145,10 +174,15 @@ class _HomeScreenState extends State<HomeScreen> {
       messenger.showSnackBar(
         SnackBar(
           content: Text(
-            isFavorite ? 'Removido dos favoritos.' : 'Adicionado aos favoritos.',
+            isFavorite
+                ? 'Removido dos favoritos.'
+                : 'Adicionado aos favoritos.',
           ),
         ),
       );
+      if (!isFavorite) {
+        await _maybePromptLoginAfterFavorite(state);
+      }
     } catch (error) {
       if (!mounted) return;
       messenger.showSnackBar(
@@ -177,11 +211,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (!mounted) return;
       setState(() {
-        _checkinStatus =
-            applied ? StoicCheckinStatus.applied : StoicCheckinStatus.notApplied;
+        _checkinStatus = applied
+            ? StoicCheckinStatus.applied
+            : StoicCheckinStatus.notApplied;
         _savedCheckinNote = _noteController.text.trim();
         if (applied &&
-            state.notificationPermission == NotificationPermissionStatus.unknown) {
+            state.notificationPermission ==
+                NotificationPermissionStatus.unknown) {
           _showNotificationNudge = true;
         } else {
           _showNotificationNudge = false;
@@ -194,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
+      await _maybePromptLoginAfterCheckin(state);
     } catch (error) {
       if (!mounted) return;
       messenger.showSnackBar(

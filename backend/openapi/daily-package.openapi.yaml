@@ -11,6 +11,41 @@ paths:
       responses:
         '200':
           description: ok
+  /v1/session:
+    post:
+      summary: Cria ou renova sessão do dispositivo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [device_id]
+              properties:
+                device_id: { type: string }
+      responses:
+        '201':
+          description: Sessão criada
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user_id, access_token]
+                properties:
+                  user_id: { type: string, format: uuid }
+                  access_token: { type: string }
+        '200':
+          description: Sessão existente renovada
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user_id, access_token]
+                properties:
+                  user_id: { type: string, format: uuid }
+                  access_token: { type: string }
+        '400':
+          description: Payload inválido
   /v1/daily-package:
     get:
       summary: Retorna pacote diário por timezone
@@ -38,6 +73,8 @@ paths:
   /v1/checkins:
     post:
       summary: Registra ou atualiza check-in diário
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -57,6 +94,8 @@ paths:
   /v1/favorites:
     get:
       summary: Lista favoritos do usuário
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: user_id
@@ -75,6 +114,8 @@ paths:
                     items: { $ref: '#/components/schemas/Favorite' }
     post:
       summary: Adiciona favorito
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -93,6 +134,8 @@ paths:
               schema: { $ref: '#/components/schemas/Favorite' }
     delete:
       summary: Remove favorito
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: user_id
@@ -142,6 +185,11 @@ paths:
                     type: array
                     items: { $ref: '#/components/schemas/DailyPackage' }
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: UUID
   schemas:
     Quote:
       type: object

@@ -5,6 +5,7 @@ class ApiClient {
   ApiClient({String? baseUrl}) : _baseUrl = baseUrl ?? _defaultBaseUrl();
 
   final String _baseUrl;
+  String? _accessToken;
 
   static String _defaultBaseUrl() {
     // Android emulator uses 10.0.2.2 to reach host machine.
@@ -23,10 +24,15 @@ class ApiClient {
     );
   }
 
+  void setAccessToken(String? value) {
+    _accessToken = value;
+  }
+
   Future<Map<String, dynamic>> get(String path,
       {Map<String, String>? query}) async {
     final client = HttpClient();
     final request = await client.getUrl(_uri(path, query));
+    _applyAuthHeader(request);
     final response = await request.close();
     final raw = await utf8.decoder.bind(response).join();
     final data = jsonDecode(raw) as Map<String, dynamic>;
@@ -42,6 +48,7 @@ class ApiClient {
       {required Map<String, dynamic> body}) async {
     final client = HttpClient();
     final request = await client.postUrl(_uri(path));
+    _applyAuthHeader(request);
     request.headers.contentType = ContentType.json;
     request.write(jsonEncode(body));
     final response = await request.close();
@@ -59,6 +66,7 @@ class ApiClient {
       {Map<String, String>? query}) async {
     final client = HttpClient();
     final request = await client.deleteUrl(_uri(path, query));
+    _applyAuthHeader(request);
     final response = await request.close();
     final raw = await utf8.decoder.bind(response).join();
     final data = jsonDecode(raw) as Map<String, dynamic>;
@@ -68,5 +76,11 @@ class ApiClient {
     }
 
     return data;
+  }
+
+  void _applyAuthHeader(HttpClientRequest request) {
+    final token = _accessToken;
+    if (token == null || token.isEmpty) return;
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
   }
 }

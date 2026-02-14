@@ -66,7 +66,7 @@ class DayDetailSheet extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: StoicColors.cardBackground,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
         top: false,
@@ -89,9 +89,9 @@ class DayDetailSheet extends StatelessWidget {
               Text(
                 _formatLongDate(date).toUpperCase(),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontSize: 10,
-                      letterSpacing: 1.1,
-                      color: StoicColors.textSubtle,
+                      fontSize: 11,
+                      letterSpacing: 0.6,
+                      color: StoicColors.stone.withValues(alpha: 0.5),
                     ),
               ),
               const SizedBox(height: 6),
@@ -115,7 +115,7 @@ class DayDetailSheet extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       letterSpacing: 1,
                       fontSize: 10,
-                      color: StoicColors.textSubtle,
+                      color: StoicColors.stone.withValues(alpha: 0.4),
                     ),
               ),
               const SizedBox(height: 8),
@@ -143,7 +143,7 @@ class DayDetailSheet extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       letterSpacing: 1,
                       fontSize: 10,
-                      color: StoicColors.textSubtle,
+                      color: StoicColors.stone.withValues(alpha: 0.4),
                     ),
               ),
               const SizedBox(height: 8),
@@ -152,8 +152,8 @@ class DayDetailSheet extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: StoicColors.border.withValues(alpha: 0.6)),
+                  borderRadius: BorderRadius.circular(StoicRadius.md),
+                  border: Border.all(color: StoicColors.border.withValues(alpha: 0.5)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,8 +192,8 @@ class DayDetailSheet extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: StoicColors.border.withValues(alpha: 0.6)),
+                    borderRadius: BorderRadius.circular(StoicRadius.md),
+                    border: Border.all(color: StoicColors.border.withValues(alpha: 0.5)),
                   ),
                   child: Text(
                     note,
@@ -213,7 +213,7 @@ class DayDetailSheet extends StatelessWidget {
                     foregroundColor: StoicColors.ivory,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(StoicRadius.md),
                     ),
                   ),
                   onPressed: onClose,

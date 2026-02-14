@@ -25,9 +25,9 @@ class NotificationNudgeCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(StoicRadius.lg),
       ),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -39,7 +39,7 @@ class NotificationNudgeCard extends StatelessWidget {
                 height: 48,
                 decoration: BoxDecoration(
                   color: StoicColors.ivory.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(StoicRadius.md),
                 ),
                 child: const Icon(
                   Icons.notifications_none_rounded,
@@ -56,6 +56,7 @@ class NotificationNudgeCard extends StatelessWidget {
                       'Quer manter sua constância?',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontFamily: 'Inter',
+                            fontSize: 18,
                             fontWeight: FontWeight.w600,
                             color: StoicColors.ivory,
                           ),
@@ -63,9 +64,10 @@ class NotificationNudgeCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       'Ative um lembrete diário no melhor horário para você.',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
                             color: StoicColors.ivory.withValues(alpha: 0.8),
-                            height: 1.5,
+                            height: 1.6,
                           ),
                     ),
                   ],
@@ -73,16 +75,16 @@ class NotificationNudgeCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: FilledButton(
               style: FilledButton.styleFrom(
                 backgroundColor: StoicColors.ivory,
                 foregroundColor: StoicColors.deepBlue,
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(StoicRadius.md),
                 ),
                 textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w600,
@@ -93,7 +95,7 @@ class NotificationNudgeCard extends StatelessWidget {
               child: const Text('Ativar lembretes'),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
             child: StoicPressScale(
