@@ -22,11 +22,12 @@ class StoicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (variant) {
-      StoicCardVariant.defaultCard => StoicColors.surface,
-      StoicCardVariant.subtle => StoicColors.cardBackground,
+      StoicCardVariant.defaultCard => StoicColors.cardBackground,
+      StoicCardVariant.subtle =>
+        StoicColors.cardBackground.withValues(alpha: 0.5),
     };
-    final borderColor = switch (variant) {
-      StoicCardVariant.defaultCard => StoicColors.cardOutline,
+  final borderColor = switch (variant) {
+      StoicCardVariant.defaultCard => Colors.transparent,
       StoicCardVariant.subtle => Colors.transparent,
     };
 
@@ -34,9 +35,7 @@ class StoicCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(StoicRadius.lg),
-        border: Border.all(
-          color: borderColor,
-        ),
+        border: Border.all(color: borderColor),
       ),
       child: Padding(
         padding: padding,

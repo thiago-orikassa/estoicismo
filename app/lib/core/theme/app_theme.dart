@@ -43,20 +43,74 @@ class AppTheme {
     );
 
     final textTheme = baseText.copyWith(
-      titleLarge: baseText.titleLarge?.copyWith(
+      displayLarge: baseText.displayLarge?.copyWith(
         fontFamily: 'Cormorant Garamond',
-        fontWeight: FontWeight.w600,
+        fontSize: 48,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.w400,
+        height: 1.1,
+      ),
+      displayMedium: baseText.displayMedium?.copyWith(
+        fontFamily: 'Cormorant Garamond',
+        fontSize: 28,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.w400,
+        height: 1.4,
+      ),
+      displaySmall: baseText.displaySmall?.copyWith(
+        fontFamily: 'Cormorant Garamond',
+        fontSize: 18,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+      ),
+      titleLarge: baseText.titleLarge?.copyWith(
+        fontFamily: 'Inter',
+        fontSize: 22,
+        fontWeight: FontWeight.w500,
+        height: 1.4,
       ),
       titleMedium: baseText.titleMedium?.copyWith(
-        fontFamily: 'Cormorant Garamond',
-        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        height: 1.4,
       ),
       headlineSmall: baseText.headlineSmall?.copyWith(
-        fontFamily: 'Cormorant Garamond',
-        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        height: 1.4,
+      ),
+      bodyLarge: baseText.bodyLarge?.copyWith(
+        fontFamily: 'Inter',
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+      ),
+      bodyMedium: baseText.bodyMedium?.copyWith(
+        fontFamily: 'Inter',
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+      ),
+      bodySmall: baseText.bodySmall?.copyWith(
+        fontFamily: 'Inter',
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
       ),
       labelLarge: baseText.labelLarge?.copyWith(
-        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.8,
+      ),
+      labelSmall: baseText.labelSmall?.copyWith(
+        fontFamily: 'Inter',
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.8,
       ),
     );
 
@@ -76,7 +130,6 @@ class AppTheme {
         color: StoicColors.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(StoicRadius.lg),
-          side: const BorderSide(color: StoicColors.cardOutline),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -107,11 +160,13 @@ class AppTheme {
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(48),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(StoicRadius.md),
           ),
           textStyle: textTheme.labelLarge?.copyWith(
             fontFamily: 'Inter',
+            fontSize: 14,
             fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
           ),
         ),
       ),
@@ -120,11 +175,23 @@ class AppTheme {
           minimumSize: const Size.fromHeight(48),
           side: const BorderSide(color: StoicColors.border),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(StoicRadius.md),
           ),
           textStyle: textTheme.labelLarge?.copyWith(
             fontFamily: 'Inter',
+            fontSize: 14,
             fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontFamily: 'Inter',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
           ),
         ),
       ),

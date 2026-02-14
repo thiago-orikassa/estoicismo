@@ -1,0 +1,28 @@
+name: Feature request
+description: Proponha uma melhoria ou nova funcionalidade
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use este template para descrever o problema e a solução proposta.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema a resolver
+      placeholder: Qual dor ou oportunidade estamos endereçando?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta de solução
+      placeholder: Descreva a solução sugerida.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto esperado
+      placeholder: Como isso melhora o produto? Métrica ou hipótese.

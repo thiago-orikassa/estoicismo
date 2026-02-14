@@ -13,9 +13,9 @@ class StoicColors {
 
   // Semantic colors
   static const appChrome = obsidian;
-  static const screenBackground = parchment;
+  static const screenBackground = Color(0xFFFFFFFF);
   static const cardBackground = ivory;
-  static const bottomBarBackground = stone;
+  static const bottomBarBackground = Color(0xFFFFFFFF);
   static const chipBackground = Color(0x1A2F4B66);
   static const chipText = deepBlue;
   static const divider = Color(0x80D9D0C3);

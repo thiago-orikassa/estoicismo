@@ -1,0 +1,43 @@
+name: Bug report
+description: Reporte um problema para investigarmos
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por reportar. Preencha o máximo possível para acelerar a correção.
+  - type: input
+    id: area
+    attributes:
+      label: Área afetada
+      placeholder: app / backend / conteúdo / docs
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Resultado atual
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, screenshots ou contexto adicional
+      description: Inclua logs ou prints relevantes.
