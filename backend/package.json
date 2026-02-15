@@ -6,6 +6,10 @@
   "dependencies": {},
   "scripts": {
     "start": "node src/server.mjs",
+    "start:dev": "node scripts/start-profile.mjs dev",
+    "start:stage": "node scripts/start-profile.mjs stage",
+    "provision:dev": "node scripts/provision.mjs dev",
+    "provision:stage": "node scripts/provision.mjs stage",
     "schedule": "node src/scheduler.mjs",
     "test": "node --test tests/*.mjs"
   }

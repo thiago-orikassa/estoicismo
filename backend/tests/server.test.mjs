@@ -11,6 +11,7 @@ let baseUrl;
 let seed;
 let testUserId;
 let authToken;
+const observabilityToken = 'test-observability-token';
 
 async function createSession(deviceId) {
   const sessionRes = await fetch(`${baseUrl}/v1/session`, {
@@ -31,6 +32,7 @@ before(async () => {
 
   process.env.STOIC_DATA_DIR = dataDir;
   process.env.STOIC_DB_PATH = join(dataDir, 'estoicismo.db');
+  process.env.STOIC_OBSERVABILITY_TOKEN = observabilityToken;
 
   const mod = await import('../src/server.mjs');
   server = mod.server;
@@ -54,6 +56,27 @@ test('GET /health responde ok', async () => {
   assert.equal(res.status, 200);
   const data = await res.json();
   assert.equal(data.ok, true);
+});
+
+test('GET /v1/observability/metrics exige token quando configurado', async () => {
+  const res = await fetch(`${baseUrl}/v1/observability/metrics`);
+  assert.equal(res.status, 401);
+  const data = await res.json();
+  assert.equal(data.error, 'unauthorized');
+});
+
+test('GET /v1/observability/metrics retorna métricas operacionais', async () => {
+  const res = await fetch(`${baseUrl}/v1/observability/metrics`, {
+    headers: {
+      'x-observability-token': observabilityToken
+    }
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.ok(data.generated_at_utc);
+  assert.equal(typeof data.tables.sessions, 'number');
+  assert.equal(typeof data.tables.analytics_events, 'number');
+  assert.ok(Array.isArray(data.analytics_events_by_name));
 });
 
 test('GET /v1/daily-package exige timezone', async () => {

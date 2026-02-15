@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../app_state.dart';
@@ -30,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   NotificationResultType? _notificationResult;
   String? _savedCheckinNote;
   String? _currentDateLocal;
+  String? _valuePaywallCheckedForDate;
 
   String _errorMessage(Object error) {
     final message = error.toString();
@@ -163,6 +166,26 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!state.canShowPaywallForTrigger(PaywallTrigger.valueBased)) return;
     await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
+    await PaywallFlow.showPaywall(
+      context,
+      state: state,
+      trigger: PaywallTrigger.valueBased,
+    );
+  }
+
+  Future<void> _maybeShowConsistencyPaywallOnDailyView(
+    AppState state,
+    String dateLocal,
+    CheckinRecord? existingRecord,
+  ) async {
+    if (_valuePaywallCheckedForDate == dateLocal) return;
+    _valuePaywallCheckedForDate = dateLocal;
+
+    if (existingRecord != null) return;
+    if (!state.hasValueBasedMilestone) return;
+
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (!mounted || _currentDateLocal != dateLocal) return;
     await PaywallFlow.showPaywall(
       context,
       state: state,
@@ -341,7 +364,15 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           _showNotificationNudge = false;
           _notificationResult = null;
+          _valuePaywallCheckedForDate = null;
         });
+        unawaited(
+          _maybeShowConsistencyPaywallOnDailyView(
+            state,
+            daily.dateLocal,
+            existingRecord,
+          ),
+        );
       });
     }
 

@@ -10,6 +10,22 @@ import '../design_system/tokens/design_tokens.dart';
 import '../domain/subscription.dart';
 
 class PaywallFlow {
+  static void _trackBlockedPaywallAttempt(
+    AppState state, {
+    required PaywallTrigger trigger,
+  }) {
+    unawaited(
+      state.trackEvent(
+        'paywall_view_blocked',
+        properties: {
+          'trigger_type': trigger.name,
+          'blocked_reason': state.paywallBlockReasonCodeForTrigger(trigger),
+          'value_milestone': state.valueBasedMilestone,
+        },
+      ),
+    );
+  }
+
   static Future<void> showRestore(
     BuildContext context, {
     required AppState state,
@@ -23,6 +39,10 @@ class PaywallFlow {
     required PremiumFeature feature,
   }) async {
     if (!state.canShowPaywallForTrigger(PaywallTrigger.featureBlock)) {
+      _trackBlockedPaywallAttempt(
+        state,
+        trigger: PaywallTrigger.featureBlock,
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Conteúdo premium em preparação.')),
       );
@@ -103,6 +123,7 @@ class PaywallFlow {
     PaywallTrigger trigger = PaywallTrigger.manual,
   }) async {
     if (!state.canShowPaywallForTrigger(trigger)) {
+      _trackBlockedPaywallAttempt(state, trigger: trigger);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Paywall disponível novamente em breve.')),
       );
@@ -118,6 +139,7 @@ class PaywallFlow {
           'trigger_type': trigger.name,
           'plan_selected': SubscriptionPlan.annual.name,
           'price_displayed': _priceForPlan(SubscriptionPlan.annual),
+          'value_milestone': state.valueBasedMilestone,
           'trial_eligible': !state.isPro,
         },
       ),

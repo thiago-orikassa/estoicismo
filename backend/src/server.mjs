@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { db } from './db.mjs';
+import { db, dbPath } from './db.mjs';
+import { logger } from './logger.mjs';
 
 const PORT = process.env.PORT || 8787;
 const HOST = process.env.HOST || '127.0.0.1';
@@ -11,6 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const defaultDataDir = join(__dirname, '../data');
 const dataDir = process.env.STOIC_DATA_DIR ?? defaultDataDir;
 const seedPath = process.env.STOIC_SEED_PATH ?? join(dataDir, 'daily_seed.json');
+const observabilityToken = process.env.STOIC_OBSERVABILITY_TOKEN ?? '';
 
 const seed = JSON.parse(readFileSync(seedPath, 'utf-8'));
 
@@ -157,6 +159,49 @@ const insertRestoreRequest = db.prepare(`
   ) values (?, ?, ?, ?, ?)
 `);
 
+const countSchemaMigrations = db.prepare(`
+  select count(*) as total
+  from schema_migrations
+`);
+
+const countSessions = db.prepare(`
+  select count(*) as total
+  from sessions
+`);
+
+const countCheckins = db.prepare(`
+  select count(*) as total
+  from checkins
+`);
+
+const countFavorites = db.prepare(`
+  select count(*) as total
+  from favorites
+`);
+
+const countAnalyticsEvents = db.prepare(`
+  select count(*) as total
+  from analytics_events
+`);
+
+const countAnalyticsEventsByName = db.prepare(`
+  select event_name, count(*) as total
+  from analytics_events
+  group by event_name
+  order by total desc, event_name asc
+`);
+
+const countSubscriptionProfiles = db.prepare(`
+  select count(*) as total
+  from subscription_profiles
+`);
+
+const countSubscriptionProfilesByStatus = db.prepare(`
+  select status, count(*) as total
+  from subscription_profiles
+  group by status
+`);
+
 const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -255,11 +300,55 @@ function readBearerToken(req) {
   return token;
 }
 
-function requireSession(req) {
+function requireSession(req, requestMeta) {
   const token = readBearerToken(req);
   if (!token) return null;
   const tokenHash = hashToken(token);
-  return selectSessionByToken.get(tokenHash);
+  const session = selectSessionByToken.get(tokenHash);
+  if (session?.user_id && requestMeta) {
+    requestMeta.userId = session.user_id;
+  }
+  return session;
+}
+
+function isObservabilityAuthorized(req) {
+  if (!observabilityToken) return true;
+  const providedToken = req.headers['x-observability-token'];
+  return typeof providedToken === 'string' && providedToken === observabilityToken;
+}
+
+function collectOperationalMetrics() {
+  const subscriptionsByStatus = {
+    free: 0,
+    trial: 0,
+    active: 0,
+    canceled: 0
+  };
+  for (const row of countSubscriptionProfilesByStatus.all()) {
+    subscriptionsByStatus[row.status] = Number(row.total ?? 0);
+  }
+
+  return {
+    generated_at_utc: new Date().toISOString(),
+    storage: {
+      data_dir: dataDir,
+      db_path: dbPath,
+      seed_path: seedPath
+    },
+    tables: {
+      schema_migrations: Number(countSchemaMigrations.get().total ?? 0),
+      sessions: Number(countSessions.get().total ?? 0),
+      checkins: Number(countCheckins.get().total ?? 0),
+      favorites: Number(countFavorites.get().total ?? 0),
+      analytics_events: Number(countAnalyticsEvents.get().total ?? 0),
+      subscription_profiles: Number(countSubscriptionProfiles.get().total ?? 0)
+    },
+    subscriptions: subscriptionsByStatus,
+    analytics_events_by_name: countAnalyticsEventsByName.all().map((row) => ({
+      event_name: row.event_name,
+      total: Number(row.total ?? 0)
+    }))
+  };
 }
 
 function stableHash(input) {
@@ -354,9 +443,38 @@ function parseBody(req) {
 
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
+  const requestMeta = {
+    requestId: randomUUID(),
+    userId: null
+  };
+  const startedAtNs = process.hrtime.bigint();
+  res.setHeader('x-request-id', requestMeta.requestId);
+  res.on('finish', () => {
+    const elapsedNs = process.hrtime.bigint() - startedAtNs;
+    const durationMs = Number(elapsedNs) / 1_000_000;
+    logger.info('http_request_completed', {
+      request_id: requestMeta.requestId,
+      method: req.method,
+      path: url.pathname,
+      status_code: res.statusCode,
+      duration_ms: Number(durationMs.toFixed(2)),
+      remote_ip: req.socket.remoteAddress ?? null,
+      user_id: requestMeta.userId
+    });
+  });
 
   if (req.method === 'GET' && url.pathname === '/health') {
     return sendJson(res, 200, { ok: true, service: 'estoicismo-backend' });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/v1/observability/metrics') {
+    if (!isObservabilityAuthorized(req)) {
+      logger.warn('observability_metrics_unauthorized', {
+        request_id: requestMeta.requestId
+      });
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+    return sendJson(res, 200, collectOperationalMetrics());
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/session') {
@@ -400,7 +518,7 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'GET' && url.pathname === '/v1/subscription/entitlement') {
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -409,7 +527,7 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/subscription/trial/start') {
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -469,7 +587,7 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/subscription/activate') {
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -517,7 +635,7 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/subscription/restore') {
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -602,7 +720,7 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/analytics/events') {
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -680,7 +798,7 @@ const server = createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'invalid_applied', message: 'applied must be boolean' });
       }
 
-      const session = requireSession(req);
+      const session = requireSession(req, requestMeta);
       if (!session) {
         return sendJson(res, 401, { error: 'unauthorized' });
       }
@@ -737,7 +855,7 @@ const server = createServer(async (req, res) => {
       return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
     }
 
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -764,7 +882,7 @@ const server = createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'invalid_quote_id', message: 'quote_id must be string' });
       }
 
-      const session = requireSession(req);
+      const session = requireSession(req, requestMeta);
       if (!session) {
         return sendJson(res, 401, { error: 'unauthorized' });
       }
@@ -808,7 +926,7 @@ const server = createServer(async (req, res) => {
       return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
     }
 
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -873,8 +991,18 @@ const isMain =
   process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isMain) {
+  logger.info('server_bootstrap', {
+    host: HOST,
+    port: Number(PORT),
+    data_dir: dataDir,
+    db_path: dbPath,
+    seed_path: seedPath,
+    observability_metrics_protected: Boolean(observabilityToken)
+  });
   server.listen(PORT, HOST, () => {
-    // eslint-disable-next-line no-console
-    console.log(`estoicismo-backend listening on ${HOST}:${PORT}`);
+    logger.info('server_listening', {
+      host: HOST,
+      port: Number(PORT)
+    });
   });
 }

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/auth/session_service.dart';
 import 'core/design_system/components/paywall_types.dart';
+import 'core/paywall/paywall_policy.dart';
 import 'features/daily_quote/data/daily_repository.dart';
 import 'features/daily_quote/domain/models.dart';
 import 'core/domain/authors.dart';
@@ -256,36 +257,57 @@ class AppState extends ChangeNotifier {
   int get completedCheckinsCount =>
       _checkinsByDate.values.where((record) => record.applied).length;
 
-  bool get hasValueBasedMilestone =>
-      completedCheckinsCount >= 3 || activeDaysCount >= 3;
+  String get valueBasedMilestone => resolveValueMilestone(
+        activeDaysCount: activeDaysCount,
+        completedCheckinsCount: completedCheckinsCount,
+      );
 
-  bool get _isFirstSessionBlocked =>
-      activeDaysCount <= 1 && completedCheckinsCount == 0;
+  bool get hasValueBasedMilestone => valueBasedMilestone != 'none';
+
+  PaywallEligibilitySnapshot _paywallSnapshot() {
+    return PaywallEligibilitySnapshot(
+      paywallEnabled: paywallEnabled,
+      isPro: isPro,
+      activeDaysCount: activeDaysCount,
+      completedCheckinsCount: completedCheckinsCount,
+      lastPaywallView: lastPaywallView,
+      lastPaywallDismissed: lastPaywallDismissed,
+      featureBlockTriggerEnabled: paywallTriggerFeatureBlockEnabled,
+      valueBasedTriggerEnabled: paywallTriggerValueBasedEnabled,
+      manualTriggerEnabled: paywallTriggerManualEnabled,
+    );
+  }
+
+  PaywallEvaluation evaluatePaywallForTrigger(
+    PaywallTrigger trigger, {
+    DateTime? now,
+  }) {
+    return evaluatePaywallEligibility(
+      trigger: trigger,
+      snapshot: _paywallSnapshot(),
+      now: now ?? DateTime.now(),
+    );
+  }
 
   bool get canShowPaywall {
-    if (!paywallEnabled || isPro) return false;
-    if (_isFirstSessionBlocked) return false;
-
-    final now = DateTime.now();
-    if (lastPaywallView != null &&
-        now.difference(lastPaywallView!) < const Duration(hours: 24)) {
-      return false;
-    }
-    if (lastPaywallDismissed != null &&
-        now.difference(lastPaywallDismissed!) < const Duration(hours: 48)) {
-      return false;
-    }
-    return true;
+    return evaluatePaywallEligibility(
+      trigger: PaywallTrigger.manual,
+      snapshot: _paywallSnapshot(),
+      now: DateTime.now(),
+      enforceTriggerRules: false,
+    ).canShow;
   }
 
   bool canShowPaywallForTrigger(PaywallTrigger trigger) {
-    if (!canShowPaywall) return false;
-    return switch (trigger) {
-      PaywallTrigger.featureBlock => paywallTriggerFeatureBlockEnabled,
-      PaywallTrigger.valueBased =>
-        paywallTriggerValueBasedEnabled && hasValueBasedMilestone,
-      PaywallTrigger.manual => paywallTriggerManualEnabled,
-    };
+    return evaluatePaywallForTrigger(trigger).canShow;
+  }
+
+  String paywallBlockReasonCodeForTrigger(
+    PaywallTrigger trigger, {
+    DateTime? now,
+  }) {
+    final evaluation = evaluatePaywallForTrigger(trigger, now: now);
+    return evaluation.blockedReasonCode;
   }
 
   void markPaywallViewed() {
