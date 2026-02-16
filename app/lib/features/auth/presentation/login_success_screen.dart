@@ -41,7 +41,7 @@ class _LoginSuccessScreenState extends State<LoginSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: StoicColors.ivory,
+      backgroundColor: AethorColors.ivory,
       body: SafeArea(
         child: Center(
           child: Padding(

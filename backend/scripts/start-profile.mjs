@@ -19,7 +19,7 @@ const env = {
   ...process.env,
   STOIC_RUNTIME_ENV: profile,
   STOIC_DATA_DIR: dataDir,
-  STOIC_DB_PATH: join(dataDir, 'estoicismo.db'),
+  STOIC_DB_PATH: join(dataDir, 'aethor.db'),
   STOIC_SEED_PATH: join(dataDir, 'daily_seed.json'),
   HOST: profile === 'stage' ? process.env.HOST ?? '0.0.0.0' : process.env.HOST ?? '127.0.0.1',
   PORT: process.env.PORT ?? (profile === 'stage' ? '8788' : '8787')

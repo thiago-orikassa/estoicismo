@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../motion/motion.dart';
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
-import 'stoic_buttons.dart';
-import 'stoic_card.dart';
+import 'aethor_buttons.dart';
+import 'aethor_card.dart';
 
-enum StoicCheckinStatus {
+enum AethorCheckinStatus {
   pending,
   applied,
   notApplied,
 }
 
-class StoicCheckinCard extends StatelessWidget {
-  const StoicCheckinCard({
+class AethorCheckinCard extends StatelessWidget {
+  const AethorCheckinCard({
     super.key,
     required this.reflectionPrompt,
     required this.noteController,
@@ -25,7 +26,7 @@ class StoicCheckinCard extends StatelessWidget {
 
   final String reflectionPrompt;
   final TextEditingController noteController;
-  final StoicCheckinStatus status;
+  final AethorCheckinStatus status;
   final bool isSubmitting;
   final VoidCallback onApplied;
   final VoidCallback onNotApplied;
@@ -34,8 +35,8 @@ class StoicCheckinCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolvedNote = savedNote?.trim() ?? '';
-    return StoicCard(
-      variant: StoicCardVariant.defaultCard,
+    return AethorCard(
+      variant: AethorCardVariant.defaultCard,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,21 +51,21 @@ class StoicCheckinCard extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: 20),
-          if (status == StoicCheckinStatus.pending) ...[
+          if (status == AethorCheckinStatus.pending) ...[
             Text(
               reflectionPrompt,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: StoicColors.obsidian,
+                    color: AethorColors.obsidian,
                   ),
             ),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(StoicRadius.md),
-                border: Border.all(color: StoicColors.sand),
+                borderRadius: BorderRadius.circular(AethorRadius.md),
+                border: Border.all(color: AethorColors.sand),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               child: TextField(
@@ -75,13 +76,13 @@ class StoicCheckinCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
                       height: 1.5,
-                      color: StoicColors.obsidian,
+                      color: AethorColors.obsidian,
                     ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Opcional: registre suas reflexões aqui...',
                   hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: StoicColors.textSubtle,
+                        color: AethorColors.textSubtle,
                         fontSize: 14,
                       ),
                 ),
@@ -91,11 +92,11 @@ class StoicCheckinCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: StoicPressScale(
+                  child: AethorPressScale(
                     enabled: !isSubmitting,
-                    child: StoicPrimaryButton(
+                    child: AethorPrimaryButton(
                       onPressed: isSubmitting ? null : onApplied,
-                      size: StoicButtonSize.medium,
+                      size: AethorButtonSize.medium,
                       fullWidth: true,
                       child: AnimatedSwitcher(
                         duration: MotionTokens.standard,
@@ -112,7 +113,7 @@ class StoicCheckinCard extends StatelessWidget {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                        StoicColors.ivory,
+                                        AethorColors.ivory,
                                       ),
                                     ),
                                   ),
@@ -130,11 +131,11 @@ class StoicCheckinCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: StoicPressScale(
+                  child: AethorPressScale(
                     enabled: !isSubmitting,
-                    child: StoicSecondaryButton(
+                    child: AethorSecondaryButton(
                       onPressed: isSubmitting ? null : onNotApplied,
-                      size: StoicButtonSize.medium,
+                      size: AethorButtonSize.medium,
                       fullWidth: true,
                       child: const Text('Não apliquei'),
                     ),
@@ -147,10 +148,10 @@ class StoicCheckinCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: StoicColors.deepBlue.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(StoicRadius.md),
+                color: AethorColors.deepBlue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AethorRadius.md),
                 border: Border.all(
-                  color: StoicColors.deepBlue.withValues(alpha: 0.2),
+                  color: AethorColors.deepBlue.withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -159,16 +160,16 @@ class StoicCheckinCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(
-                        Icons.check_rounded,
+                        AethorIcons.check,
                         size: 20,
-                        color: StoicColors.deepBlue,
+                        color: AethorColors.deepBlue,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Check-in registrado',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 14,
-                              color: StoicColors.deepBlue,
+                              color: AethorColors.deepBlue,
                               fontWeight: FontWeight.w500,
                             ),
                       ),
@@ -176,13 +177,13 @@ class StoicCheckinCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    status == StoicCheckinStatus.applied
+                    status == AethorCheckinStatus.applied
                         ? 'Você aplicou a prática de hoje.'
-                        : 'Registrado. Tente novamente amanhã.',
+                        : 'Registrado. Amanhã há nova prática.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 13,
-                          color: StoicColors.textSecondarySoft,
+                          color: AethorColors.textSecondarySoft,
                           height: 1.5,
                         ),
                   ),
@@ -196,9 +197,9 @@ class StoicCheckinCard extends StatelessWidget {
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(StoicRadius.md),
+                  borderRadius: BorderRadius.circular(AethorRadius.md),
                   border: Border.all(
-                    color: StoicColors.sand.withValues(alpha: 0.5),
+                    color: AethorColors.sand.withValues(alpha: 0.5),
                   ),
                 ),
                 child: Column(
@@ -209,7 +210,7 @@ class StoicCheckinCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             fontSize: 11,
                             letterSpacing: 0.8,
-                            color: StoicColors.textSubtle,
+                            color: AethorColors.textSubtle,
                           ),
                     ),
                     const SizedBox(height: 6),
@@ -217,7 +218,7 @@ class StoicCheckinCard extends StatelessWidget {
                       resolvedNote,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             height: 1.5,
-                            color: StoicColors.obsidian,
+                            color: AethorColors.obsidian,
                           ),
                     ),
                   ],
@@ -230,7 +231,7 @@ class StoicCheckinCard extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 13,
-                    color: StoicColors.textMuted,
+                    color: AethorColors.textMuted,
                   ),
             ),
           ],

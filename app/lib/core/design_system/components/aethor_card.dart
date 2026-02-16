@@ -2,35 +2,35 @@ import 'package:flutter/material.dart';
 
 import '../tokens/design_tokens.dart';
 
-enum StoicCardVariant {
+enum AethorCardVariant {
   defaultCard,
   subtle,
 }
 
-class StoicCard extends StatelessWidget {
-  const StoicCard({
+class AethorCard extends StatelessWidget {
+  const AethorCard({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(StoicSpacing.md),
-    this.variant = StoicCardVariant.defaultCard,
+    this.padding = const EdgeInsets.all(AethorSpacing.md),
+    this.variant = AethorCardVariant.defaultCard,
   });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
-  final StoicCardVariant variant;
+  final AethorCardVariant variant;
 
   @override
   Widget build(BuildContext context) {
     final color = switch (variant) {
-      StoicCardVariant.defaultCard => StoicColors.cardBackground,
-      StoicCardVariant.subtle =>
-        StoicColors.cardBackground.withValues(alpha: 0.5),
+      AethorCardVariant.defaultCard => AethorColors.cardBackground,
+      AethorCardVariant.subtle =>
+        AethorColors.cardBackground.withValues(alpha: 0.5),
     };
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(StoicRadius.lg),
+        borderRadius: BorderRadius.circular(AethorRadius.lg),
       ),
       child: Padding(
         padding: padding,

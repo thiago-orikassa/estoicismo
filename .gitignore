@@ -43,6 +43,15 @@ app/build
 .pub-cache/
 .pub/
 
+# Secrets
+backend/secrets/
+
+# Firebase config files (contain API keys and project IDs)
+app/android/app/google-services.json
+app/ios/Runner/GoogleService-Info.plist
+**/firebase_options.dart
+**/service-account*.json
+
 # Local runtime data
 backend/.runtime/
 backend/data/*.db

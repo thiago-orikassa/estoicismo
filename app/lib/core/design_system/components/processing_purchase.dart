@@ -8,7 +8,7 @@ class ProcessingPurchaseOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: StoicColors.obsidian.withValues(alpha: 0.92),
+      color: AethorColors.obsidian.withValues(alpha: 0.92),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -18,14 +18,14 @@ class ProcessingPurchaseOverlay extends StatelessWidget {
               height: 40,
               child: CircularProgressIndicator(
                 strokeWidth: 3,
-                valueColor: AlwaysStoppedAnimation<Color>(StoicColors.copper),
+                valueColor: AlwaysStoppedAnimation<Color>(AethorColors.copper),
               ),
             ),
             const SizedBox(height: 16),
             Text(
               'Confirmando sua assinatura...',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: StoicColors.ivory,
+                    color: AethorColors.ivory,
                   ),
             ),
           ],

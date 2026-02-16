@@ -1,16 +1,19 @@
 {
-  "name": "estoicismo-backend",
+  "name": "aethor-backend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "dependencies": {},
   "scripts": {
-    "start": "node src/server.mjs",
+    "validate:seed": "node scripts/validate-seed.mjs",
+    "start": "node scripts/validate-seed.mjs && node src/server.mjs",
     "start:dev": "node scripts/start-profile.mjs dev",
     "start:stage": "node scripts/start-profile.mjs stage",
     "provision:dev": "node scripts/provision.mjs dev",
     "provision:stage": "node scripts/provision.mjs stage",
     "schedule": "node src/scheduler.mjs",
-    "test": "node --test tests/*.mjs"
+    "test": "node --test tests/*.mjs",
+    "observability:check": "node scripts/observability-check.mjs",
+    "release:gate": "node scripts/release-gate.mjs"
   }
 }

@@ -29,7 +29,7 @@ Baseado em:
 | MA-02 | Mobile Architect | Contratos de dados (Quote, Recommendation, Check-in) | P0 | M | MA-01, SC-01 | Schemas versionados + validações mínimas | DONE |
 | MA-03 | Mobile Architect | Estratégia offline e cache de 7 dias | P0 | M | MA-01 | Fluxo offline documentado + política de expiração | DONE |
 | MA-04 | Mobile Architect | Definir estratégia de feature flags | P0 | S | MA-01 | Plano de toggles por funcionalidade crítica | DONE |
-| MA-05 | Mobile Architect | Orquestrar gatilhos de paywall no app (A/B/C) com regra de frequência e cooldown | P0 | M | MA-04, PS-04 | Gatilhos implementados e auditáveis por logs/eventos | IN PROGRESS |
+| MA-05 | Mobile Architect | Orquestrar gatilhos de paywall no app (A/B/C) com regra de frequência e cooldown | P0 | M | MA-04, PS-04 | Gatilhos implementados e auditáveis por logs/eventos | DONE |
 | BE-01 | Backend and Data Engineer | Provisionar backend e banco base | P0 | M | MA-02 | Ambientes dev/stage com migrações iniciais | DONE |
 | BE-02 | Backend and Data Engineer | API pacote diário por timezone | P0 | M | BE-01, SC-02, SC-03 | Endpoint retorna citação + recomendação válidas | DONE |
 | BE-03 | Backend and Data Engineer | API de favoritos e histórico | P0 | M | BE-01 | CRUD funcional com paginação | DONE |
@@ -39,11 +39,11 @@ Baseado em:
 | BE-07 | Backend and Data Engineer | Expor entitlement de assinatura + elegibilidade de trial + restauração | P0 | M | BE-01, MA-05 | Contrato de assinatura disponível e validado em staging | DONE |
 | BE-08 | Backend and Data Engineer | Instrumentar eventos de monetização no backend (`paywall_*`, `trial_*`, `subscription_*`) | P0 | S | BE-06, PS-04 | Eventos publicados com propriedades mínimas e versionamento | DONE |
 | AN-01 | Android Specialist | Base UI Android (Material 3) | P1 | M | MA-01 | Home, histórico e ajustes com padrões M3 | DONE |
-| AN-02 | Android Specialist | Fluxo push Android (FCM + permissões) | P0 | M | BE-05 | Push entregue e aberto com deeplink correto | TODO |
+| AN-02 | Android Specialist | Fluxo push Android (FCM + permissões) | P0 | M | BE-05 | Push entregue e aberto com deeplink correto | IN PROGRESS |
 | AN-03 | Android Specialist | Acessibilidade Android (fonte/contraste/leitura) | P1 | S | AN-01 | Checklist de acessibilidade sem bloqueadores | TODO |
 | AN-04 | Android Specialist | Integrar compra e restore Android (Billing) com retorno para feature bloqueada | P0 | M | MA-05, BE-07 | Trial/compra/restore concluídos com retorno ao contexto correto | TODO |
 | IOS-01 | iOS Specialist | Base UI iOS (HIG + Dynamic Type) | P1 | M | MA-01 | Home, histórico e ajustes com padrões HIG | DONE |
-| IOS-02 | iOS Specialist | Fluxo push iOS (APNs/FCM + permissões) | P0 | M | BE-05 | Push entregue e aberto com deeplink correto | TODO |
+| IOS-02 | iOS Specialist | Fluxo push iOS (APNs/FCM + permissões) | P0 | M | BE-05 | Push entregue e aberto com deeplink correto | IN PROGRESS |
 | IOS-03 | iOS Specialist | Acessibilidade iOS (Dynamic Type/VoiceOver) | P1 | S | IOS-01 | Checklist sem bloqueadores críticos | TODO |
 | IOS-04 | iOS Specialist | Integrar compra e restore iOS (StoreKit) com retorno para feature bloqueada | P0 | M | MA-05, BE-07 | Trial/compra/restore concluídos com retorno ao contexto correto | TODO |
 | QA-01 | QA and Analytics Lead | Plano de testes e estratégia de regressão | P0 | S | PS-01, MA-01 | Plano com suíte mínima por fluxo crítico | DONE |
@@ -57,10 +57,8 @@ Baseado em:
 
 ## TODO
 - SC-05
-- AN-02
 - AN-03
 - AN-04
-- IOS-02
 - IOS-03
 - IOS-04
 - QA-03
@@ -69,7 +67,8 @@ Baseado em:
 - QA-06
 
 ## IN PROGRESS
-- MA-05
+- AN-02
+- IOS-02
 
 ## BLOCKED
 - (usar para dependências não resolvidas)
@@ -80,7 +79,7 @@ Baseado em:
 ## DONE
 - PS-01, PS-02, PS-03, PS-04
 - SC-01, SC-02, SC-03, SC-04
-- MA-01, MA-02, MA-03, MA-04
+- MA-01, MA-02, MA-03, MA-04, MA-05
 - BE-01, BE-02, BE-03, BE-04, BE-05, BE-06, BE-07, BE-08
 - QA-01, QA-02
 - AN-01, IOS-01
@@ -89,8 +88,8 @@ Baseado em:
 
 | Acionável | Objetivo | IDs incluídos | Janela alvo | Status |
 |---|---|---|---|---|
-| 1 | Fechar orquestração de paywall (A/B/C) com guardrails e auditabilidade | MA-05 | 2026-02-17 a 2026-02-21 | IN PROGRESS |
-| 2 | Fechar push + deeplink cross-platform e validar ritual diário | AN-02, IOS-02, QA-03 | 2026-02-23 a 2026-03-06 | TODO |
+| 1 | Fechar orquestração de paywall (A/B/C) com guardrails e auditabilidade | MA-05 | 2026-02-17 a 2026-02-21 | DONE |
+| 2 | Fechar push + deeplink cross-platform e validar ritual diário | AN-02, IOS-02, QA-03 | 2026-02-23 a 2026-03-06 | IN PROGRESS |
 | 3 | Fechar monetização E2E + observabilidade + gate beta | AN-03, IOS-03, AN-04, IOS-04, QA-05, QA-06, QA-04 | 2026-02-24 a 2026-03-06 | TODO |
 
 ## 2.0.1) Execução do Acionável 1 (MA-05)
@@ -98,17 +97,19 @@ Baseado em:
 - Regras centralizadas: primeira sessão protegida, frequência máxima de 24h, cooldown de 48h, flags por trigger e milestone de valor (`checkins_3`, `active_days_3`).
 - App integrado com razão de bloqueio auditável (`paywall_view_blocked`) em `app/lib/core/paywall/paywall_flow.dart`.
 - Trigger de consistência (3º dia ativo) aplicado também na Home ao carregar o pacote diário em `app/lib/features/daily_quote/presentation/home_screen.dart`.
-- Cobertura de testes adicionada em `app/test/core/paywall/paywall_policy_test.dart` (6 novos testes).
-- Validação executada:
-  - `cd app && flutter test` -> 7/7 passando.
-  - `cd app && flutter analyze lib/core/paywall lib/features/daily_quote/presentation/home_screen.dart lib/app_state.dart` -> sem issues.
+- Cobertura de testes expandida de 6 para 44 em `app/test/core/paywall/paywall_policy_test.dart`.
+- Validação final executada (2026-02-15):
+  - `cd app && flutter test` -> 49/49 passando (44 paywall + 5 existentes).
+  - `npm test --prefix backend` -> 15/15 passando.
+  - `cd app && flutter analyze lib/core/paywall lib/features/daily_quote/presentation/home_screen.dart lib/app_state.dart` -> 0 issues.
+- **Status: DONE** - Critério de aceite atendido (gatilhos A/B/C validados com frequência 1x/dia, cooldown 48h, sem paywall na 1a sessão, com eventos auditáveis). Sem regressão.
 
 ## 2.1) Board Operacional de Ação (faltantes do release)
 
 | Ordem | Janela | Stream | IDs | Dono primário | Dependências | Critério de saída (DoD) | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | 2026-02-17 a 2026-02-21 | Fechamento da orquestração de paywall | MA-05 | Mobile Architect | MA-04, PS-04, BE-07, BE-08 | Gatilhos A/B/C validados com frequência 1x/dia, cooldown 48h, sem paywall na 1a sessão, com eventos auditáveis | IN PROGRESS |
-| 2 | 2026-02-23 a 2026-02-27 | Push + deeplink cross-platform | AN-02, IOS-02 | Android Specialist + iOS Specialist | BE-05 | Push entregue em Android/iOS, abertura por deeplink no contexto correto (Home/check-in), eventos `push_received` e `push_opened` coletados | TODO |
+| 1 | 2026-02-17 a 2026-02-21 | Fechamento da orquestração de paywall | MA-05 | Mobile Architect | MA-04, PS-04, BE-07, BE-08 | Gatilhos A/B/C validados com frequência 1x/dia, cooldown 48h, sem paywall na 1a sessão, com eventos auditáveis | DONE |
+| 2 | 2026-02-23 a 2026-02-27 | Push + deeplink cross-platform | AN-02, IOS-02 | Android Specialist + iOS Specialist | BE-05 | Push entregue em Android/iOS, abertura por deeplink no contexto correto (Home/check-in), eventos `push_received` e `push_opened` coletados | IN PROGRESS |
 | 3 | 2026-02-24 a 2026-02-28 | Hardening de acessibilidade mobile | AN-03, IOS-03 | Android Specialist + iOS Specialist | AN-01, IOS-01 | Checklist sem bloqueadores (fonte escalavel, contraste, leitura/VoiceOver, targets minimos, navegação assistiva) | TODO |
 | 4 | 2026-03-02 a 2026-03-04 | Compra e restauração reais (stores) | AN-04, IOS-04 | Android Specialist + iOS Specialist | MA-05, BE-07 | Trial/compra/restore em sandbox com retorno ao contexto bloqueado e erros tratáveis sem quebrar fluxo free | TODO |
 | 5 | 2026-03-03 a 2026-03-05 | QA monetização + monitoramento de guardrails | QA-05, QA-06 | QA and Analytics Lead | AN-04, IOS-04, BE-08 | E2E monetização aprovado + dashboard/alertas ativos para `paywall_*`, `trial_*`, `subscription_*`, D7 e check-in | TODO |

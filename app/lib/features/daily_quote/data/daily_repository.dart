@@ -5,6 +5,7 @@ class DailyRepository {
   DailyRepository(this._api);
 
   final ApiClient _api;
+  ApiClient get api => _api;
 
   Future<DailyPackage> fetchDailyPackage({
     required String timezone,

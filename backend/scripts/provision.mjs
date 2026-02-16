@@ -14,7 +14,7 @@ if (!['dev', 'stage'].includes(profile)) {
 
 const runtimeRoot = resolve(backendRoot, '.runtime', profile);
 const dataDir = join(runtimeRoot, 'data');
-const dbPath = join(dataDir, 'estoicismo.db');
+const dbPath = join(dataDir, 'aethor.db');
 const seedPath = join(dataDir, 'daily_seed.json');
 const sourceSeedPath = process.env.STOIC_SEED_SOURCE_PATH ?? join(backendRoot, 'data', 'daily_seed.json');
 

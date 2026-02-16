@@ -30,9 +30,9 @@ class AuthLoadingSpinner extends StatelessWidget {
   Color get _stroke {
     switch (color) {
       case AuthSpinnerColor.light:
-        return StoicColors.ivory;
+        return AethorColors.ivory;
       case AuthSpinnerColor.dark:
-        return StoicColors.deepBlue;
+        return AethorColors.deepBlue;
     }
   }
 

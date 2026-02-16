@@ -40,6 +40,7 @@ Garantir que toda citação publicada seja literal, verificável e rastreável, 
 - Zero citações com status indefinido no seed final.
 - `authenticity_level=verified` somente quando comprovado.
 - Coerência com taxonomia de temas e contextos do MVP.
+- **Acentuação PT-BR obrigatória**: todo texto voltado ao usuário (títulos, passos, prompts, labels) deve usar acentos e diacríticos corretos. Referência: checklist de acentuação em `AGENTS.md` seção 10.
 
 ## Saídas esperadas
 - Seed editorial verificado em `content/seeds/`.

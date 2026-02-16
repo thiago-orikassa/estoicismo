@@ -1,4 +1,4 @@
-const serviceName = process.env.STOIC_SERVICE_NAME ?? 'estoicismo-backend';
+const serviceName = process.env.STOIC_SERVICE_NAME ?? 'aethor-backend';
 const runtimeEnv = process.env.STOIC_RUNTIME_ENV ?? process.env.NODE_ENV ?? 'dev';
 
 function sanitizeValue(value) {

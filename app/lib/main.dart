@@ -1,16 +1,24 @@
 import 'dart:async';
 
 import 'package:animations/animations.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 
 import 'app_state.dart';
+import 'core/analytics/analytics_service.dart';
+import 'firebase_options.dart';
 import 'core/design_system/motion/motion.dart';
 import 'core/design_system/tokens/design_tokens.dart';
 import 'core/auth/session_service.dart';
 import 'core/networking/api_client.dart';
+import 'core/notifications/deep_link_intent.dart';
+import 'core/notifications/push_service.dart';
 import 'core/storage/secure_store.dart';
+import 'core/paywall/purchase_service.dart';
+import 'core/design_system/tokens/aethor_icons.dart';
 import 'core/theme/app_theme.dart';
 import 'features/daily_quote/data/daily_repository.dart';
 import 'features/daily_quote/presentation/home_screen.dart';
@@ -22,11 +30,19 @@ import 'features/auth/presentation/auth_splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  final analytics = AnalyticsService(FirebaseAnalytics.instance);
 
   final api = ApiClient();
   final sessionService = SessionService(api, SecureStore());
   final repo = DailyRepository(api);
-  final state = AppState(repo, sessionService);
+  final purchaseService = PurchaseService();
+  await purchaseService.initialize();
+  final state = AppState(repo, sessionService,
+      purchaseService: purchaseService, analytics: analytics);
   await state.initialize();
   try {
     final deviceTimezone = await FlutterTimezone.getLocalTimezone();
@@ -37,11 +53,11 @@ Future<void> main() async {
     // Keep default timezone fallback when device timezone lookup fails.
   }
 
-  runApp(EstoicismoApp(state: state));
+  runApp(AethorApp(state: state));
 }
 
-class EstoicismoApp extends StatelessWidget {
-  const EstoicismoApp({super.key, required this.state});
+class AethorApp extends StatelessWidget {
+  const AethorApp({super.key, required this.state});
 
   final AppState state;
 
@@ -88,6 +104,7 @@ class _SplashGateState extends State<SplashGate> {
   bool _showLoading = false;
   Timer? _loadingTimer;
   Timer? _transitionTimer;
+  final PushService _onboardingPushService = PushService();
 
   @override
   void initState() {
@@ -106,7 +123,25 @@ class _SplashGateState extends State<SplashGate> {
   void dispose() {
     _loadingTimer?.cancel();
     _transitionTimer?.cancel();
+    unawaited(_onboardingPushService.dispose());
     super.dispose();
+  }
+
+  Future<bool> _requestNotificationPermission() async {
+    final granted = await _onboardingPushService.requestPermission();
+    widget.state.setNotificationPermission(
+      granted
+          ? NotificationPermissionStatus.granted
+          : NotificationPermissionStatus.denied,
+    );
+    widget.state.trackEvent(
+      'push_permission_result',
+      properties: {
+        'granted': granted,
+        'source': 'onboarding',
+      },
+    );
+    return granted;
   }
 
   @override
@@ -115,7 +150,10 @@ class _SplashGateState extends State<SplashGate> {
         ? AuthSplashScreen(showLoading: _showLoading)
         : (widget.state.onboardingComplete
             ? MainShell(state: widget.state)
-            : OnboardingFlow(state: widget.state));
+            : OnboardingFlow(
+                state: widget.state,
+                onRequestNotificationPermission: _requestNotificationPermission,
+              ));
 
     return AnimatedSwitcher(
       duration: MotionTokens.durationOrZero(context, MotionTokens.standard),
@@ -138,13 +176,148 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _index = 0;
+  final PushService _pushService = PushService();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.state.bootstrap();
+      unawaited(_initializePushAndDeepLinks());
     });
+  }
+
+  @override
+  void dispose() {
+    unawaited(_pushService.dispose());
+    super.dispose();
+  }
+
+  /// Expose PushService so that other widgets (e.g. OnboardingFlow) can
+  /// request notification permission without creating a second instance.
+  PushService get pushService => _pushService;
+
+  Future<void> _initializePushAndDeepLinks() async {
+    if (!widget.state.pushNotificationsEnabled) return;
+
+    await _pushService.initialize(
+      onAppLink: _handleAppLinkIntent,
+      onPushReceived: (properties) async {
+        widget.state.trackEvent('push_received', properties: properties);
+        _showInAppNotification(properties);
+      },
+      onPushOpened: (properties) => widget.state.trackEvent(
+        'push_opened',
+        properties: properties,
+      ),
+      onTokenRefresh: _registerFcmToken,
+    );
+
+    // Do NOT auto-request permission here — respect Apple/Google guidelines.
+    // Permission is requested during onboarding (step 4) or via nudge card.
+    // Only retrieve token if permission was already granted in a previous session.
+    if (widget.state.notificationPermission ==
+        NotificationPermissionStatus.granted) {
+      final token = await _pushService.getToken();
+      if (token != null) {
+        unawaited(_registerFcmToken(token));
+      }
+    }
+  }
+
+  void _showInAppNotification(Map<String, dynamic> properties) {
+    if (!mounted) return;
+    final title = properties['notification_title'] as String?;
+    final body = properties['notification_body'] as String?;
+    final deeplink = properties['deeplink'] as String?;
+    if (title == null && body == null) return;
+
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger == null) return;
+
+    messenger.showMaterialBanner(
+      MaterialBanner(
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (title != null)
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+            if (body != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(body, maxLines: 2, overflow: TextOverflow.ellipsis),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              messenger.hideCurrentMaterialBanner();
+              if (deeplink != null) {
+                final uri = Uri.tryParse(deeplink);
+                if (uri != null) {
+                  _handleAppLinkIntent(
+                    parseAppLinkIntent(uri, source: 'in_app_banner')!,
+                  );
+                }
+              }
+            },
+            child: const Text('Ver'),
+          ),
+          TextButton(
+            onPressed: () => messenger.hideCurrentMaterialBanner(),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
+    );
+
+    // Auto-dismiss after 5 seconds.
+    Future.delayed(const Duration(seconds: 5), () {
+      try {
+        messenger.hideCurrentMaterialBanner();
+      } catch (_) {}
+    });
+  }
+
+  Future<void> _registerFcmToken(String token) async {
+    try {
+      await widget.state.api.post(
+        '/v1/push-tokens',
+        body: {
+          'fcm_token': token,
+          'platform': _currentPlatform(),
+        },
+      );
+    } catch (_) {
+      // Best effort — token registration must not break the app.
+    }
+  }
+
+  String _currentPlatform() {
+    if (Theme.of(context).platform == TargetPlatform.iOS) return 'ios';
+    return 'android';
+  }
+
+  Future<void> _handleAppLinkIntent(AppLinkIntent intent) async {
+    if (!mounted) return;
+
+    final nextIndex = switch (intent.target) {
+      AppLinkTarget.today => 0,
+      AppLinkTarget.history => 1,
+      AppLinkTarget.favorites => 2,
+      AppLinkTarget.settings => 3,
+      AppLinkTarget.unknown => _index,
+    };
+
+    if (mounted && nextIndex != _index) {
+      setState(() => _index = nextIndex);
+    }
+
+    if (intent.target == AppLinkTarget.today && intent.dateLocal != null) {
+      await widget.state.loadDaily(dateLocal: intent.dateLocal);
+    }
   }
 
   @override
@@ -166,10 +339,10 @@ class _MainShellState extends State<MainShell> {
       IconData icon,
       String label,
     })>[
-      (icon: Icons.home_outlined, label: 'Hoje'),
-      (icon: Icons.history, label: 'Histórico'),
-      (icon: Icons.star_outline, label: 'Favoritos'),
-      (icon: Icons.settings_outlined, label: 'Ajustes'),
+      (icon: AethorIcons.home, label: 'Hoje'),
+      (icon: AethorIcons.history, label: 'Histórico'),
+      (icon: AethorIcons.favorites, label: 'Favoritos'),
+      (icon: AethorIcons.settings, label: 'Ajustes'),
     ];
 
     final reduceMotion = MotionTokens.reduceMotionOf(context);
@@ -188,7 +361,7 @@ class _MainShellState extends State<MainShell> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: StoicColors.screenBackground,
+        backgroundColor: AethorColors.screenBackground,
         body: SafeArea(
           bottom: false,
           child: Column(
@@ -198,10 +371,10 @@ class _MainShellState extends State<MainShell> {
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: StoicColors.copper.withValues(alpha: 0.1),
+                      color: AethorColors.copper.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: StoicColors.copper.withValues(alpha: 0.25),
+                        color: AethorColors.copper.withValues(alpha: 0.25),
                       ),
                     ),
                     child: Padding(
@@ -212,7 +385,7 @@ class _MainShellState extends State<MainShell> {
                             child: Text(
                               widget.state.error!,
                               style: const TextStyle(
-                                color: StoicColors.obsidian,
+                                color: AethorColors.obsidian,
                                 fontSize: 12,
                                 height: 1.4,
                               ),
@@ -245,10 +418,10 @@ class _MainShellState extends State<MainShell> {
         ),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
-            color: StoicColors.bottomBarBackground,
+            color: AethorColors.bottomBarBackground,
             border: Border(
               top: BorderSide(
-                color: StoicColors.bottomBarBorder,
+                color: AethorColors.bottomBarBorder,
               ),
             ),
           ),
@@ -260,8 +433,8 @@ class _MainShellState extends State<MainShell> {
                 children: List.generate(tabs.length, (i) {
                   final isSelected = i == _index;
                   final color = isSelected
-                      ? StoicColors.deepBlue
-                      : StoicColors.textSubtle;
+                      ? AethorColors.deepBlue
+                      : AethorColors.textSubtle;
                   return Expanded(
                     child: InkResponse(
                       onTap: () => setState(() => _index = i),

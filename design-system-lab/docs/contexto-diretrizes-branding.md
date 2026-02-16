@@ -1,7 +1,7 @@
-# Contexto e Diretrizes de Branding - Estoicismo
+# Contexto e Diretrizes de Branding - Aethor
 
 ## Objetivo
-Centralizar os princípios de marca do projeto Estoicismo para orientar produto, conteúdo, design, marketing e tom de comunicação.
+Centralizar os princípios de marca do projeto Aethor para orientar produto, conteúdo, design, marketing e tom de comunicação.
 
 ## Contexto do Produto
 - Solução: app de prática estoica diária.

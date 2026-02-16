@@ -18,7 +18,7 @@ class LoginErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: StoicColors.ivory,
+      backgroundColor: AethorColors.ivory,
       body: SafeArea(
         child: Center(
           child: Padding(

@@ -25,10 +25,11 @@
 - SC-04: revisão de integridade concluída com curadoria final para MVP (`40 verified` / `50 rejected`).
 - BE-01: provisionamento dev/stage padronizado com scripts e relatório de migração.
 - BE-06: logs estruturados e endpoint de métricas operacionais publicados.
+- MA-05: orquestração de gatilhos de paywall (A/B/C) fechada com motor de elegibilidade, guardrails (1a sessão, 24h freq, 48h cooldown), flags por trigger, milestone de valor e auditabilidade completa. Validação: 44/44 testes de paywall, 49/49 Flutter total, 0 issues no analyze.
 
 ## Tarefas em andamento
-- MA-05: orquestração de gatilhos de paywall em app (A/B/C) implementada com regra de frequência/cooldown, pendente validação E2E completa.
-- MA-05 (parcial concluído em 2026-02-15): motor de elegibilidade centralizado + razão de bloqueio auditável + trigger de consistência no 3º dia ativo.
+- AN-02: fluxo push Android (FCM + permissões) em andamento.
+- IOS-02: fluxo push iOS (APNs/FCM + permissões) em andamento.
 
 ## Decisões editoriais confirmadas (SC-02)
 - Fonte de verdade: 1 edição canônica por autor (preferência domínio público).
@@ -76,6 +77,16 @@
 - `cd app && flutter test`: 7/7 testes passando.
 - `cd app && flutter analyze`: sem erros de compilação; pendências em lints informativos históricos.
 - `cd app && flutter analyze lib/core/paywall lib/features/daily_quote/presentation/home_screen.dart lib/app_state.dart`: sem issues.
+
+## Validação técnica executada (2026-02-15) - Fechamento MA-05
+- `npm test --prefix backend`: 15/15 testes passando.
+- `cd app && flutter test`: 49/49 testes passando (44 paywall + 5 existentes).
+- `cd app && flutter analyze lib/core/paywall lib/features/daily_quote/presentation/home_screen.dart lib/app_state.dart`: 0 issues.
+- Cobertura de testes de paywall expandida de 6 para 44 testes:
+  - resolveValueMilestone (5), guardrails globais (5), frequência 24h (4), cooldown 48h (4)
+  - trigger valueBased A/B (5), trigger featureBlock C (3), trigger manual (3)
+  - enforceTriggerRules=false (3), prioridade de avaliação (4), blockedReasonCode (2)
+  - cenário E2E jornada completa de 3 dias (6)
 
 ## Próximo bloco de execução
 1. QA-05: suíte E2E de monetização (feature block -> paywall -> trial/compra/restore).

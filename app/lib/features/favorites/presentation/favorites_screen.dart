@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../app_state.dart';
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 import '../../../core/paywall/paywall_flow.dart';
 
@@ -28,7 +29,7 @@ class FavoritesScreen extends StatelessWidget {
                 fontSize: 48,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w500,
-                color: StoicColors.obsidian,
+                color: AethorColors.obsidian,
                 height: 1.1,
               ),
         ),
@@ -42,10 +43,10 @@ class FavoritesScreen extends StatelessWidget {
         children: [
           header,
           if (state.offline) ...[
-            StoicOfflineBanner(onSync: state.bootstrap),
+            AethorOfflineBanner(onSync: state.bootstrap),
             const SizedBox(height: 12),
           ],
-          const StoicLoadingState(),
+          const AethorLoadingState(),
         ],
       );
     }
@@ -60,20 +61,20 @@ class FavoritesScreen extends StatelessWidget {
         children: [
           header,
           if (offline) ...[
-            StoicOfflineBanner(onSync: state.bootstrap),
+            AethorOfflineBanner(onSync: state.bootstrap),
             const SizedBox(height: 12),
           ],
-          StoicEmptyState(
+          AethorEmptyState(
             title: offline
                 ? 'Você está offline.'
-                : 'Nenhuma citação favoritada ainda.',
+                : 'As citações que ressoam com você aparecerão aqui.',
             description: offline
                 ? 'Conecte-se para sincronizar seus favoritos.'
-                : 'Toque no ícone de estrela da citação do dia para salvar.',
+                : 'Salve a citação do dia para revisitar quando precisar.',
             icon: Icon(
-              offline ? Icons.wifi_off_rounded : Icons.favorite_border_rounded,
+              offline ? AethorIcons.wifiOff : AethorIcons.heartOutline,
               size: 32,
-              color: offline ? StoicColors.deepBlue : StoicColors.textSubtle,
+              color: offline ? AethorColors.deepBlue : AethorColors.textSubtle,
             ),
             actionLabel: actionLabel,
             onAction: onAction,
@@ -91,14 +92,14 @@ class FavoritesScreen extends StatelessWidget {
 
     final entries = <Widget>[
       header,
-      if (state.offline) StoicOfflineBanner(onSync: state.bootstrap),
+      if (state.offline) AethorOfflineBanner(onSync: state.bootstrap),
       if (state.offline) const SizedBox(height: 4),
       ...favoritesToShow.map((favorite) {
         final quote = state.findQuoteById(favorite.quoteId);
         final card = Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
           decoration: BoxDecoration(
-            color: StoicColors.cardBackground,
+            color: AethorColors.cardBackground,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -114,12 +115,12 @@ class FavoritesScreen extends StatelessWidget {
                       fontFamily: 'Cormorant Garamond',
                       fontSize: 20,
                       fontStyle: FontStyle.italic,
-                      color: StoicColors.obsidian,
+                      color: AethorColors.obsidian,
                       height: 1.4,
                     ),
               ),
               const SizedBox(height: 12),
-              const Divider(height: 1, color: StoicColors.divider),
+              const Divider(height: 1, color: AethorColors.divider),
               const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -133,7 +134,7 @@ class FavoritesScreen extends StatelessWidget {
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.w600,
-                                    color: StoicColors.obsidian,
+                                    color: AethorColors.obsidian,
                                   ),
                         ),
                         const SizedBox(height: 2),
@@ -143,7 +144,7 @@ class FavoritesScreen extends StatelessWidget {
                               : '${quote.sourceWork} / ${quote.sourceRef}',
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: StoicColors.textSubtle,
+                                    color: AethorColors.textSubtle,
                                     letterSpacing: 0.4,
                                   ),
                         ),
@@ -171,8 +172,8 @@ class FavoritesScreen extends StatelessWidget {
                       }
                     },
                     tooltip: 'Remover dos favoritos',
-                    icon: const Icon(Icons.close_rounded,
-                        color: StoicColors.copper),
+                    icon: const Icon(AethorIcons.close,
+                        color: AethorColors.copper),
                   ),
                 ],
               ),
@@ -180,29 +181,29 @@ class FavoritesScreen extends StatelessWidget {
           ),
         );
 
-        return StoicFadeSlideIn(child: card);
+        return AethorFadeSlideIn(child: card);
       }),
       if (showUpsell)
-        StoicCard(
-          variant: StoicCardVariant.subtle,
+        AethorCard(
+          variant: AethorCardVariant.subtle,
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.lock_rounded, color: StoicColors.copper),
+              const Icon(AethorIcons.lock, color: AethorColors.copper),
               const SizedBox(height: 8),
               Text(
                 'Favoritos ilimitados são Pro',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: StoicColors.obsidian,
+                      color: AethorColors.obsidian,
                     ),
               ),
               const SizedBox(height: 6),
               Text(
-                'Guarde todas as citações que fazem sentido para você.',
+                'Salve cada citação para revisitar quando precisar.',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: StoicColors.textMuted,
+                      color: AethorColors.textMuted,
                     ),
               ),
               const SizedBox(height: 12),
@@ -210,8 +211,8 @@ class FavoritesScreen extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: StoicColors.deepBlue,
-                    foregroundColor: StoicColors.ivory,
+                    backgroundColor: AethorColors.deepBlue,
+                    foregroundColor: AethorColors.ivory,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),

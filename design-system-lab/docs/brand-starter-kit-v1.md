@@ -1,7 +1,7 @@
-# Brand Starter Kit v1 - Estoicismo
+# Brand Starter Kit v1 - Aethor
 
 ## 1. Núcleo da Marca
-- Nome: Estoicismo
+- Nome: Aethor
 - Essência: clareza emocional para viver melhor todos os dias.
 - Promessa: converter sabedoria estoica em prática cotidiana.
 - Posicionamento: filosofia prática com curadoria confiável.

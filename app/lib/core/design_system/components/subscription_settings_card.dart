@@ -35,25 +35,25 @@ class SubscriptionSettingsCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: StoicColors.cardBackground,
+          color: AethorColors.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: StoicColors.border),
+          border: Border.all(color: AethorColors.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Estoicismo Pro',
+              'Aethor Pro',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: StoicColors.obsidian,
+                    color: AethorColors.obsidian,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
               'Histórico completo, favoritos ilimitados e trilhas guiadas.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: StoicColors.textMuted,
+                    color: AethorColors.textMuted,
                   ),
             ),
             const SizedBox(height: 14),
@@ -63,8 +63,8 @@ class SubscriptionSettingsCard extends StatelessWidget {
                   child: FilledButton(
                     onPressed: onViewPlans,
                     style: FilledButton.styleFrom(
-                      backgroundColor: StoicColors.deepBlue,
-                      foregroundColor: StoicColors.ivory,
+                      backgroundColor: AethorColors.deepBlue,
+                      foregroundColor: AethorColors.ivory,
                     ),
                     child: const Text('Ver planos Pro'),
                   ),
@@ -73,7 +73,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
                 TextButton(
                   onPressed: onRestore,
                   style: TextButton.styleFrom(
-                    foregroundColor: StoicColors.textMuted,
+                    foregroundColor: AethorColors.textMuted,
                   ),
                   child: const Text('Restaurar compra'),
                 ),
@@ -96,8 +96,8 @@ class SubscriptionSettingsCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            StoicColors.deepBlue,
-            StoicColors.deepBlue.withValues(alpha: 0.85),
+            AethorColors.deepBlue,
+            AethorColors.deepBlue.withValues(alpha: 0.85),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -110,13 +110,13 @@ class SubscriptionSettingsCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: StoicColors.ivory.withValues(alpha: 0.2),
+                  color: AethorColors.ivory.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   badge,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: StoicColors.ivory,
+                        color: AethorColors.ivory,
                         fontWeight: FontWeight.w600,
                         fontSize: 11,
                       ),
@@ -126,7 +126,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
               Text(
                 planLabel,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: StoicColors.ivory,
+                      color: AethorColors.ivory,
                     ),
               ),
             ],
@@ -135,7 +135,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
           Text(
             billingLabel,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: StoicColors.ivory.withValues(alpha: 0.8),
+                  color: AethorColors.ivory.withValues(alpha: 0.8),
                 ),
           ),
           const SizedBox(height: 14),
@@ -145,9 +145,9 @@ class SubscriptionSettingsCard extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: onManage,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: StoicColors.ivory,
+                    foregroundColor: AethorColors.ivory,
                     side: BorderSide(
-                      color: StoicColors.ivory.withValues(alpha: 0.4),
+                      color: AethorColors.ivory.withValues(alpha: 0.4),
                     ),
                   ),
                   child: const Text('Gerenciar assinatura'),
@@ -157,7 +157,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
               TextButton(
                 onPressed: onRestore,
                 style: TextButton.styleFrom(
-                  foregroundColor: StoicColors.ivory.withValues(alpha: 0.8),
+                  foregroundColor: AethorColors.ivory.withValues(alpha: 0.8),
                 ),
                 child: const Text('Restaurar'),
               ),

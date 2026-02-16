@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../motion/motion.dart';
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
-import 'stoic_buttons.dart';
+import 'aethor_buttons.dart';
 
-class StoicLoadingState extends StatelessWidget {
-  const StoicLoadingState({
+class AethorLoadingState extends StatelessWidget {
+  const AethorLoadingState({
     super.key,
-    this.message = 'Carregando conteúdo...',
-    this.subtitle = 'Buscando sua prática diária',
+    this.message = 'Preparando sua prática...',
+    this.subtitle = 'O conteúdo de hoje está a caminho.',
   });
 
   final String message;
@@ -27,8 +28,8 @@ class StoicLoadingState extends StatelessWidget {
               height: 64,
               child: CircularProgressIndicator(
                 strokeWidth: 4,
-                backgroundColor: StoicColors.sand,
-                valueColor: AlwaysStoppedAnimation<Color>(StoicColors.copper),
+                backgroundColor: AethorColors.sand,
+                valueColor: AlwaysStoppedAnimation<Color>(AethorColors.copper),
               ),
             ),
             const SizedBox(height: 24),
@@ -37,7 +38,7 @@ class StoicLoadingState extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: StoicColors.obsidian,
+                    color: AethorColors.obsidian,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -46,7 +47,7 @@ class StoicLoadingState extends StatelessWidget {
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 13,
-                    color: StoicColors.textMuted,
+                    color: AethorColors.textMuted,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -57,8 +58,8 @@ class StoicLoadingState extends StatelessWidget {
   }
 }
 
-class StoicEmptyState extends StatelessWidget {
-  const StoicEmptyState({
+class AethorEmptyState extends StatelessWidget {
+  const AethorEmptyState({
     super.key,
     required this.title,
     this.description,
@@ -75,7 +76,7 @@ class StoicEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoicFadeIn(
+    return AethorFadeIn(
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 400),
         child: Center(
@@ -89,7 +90,7 @@ class StoicEmptyState extends StatelessWidget {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: StoicColors.sand.withValues(alpha: 0.3),
+                      color: AethorColors.sand.withValues(alpha: 0.3),
                       shape: BoxShape.circle,
                     ),
                     child: Center(child: icon),
@@ -100,7 +101,7 @@ class StoicEmptyState extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: StoicColors.obsidian,
+                        color: AethorColors.obsidian,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -110,17 +111,17 @@ class StoicEmptyState extends StatelessWidget {
                     description!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 14,
-                          color: StoicColors.textMuted,
+                          color: AethorColors.textMuted,
                         ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (actionLabel != null && onAction != null) ...[
                   const SizedBox(height: 24),
-                  StoicPressScale(
-                    child: StoicPrimaryButton(
+                  AethorPressScale(
+                    child: AethorPrimaryButton(
                       onPressed: onAction,
-                      size: StoicButtonSize.medium,
+                      size: AethorButtonSize.medium,
                       child: Text(actionLabel!),
                     ),
                   ),
@@ -134,11 +135,11 @@ class StoicEmptyState extends StatelessWidget {
   }
 }
 
-class StoicErrorState extends StatelessWidget {
-  const StoicErrorState({
+class AethorErrorState extends StatelessWidget {
+  const AethorErrorState({
     super.key,
-    this.title = 'Não foi possível carregar',
-    this.message = 'Verifique sua conexão e tente novamente.',
+    this.title = 'Falha na conexão.',
+    this.message = 'Verifique sua rede e tente novamente.',
     required this.onRetry,
     this.retryLabel = 'Tentar novamente',
   });
@@ -150,7 +151,7 @@ class StoicErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoicFadeIn(
+    return AethorFadeIn(
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 600),
         child: Center(
@@ -163,12 +164,12 @@ class StoicErrorState extends StatelessWidget {
                   width: 64,
                   height: 64,
                   decoration: BoxDecoration(
-                    color: StoicColors.copper.withValues(alpha: 0.1),
+                    color: AethorColors.copper.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.warning_amber_rounded,
-                    color: StoicColors.copper,
+                    AethorIcons.warning,
+                    color: AethorColors.copper,
                     size: 32,
                   ),
                 ),
@@ -178,7 +179,7 @@ class StoicErrorState extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: StoicColors.obsidian,
+                        color: AethorColors.obsidian,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -188,15 +189,15 @@ class StoicErrorState extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 14,
                         height: 1.6,
-                        color: StoicColors.textSecondarySoft,
+                        color: AethorColors.textSecondarySoft,
                       ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                StoicPressScale(
-                  child: StoicPrimaryButton(
+                AethorPressScale(
+                  child: AethorPrimaryButton(
                     onPressed: onRetry,
-                    size: StoicButtonSize.medium,
+                    size: AethorButtonSize.medium,
                     fullWidth: true,
                     child: Text(retryLabel),
                   ),
@@ -210,8 +211,8 @@ class StoicErrorState extends StatelessWidget {
   }
 }
 
-class StoicOfflineBanner extends StatelessWidget {
-  const StoicOfflineBanner({
+class AethorOfflineBanner extends StatelessWidget {
+  const AethorOfflineBanner({
     super.key,
     required this.onSync,
   });
@@ -223,15 +224,15 @@ class StoicOfflineBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: StoicColors.deepBlue.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(StoicRadius.md),
-        border: Border.all(color: StoicColors.deepBlue.withValues(alpha: 0.2)),
+        color: AethorColors.deepBlue.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AethorRadius.md),
+        border: Border.all(color: AethorColors.deepBlue.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           const Icon(
-            Icons.wifi_off_rounded,
-            color: StoicColors.deepBlue,
+            AethorIcons.wifiOff,
+            color: AethorColors.deepBlue,
             size: 20,
           ),
           const SizedBox(width: 10),
@@ -242,7 +243,7 @@ class StoicOfflineBanner extends StatelessWidget {
                 Text(
                   'Modo offline',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: StoicColors.deepBlue,
+                        color: AethorColors.deepBlue,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -251,7 +252,7 @@ class StoicOfflineBanner extends StatelessWidget {
                   'Mostrando conteúdo em cache',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 12,
-                        color: StoicColors.textMuted,
+                        color: AethorColors.textMuted,
                       ),
                 ),
               ],
@@ -261,8 +262,8 @@ class StoicOfflineBanner extends StatelessWidget {
           TextButton(
             onPressed: onSync,
             style: TextButton.styleFrom(
-              foregroundColor: StoicColors.deepBlue,
-              backgroundColor: StoicColors.deepBlue.withValues(alpha: 0.1),
+              foregroundColor: AethorColors.deepBlue,
+              backgroundColor: AethorColors.deepBlue.withValues(alpha: 0.1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

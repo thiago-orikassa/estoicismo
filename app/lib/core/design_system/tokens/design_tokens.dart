@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class StoicColors {
+class AethorColors {
   // Primitive palette
   static const obsidian = Color(0xFF111315);
   static const stone = Color(0xFF2C3136);
@@ -40,7 +40,7 @@ class StoicColors {
   static const info = deepBlue;
 }
 
-class StoicSpacing {
+class AethorSpacing {
   static const xxs = 4.0;
   static const xs = 8.0;
   static const sm = 12.0;
@@ -50,7 +50,7 @@ class StoicSpacing {
   static const xxl = 32.0;
 }
 
-class StoicRadius {
+class AethorRadius {
   static const sm = 8.0;
   static const md = 12.0;
   static const lg = 16.0;

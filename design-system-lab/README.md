@@ -1,4 +1,4 @@
-# Estoicismo DS Lab (localhost)
+# Aethor DS Lab (localhost)
 
 Playground web interativo para visualizar e testar componentes do design system fora do app Flutter.
 

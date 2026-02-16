@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../motion/motion.dart';
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
 enum AuthStateMessageType { success, error }
@@ -20,11 +21,11 @@ class AuthStateMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSuccess = type == AuthStateMessageType.success;
-    final icon = isSuccess ? Icons.check_rounded : Icons.error_outline;
+    final icon = isSuccess ? AethorIcons.check : AethorIcons.error;
     final iconBackground =
-        isSuccess ? StoicColors.deepBlue : StoicColors.copper;
+        isSuccess ? AethorColors.deepBlue : AethorColors.copper;
 
-    return StoicFadeSlideIn(
+    return AethorFadeSlideIn(
       offsetY: 8,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -36,7 +37,7 @@ class AuthStateMessage extends StatelessWidget {
               color: iconBackground,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: StoicColors.ivory, size: 32),
+            child: Icon(icon, color: AethorColors.ivory, size: 32),
           ),
           const SizedBox(height: 16),
           Text(
@@ -45,7 +46,7 @@ class AuthStateMessage extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
-                  color: StoicColors.obsidian,
+                  color: AethorColors.obsidian,
                 ),
           ),
           if (subtitle != null) ...[
@@ -54,7 +55,7 @@ class AuthStateMessage extends StatelessWidget {
               subtitle!,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: StoicColors.textMuted,
+                    color: AethorColors.textMuted,
                     height: 1.4,
                   ),
             ),

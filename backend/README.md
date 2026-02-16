@@ -3,10 +3,10 @@
 API mínima para destravar integração do app mobile no MVP.
 
 ## Persistência
-- SQLite (arquivo local): `backend/data/estoicismo.db` por padrão.
+- SQLite (arquivo local): `backend/data/aethor.db` por padrão.
 - Variáveis:
   - `STOIC_DATA_DIR` (default: `backend/data`)
-  - `STOIC_DB_PATH` (default: `<STOIC_DATA_DIR>/estoicismo.db`)
+  - `STOIC_DB_PATH` (default: `<STOIC_DATA_DIR>/aethor.db`)
   - `STOIC_SEED_PATH` (default: `<STOIC_DATA_DIR>/daily_seed.json`)
   - `STOIC_RUNTIME_ENV` (ex.: `dev`, `stage`)
   - `STOIC_OBSERVABILITY_TOKEN` (opcional, protege endpoint de métricas)

@@ -4,9 +4,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/analytics/analytics_service.dart';
 import 'core/auth/session_service.dart';
+import 'core/networking/api_client.dart';
 import 'core/design_system/components/paywall_types.dart';
 import 'core/paywall/paywall_policy.dart';
+import 'core/paywall/purchase_service.dart';
 import 'features/daily_quote/data/daily_repository.dart';
 import 'features/daily_quote/domain/models.dart';
 import 'core/domain/authors.dart';
@@ -19,10 +22,15 @@ enum NotificationPermissionStatus {
 }
 
 class AppState extends ChangeNotifier {
-  AppState(this._repo, this._sessionService);
+  AppState(this._repo, this._sessionService,
+      {this.purchaseService, this.analytics});
 
   final DailyRepository _repo;
   final SessionService _sessionService;
+  final PurchaseService? purchaseService;
+  final AnalyticsService? analytics;
+
+  ApiClient get api => _repo.api;
   SharedPreferences? _prefs;
 
   static const _onboardingKey = 'onboarding_complete';
@@ -47,16 +55,21 @@ class AppState extends ChangeNotifier {
   static const _paywallTriggerValueBasedKey = 'paywall_trigger_value_based';
   static const _paywallTriggerManualKey = 'paywall_trigger_manual';
   static const _activeDaysKey = 'active_days';
+  static const _pushNotificationsEnabledKey = 'push_notifications_enabled';
 
   String userId = '';
   String timezone = 'America/Sao_Paulo';
   String preferredContext = 'trabalho';
-  Set<String> preferredAuthors = kStoicAuthors.toSet();
+  Set<String> preferredAuthors = kAethorAuthors.toSet();
   String? reminderTime;
   bool remindersEnabled = false;
   NotificationPermissionStatus notificationPermission =
       NotificationPermissionStatus.unknown;
   bool onboardingComplete = false;
+
+  /// Kill switch: if false, push initialization is skipped entirely.
+  /// Allows disabling push notifications without a code deploy.
+  bool pushNotificationsEnabled = true;
   bool offline = false;
   bool sessionReady = false;
   bool isAuthenticated = false;
@@ -149,6 +162,8 @@ class AppState extends ChangeNotifier {
     _activeDays
       ..clear()
       ..addAll(_prefs?.getStringList(_activeDaysKey) ?? const <String>[]);
+    pushNotificationsEnabled =
+        _prefs?.getBool(_pushNotificationsEnabledKey) ?? true;
     await _initializeSession();
     _loadCheckins();
   }
@@ -158,6 +173,7 @@ class AppState extends ChangeNotifier {
       final session = await _sessionService.ensureSession();
       userId = session.userId;
       sessionReady = true;
+      await analytics?.setUserId(userId);
     } catch (e) {
       error = e.toString();
       if (e is SocketException) {
@@ -200,6 +216,12 @@ class AppState extends ChangeNotifier {
   void setRemindersEnabled(bool value) {
     remindersEnabled = value;
     _prefs?.setBool(_remindersEnabledKey, value);
+    notifyListeners();
+  }
+
+  void setPushNotificationsEnabled(bool value) {
+    pushNotificationsEnabled = value;
+    _prefs?.setBool(_pushNotificationsEnabledKey, value);
     notifyListeners();
   }
 
@@ -358,11 +380,33 @@ class AppState extends ChangeNotifier {
       'event_version': 1,
     };
 
-    try {
-      await _repo.trackEvent(eventName: eventName, properties: merged);
-    } catch (_) {
-      // Analytics is best effort and must not break core flow.
+    // Send to backend API and Firebase Analytics in parallel.
+    await Future.wait([
+      _repo
+          .trackEvent(eventName: eventName, properties: merged)
+          .catchError((_) {}),
+      if (analytics != null)
+        analytics!
+            .logEvent(eventName, parameters: _toFirebaseParams(merged))
+            .catchError((_) {}),
+    ]);
+  }
+
+  /// Converts dynamic properties to Firebase-compatible types.
+  /// Firebase Analytics only accepts String, int, and double values.
+  Map<String, Object> _toFirebaseParams(Map<String, dynamic> props) {
+    final result = <String, Object>{};
+    for (final entry in props.entries) {
+      final value = entry.value;
+      if (value is String || value is int || value is double) {
+        result[entry.key] = value;
+      } else if (value is bool) {
+        result[entry.key] = value ? 1 : 0;
+      } else if (value != null) {
+        result[entry.key] = value.toString();
+      }
     }
+    return result;
   }
 
   void startTrial(SubscriptionPlan plan) {
@@ -398,6 +442,42 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> syncEntitlementFromBackend() async {
+    try {
+      final data = await api.get('/v1/subscription/entitlement');
+      final status = data['status'] as String?;
+      final plan = data['plan'] as String?;
+      if (status == 'trial') {
+        subscriptionStatus = SubscriptionStatus.trial;
+      } else if (status == 'active') {
+        subscriptionStatus = SubscriptionStatus.active;
+      } else {
+        subscriptionStatus = SubscriptionStatus.free;
+      }
+      if (plan == 'annual') {
+        subscriptionPlan = SubscriptionPlan.annual;
+      } else if (plan == 'monthly') {
+        subscriptionPlan = SubscriptionPlan.monthly;
+      }
+      final trialEnd = data['trial_ends_at'] as String?;
+      trialEndsAt = trialEnd != null ? DateTime.tryParse(trialEnd) : null;
+      final billing = data['next_billing_at'] as String?;
+      nextBillingDate = billing != null ? DateTime.tryParse(billing) : null;
+      _persistSubscription();
+      notifyListeners();
+    } catch (_) {
+      // Sync is best-effort; local state remains authoritative.
+    }
+  }
+
+  String priceForPlan(SubscriptionPlan plan) {
+    final product = purchaseService?.productForPlan(plan);
+    if (product != null) return product.price;
+    return plan == SubscriptionPlan.monthly
+        ? 'R\$ 19,90/mês'
+        : 'R\$ 149,00/ano';
+  }
+
   CheckinRecord? checkinForDate(String dateLocal) {
     return _checkinsByDate[dateLocal];
   }
@@ -411,7 +491,7 @@ class AppState extends ChangeNotifier {
   Future<void> resetOnboarding() async {
     onboardingComplete = false;
     preferredContext = 'trabalho';
-    preferredAuthors = kStoicAuthors.toSet();
+    preferredAuthors = kAethorAuthors.toSet();
     reminderTime = null;
     remindersEnabled = false;
     notificationPermission = NotificationPermissionStatus.unknown;
@@ -429,6 +509,7 @@ class AppState extends ChangeNotifier {
     paywallTriggerFeatureBlockEnabled = true;
     paywallTriggerValueBasedEnabled = true;
     paywallTriggerManualEnabled = true;
+    pushNotificationsEnabled = true;
     _activeDays.clear();
 
     await _prefs?.remove(_onboardingKey);
@@ -451,6 +532,7 @@ class AppState extends ChangeNotifier {
     await _prefs?.remove(_paywallTriggerValueBasedKey);
     await _prefs?.remove(_paywallTriggerManualKey);
     await _prefs?.remove(_activeDaysKey);
+    await _prefs?.remove(_pushNotificationsEnabledKey);
 
     notifyListeners();
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/context_labels.dart';
 import '../tokens/design_tokens.dart';
-import 'stoic_card.dart';
+import 'aethor_card.dart';
 
 class PracticeCard extends StatelessWidget {
   const PracticeCard({
@@ -28,8 +28,8 @@ class PracticeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoicCard(
-      variant: StoicCardVariant.defaultCard,
+    return AethorCard(
+      variant: AethorCardVariant.defaultCard,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class PracticeCard extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   height: 1.6,
                   fontSize: 14,
-                  color: StoicColors.textSecondarySoft,
+                  color: AethorColors.textSecondarySoft,
                 ),
           ),
           const SizedBox(height: 12),
@@ -86,7 +86,7 @@ class PracticeCard extends StatelessWidget {
                         width: 24,
                         height: 24,
                         decoration: const BoxDecoration(
-                          color: StoicColors.deepBlue,
+                          color: AethorColors.deepBlue,
                           shape: BoxShape.circle,
                         ),
                         child: Center(
@@ -96,7 +96,7 @@ class PracticeCard extends StatelessWidget {
                                 .textTheme
                                 .labelSmall
                                 ?.copyWith(
-                                  color: StoicColors.ivory,
+                                  color: AethorColors.ivory,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -111,7 +111,7 @@ class PracticeCard extends StatelessWidget {
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     height: 1.6,
                                     fontSize: 14,
-                                    color: StoicColors.obsidian,
+                                    color: AethorColors.obsidian,
                                   ),
                         ),
                       ),
@@ -119,55 +119,57 @@ class PracticeCard extends StatelessWidget {
                   ),
                 ),
               ),
-          const Divider(height: 1, color: StoicColors.divider),
-          const SizedBox(height: 12),
-          if (expectedOutcome.isNotEmpty)
-            Text.rich(
-              TextSpan(
-                text: 'Impacto esperado: ',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: StoicColors.obsidian,
-                    ),
-                children: [
-                  TextSpan(
-                    text: expectedOutcome,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                          color: StoicColors.textMuted,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          if (expectedOutcome.isNotEmpty && completionCriteria.isNotEmpty)
+          if (expectedOutcome.isNotEmpty || completionCriteria.isNotEmpty) ...[
+            const Divider(height: 1, color: AethorColors.divider),
             const SizedBox(height: 12),
-          if (completionCriteria.isNotEmpty)
-            Text.rich(
-              TextSpan(
-                text: 'Sinal de conclusão: ',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: StoicColors.obsidian,
+            if (expectedOutcome.isNotEmpty)
+              Text.rich(
+                TextSpan(
+                  text: 'Impacto esperado: ',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: AethorColors.obsidian,
+                      ),
+                  children: [
+                    TextSpan(
+                      text: expectedOutcome,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            color: AethorColors.textMuted,
+                          ),
                     ),
-                children: [
-                  TextSpan(
-                    text: completionCriteria,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                          color: StoicColors.textMuted,
-                        ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            if (expectedOutcome.isNotEmpty && completionCriteria.isNotEmpty)
+              const SizedBox(height: 12),
+            if (completionCriteria.isNotEmpty)
+              Text.rich(
+                TextSpan(
+                  text: 'Sinal de conclusão: ',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: AethorColors.obsidian,
+                      ),
+                  children: [
+                    TextSpan(
+                      text: completionCriteria,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            color: AethorColors.textMuted,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
           if (journalPrompt.isNotEmpty) ...[
             const SizedBox(height: 16),
-            const Divider(height: 1, color: StoicColors.divider),
+            const Divider(height: 1, color: AethorColors.divider),
             const SizedBox(height: 12),
             Text(
               'Reflexão do dia: $journalPrompt',
@@ -175,7 +177,7 @@ class PracticeCard extends StatelessWidget {
                     fontFamily: 'Cormorant Garamond',
                     fontStyle: FontStyle.italic,
                     fontSize: 18,
-                    color: StoicColors.stone,
+                    color: AethorColors.stone,
                     height: 1.5,
                   ),
             ),
@@ -206,7 +208,7 @@ class _BulletInfo extends StatelessWidget {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: StoicColors.copper,
+            color: AethorColors.copper,
             borderRadius: BorderRadius.circular(bulletRadius),
           ),
           child: SizedBox(width: bulletSize.width, height: bulletSize.height),
@@ -217,7 +219,7 @@ class _BulletInfo extends StatelessWidget {
             TextSpan(
               text: '$label: ',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: StoicColors.obsidian,
+                    color: AethorColors.obsidian,
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
                   ),
@@ -225,7 +227,7 @@ class _BulletInfo extends StatelessWidget {
                 TextSpan(
                   text: value,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: StoicColors.textMuted,
+                        color: AethorColors.textMuted,
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
                       ),
