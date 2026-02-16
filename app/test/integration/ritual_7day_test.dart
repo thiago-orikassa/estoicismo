@@ -10,7 +10,6 @@ import 'package:aethor_app/core/notifications/deep_link_intent.dart';
 void main() {
   group('Ritual 7-day: deep link → navigation intent × 7', () {
     test('7 consecutive daily push deep links produce correct intents', () {
-      const baseDate = '2026-02-09';
       final dates = List.generate(7, (i) {
         final day = 9 + i;
         return '2026-02-${day.toString().padLeft(2, '0')}';

@@ -70,7 +70,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -145,7 +145,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -220,7 +220,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -295,7 +295,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -370,7 +370,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -445,7 +445,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -520,7 +520,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -595,7 +595,7 @@
       "theme_primary": "propósito",
       "behavior_intent": "decidir por virtude, não por impulso",
       "context_tags": [
-        "decisão_dificil",
+        "decisao_dificil",
         "propósito"
       ],
       "authenticity_level": "verified"
@@ -669,7 +669,7 @@
     {
       "id": "r-005",
       "quote_id": "q-sen-5",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Critério de virtude",
       "action_steps": [
         "Liste 2 opções",
@@ -749,7 +749,7 @@
     {
       "id": "r-010",
       "quote_id": "q-sen-10",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Teste da posteridade",
       "action_steps": [
         "Pergunte se aprovaria essa decisão em 1 ano",
@@ -829,7 +829,7 @@
     {
       "id": "r-015",
       "quote_id": "q-epi-5",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Escolha pelo papel",
       "action_steps": [
         "Defina seu papel (líder pai amigo)",
@@ -909,7 +909,7 @@
     {
       "id": "r-020",
       "quote_id": "q-epi-10",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Clareza de perda aceitável",
       "action_steps": [
         "Liste pior perda aceitável",
@@ -989,7 +989,7 @@
     {
       "id": "r-025",
       "quote_id": "q-epi-15",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Separar valor de resultado",
       "action_steps": [
         "Defina a decisão correta",
@@ -1069,7 +1069,7 @@
     {
       "id": "r-030",
       "quote_id": "q-epi-20",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Ensaiar objeções",
       "action_steps": [
         "Liste 3 objeções a sua decisão",
@@ -1149,7 +1149,7 @@
     {
       "id": "r-035",
       "quote_id": "q-mar-5",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Agir segundo natureza racional",
       "action_steps": [
         "Escolha a opção mais racional e justa",
@@ -1229,7 +1229,7 @@
     {
       "id": "r-040",
       "quote_id": "q-mar-12",
-      "context": "decisão_dificil",
+      "context": "decisao_dificil",
       "action_title": "Noite de revisão",
       "action_steps": [
         "Revise 3 escolhas do dia",
