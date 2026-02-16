@@ -73,6 +73,45 @@ function generate({ timezone, startDate, days }) {
   return { created, skipped, total: scheduled.length };
 }
 
+/**
+ * Build a push notification preview for a given timezone and date.
+ * Uses the scheduled_packages.json if available, otherwise generates on-the-fly.
+ */
+function sendDailyPush(timezone) {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(now);
+  const year = parts.find((p) => p.type === 'year')?.value;
+  const month = parts.find((p) => p.type === 'month')?.value;
+  const day = parts.find((p) => p.type === 'day')?.value;
+  const dateLocal = `${year}-${month}-${day}`;
+
+  const scheduled = loadScheduled();
+  const existing = scheduled.find(
+    (p) => p.date_local === dateLocal && p.timezone === timezone
+  );
+  const pack = existing ?? pickDailyPair(dateLocal, timezone);
+
+  const title = 'Seu insight do dia';
+  const body = `${pack.quote.author}: ${pack.quote.text.slice(0, 80)}${
+    pack.quote.text.length > 80 ? '...' : ''
+  }`;
+  const data = {
+    deeplink: `aethor://today?date_local=${dateLocal}&focus=checkin`,
+    route: 'today',
+    date_local: dateLocal,
+    version: '1',
+  };
+
+  return { title, body, data, dateLocal, pack };
+}
+
+export { generate, pickDailyPair, sendDailyPush };
+
 const timezone = process.argv[2] ?? 'America/Sao_Paulo';
 const startDate = process.argv[3] ?? new Date().toISOString().slice(0, 10);
 const days = Number(process.argv[4] ?? 7);

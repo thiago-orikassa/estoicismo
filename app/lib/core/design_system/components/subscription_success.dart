@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
 class SubscriptionSuccessOverlay extends StatelessWidget {
@@ -17,7 +18,7 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: StoicColors.obsidian.withValues(alpha: 0.96),
+      color: AethorColors.obsidian.withValues(alpha: 0.96),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
@@ -29,20 +30,20 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: StoicColors.copper.withValues(alpha: 0.2),
+                  color: AethorColors.copper.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.check_rounded,
+                  AethorIcons.check,
                   size: 32,
-                  color: StoicColors.copper,
+                  color: AethorColors.copper,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
                 isTrial ? 'Teste iniciado com sucesso' : 'Pro ativado com sucesso',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: StoicColors.ivory,
+                      color: AethorColors.ivory,
                       fontWeight: FontWeight.w600,
                     ),
                 textAlign: TextAlign.center,
@@ -50,10 +51,10 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 isTrial
-                    ? 'Aproveite 7 dias gratuitos para explorar todos os recursos.'
+                    ? '7 dias para praticar com todos os recursos.'
                     : 'Sua assinatura está ativa. Aproveite os recursos Pro.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: StoicColors.sand,
+                      color: AethorColors.sand,
                       height: 1.5,
                     ),
                 textAlign: TextAlign.center,
@@ -65,8 +66,8 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: StoicColors.copper,
-                    foregroundColor: StoicColors.ivory,
+                    backgroundColor: AethorColors.copper,
+                    foregroundColor: AethorColors.ivory,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -80,7 +81,7 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
               TextButton(
                 onPressed: onClose,
                 style: TextButton.styleFrom(
-                  foregroundColor: StoicColors.sand,
+                  foregroundColor: AethorColors.sand,
                 ),
                 child: const Text('Voltar ao início'),
               ),
@@ -109,13 +110,13 @@ class _FeatureList extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.check_rounded,
-                      color: StoicColors.copper, size: 18),
+                  const Icon(AethorIcons.check,
+                      color: AethorColors.copper, size: 18),
                   const SizedBox(width: 8),
                   Text(
                     feature,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: StoicColors.ivory,
+                          color: AethorColors.ivory,
                         ),
                   ),
                 ],

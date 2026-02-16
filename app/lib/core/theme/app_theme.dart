@@ -7,38 +7,38 @@ class AppTheme {
   static ThemeData lightMaterial() {
     const scheme = ColorScheme(
       brightness: Brightness.light,
-      primary: StoicColors.deepBlue,
+      primary: AethorColors.deepBlue,
       onPrimary: Colors.white,
-      primaryContainer: StoicColors.sand,
-      onPrimaryContainer: StoicColors.obsidian,
-      secondary: StoicColors.copper,
+      primaryContainer: AethorColors.sand,
+      onPrimaryContainer: AethorColors.obsidian,
+      secondary: AethorColors.copper,
       onSecondary: Colors.white,
       secondaryContainer: Color(0xFFE8D4C6),
-      onSecondaryContainer: StoicColors.obsidian,
-      tertiary: StoicColors.stone,
+      onSecondaryContainer: AethorColors.obsidian,
+      tertiary: AethorColors.stone,
       onTertiary: Colors.white,
       tertiaryContainer: Color(0xFFE7E1D6),
-      onTertiaryContainer: StoicColors.obsidian,
-      error: StoicColors.error,
+      onTertiaryContainer: AethorColors.obsidian,
+      error: AethorColors.error,
       onError: Colors.white,
       errorContainer: Color(0xFFF9DEDC),
       onErrorContainer: Color(0xFF410E0B),
-      surface: StoicColors.screenBackground,
-      onSurface: StoicColors.textPrimary,
-      onSurfaceVariant: StoicColors.textSubtle,
-      outline: StoicColors.cardOutline,
-      outlineVariant: StoicColors.bottomBarBorder,
+      surface: AethorColors.screenBackground,
+      onSurface: AethorColors.textPrimary,
+      onSurfaceVariant: AethorColors.textSubtle,
+      outline: AethorColors.cardOutline,
+      outlineVariant: AethorColors.bottomBarBorder,
       shadow: Color(0x26000000),
       scrim: Color(0x52000000),
-      inverseSurface: StoicColors.obsidian,
+      inverseSurface: AethorColors.obsidian,
       onInverseSurface: Colors.white,
-      inversePrimary: StoicColors.sand,
-      surfaceTint: StoicColors.deepBlue,
+      inversePrimary: AethorColors.sand,
+      surfaceTint: AethorColors.deepBlue,
     );
 
     final baseText = Typography.material2021().black.apply(
-          bodyColor: StoicColors.textPrimary,
-          displayColor: StoicColors.textPrimary,
+          bodyColor: AethorColors.textPrimary,
+          displayColor: AethorColors.textPrimary,
           fontFamily: 'Inter',
         );
 
@@ -117,51 +117,51 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: StoicColors.screenBackground,
+      scaffoldBackgroundColor: AethorColors.screenBackground,
       textTheme: textTheme,
       appBarTheme: const AppBarTheme(
         centerTitle: false,
-        backgroundColor: StoicColors.screenBackground,
-        foregroundColor: StoicColors.textPrimary,
+        backgroundColor: AethorColors.screenBackground,
+        foregroundColor: AethorColors.textPrimary,
       ),
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
-        color: StoicColors.cardBackground,
+        color: AethorColors.cardBackground,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(StoicRadius.lg),
+          borderRadius: BorderRadius.circular(AethorRadius.lg),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(StoicRadius.md),
-          borderSide: const BorderSide(color: StoicColors.border),
+          borderRadius: BorderRadius.circular(AethorRadius.md),
+          borderSide: const BorderSide(color: AethorColors.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(StoicRadius.md),
-          borderSide: const BorderSide(color: StoicColors.border),
+          borderRadius: BorderRadius.circular(AethorRadius.md),
+          borderSide: const BorderSide(color: AethorColors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(StoicRadius.md),
-          borderSide: const BorderSide(color: StoicColors.deepBlue, width: 1.5),
+          borderRadius: BorderRadius.circular(AethorRadius.md),
+          borderSide: const BorderSide(color: AethorColors.deepBlue, width: 1.5),
         ),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: StoicColors.chipBackground,
-        selectedColor: StoicColors.chipBackground,
+        backgroundColor: AethorColors.chipBackground,
+        selectedColor: AethorColors.chipBackground,
         side:
-            BorderSide(color: StoicColors.cardOutline.withValues(alpha: 0.45)),
+            BorderSide(color: AethorColors.cardOutline.withValues(alpha: 0.45)),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(StoicRadius.pill),
+          borderRadius: BorderRadius.circular(AethorRadius.pill),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(48),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(StoicRadius.md),
+            borderRadius: BorderRadius.circular(AethorRadius.md),
           ),
           textStyle: textTheme.labelLarge?.copyWith(
             fontFamily: 'Inter',
@@ -174,9 +174,9 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size.fromHeight(48),
-          side: const BorderSide(color: StoicColors.border),
+          side: const BorderSide(color: AethorColors.border),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(StoicRadius.md),
+            borderRadius: BorderRadius.circular(AethorRadius.md),
           ),
           textStyle: textTheme.labelLarge?.copyWith(
             fontFamily: 'Inter',
@@ -197,18 +197,18 @@ class AppTheme {
         ),
       ),
       navigationBarTheme: const NavigationBarThemeData(
-        backgroundColor: StoicColors.bottomBarBackground,
+        backgroundColor: AethorColors.bottomBarBackground,
         indicatorColor: Color(0x1A2F4B66),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       bannerTheme: MaterialBannerThemeData(
         backgroundColor: const Color(0xFFE7DDD1),
         contentTextStyle: textTheme.bodyMedium?.copyWith(
-          color: StoicColors.obsidian,
+          color: AethorColors.obsidian,
         ),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: StoicColors.deepBlue,
+        backgroundColor: AethorColors.deepBlue,
         contentTextStyle: textTheme.bodyMedium?.copyWith(color: Colors.white),
       ),
     );
@@ -217,11 +217,11 @@ class AppTheme {
   static CupertinoThemeData cupertino() {
     return const CupertinoThemeData(
       brightness: Brightness.light,
-      primaryColor: StoicColors.deepBlue,
-      scaffoldBackgroundColor: StoicColors.screenBackground,
-      barBackgroundColor: StoicColors.screenBackground,
+      primaryColor: AethorColors.deepBlue,
+      scaffoldBackgroundColor: AethorColors.screenBackground,
+      barBackgroundColor: AethorColors.screenBackground,
       textTheme: CupertinoTextThemeData(
-        primaryColor: StoicColors.textPrimary,
+        primaryColor: AethorColors.textPrimary,
       ),
     );
   }

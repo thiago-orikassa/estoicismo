@@ -18,7 +18,7 @@ class _DesignSystemPlaygroundScreenState
   bool _showEmpty = false;
   bool _showError = false;
   bool _ctaLoading = false;
-  StoicCheckinStatus _checkinStatus = StoicCheckinStatus.pending;
+  AethorCheckinStatus _checkinStatus = AethorCheckinStatus.pending;
 
   final TextEditingController _noteController = TextEditingController(
     text: 'Hoje escolhi pausar antes de reagir.',
@@ -35,7 +35,7 @@ class _DesignSystemPlaygroundScreenState
     final sectionLabelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
           fontSize: 11,
           letterSpacing: 0.8,
-          color: StoicColors.stone.withValues(alpha: 0.4),
+          color: AethorColors.stone.withValues(alpha: 0.4),
         );
 
     return ListView(
@@ -51,7 +51,7 @@ class _DesignSystemPlaygroundScreenState
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 16),
-        StoicCard(
+        AethorCard(
           child: Wrap(
             spacing: 12,
             runSpacing: 8,
@@ -79,8 +79,8 @@ class _DesignSystemPlaygroundScreenState
             ],
           ),
         ),
-        StoicSection(
-          spacing: StoicSectionSpacing.normal,
+        AethorSection(
+          spacing: AethorSectionSpacing.normal,
           children: [
             Text('QuoteCard', style: sectionLabelStyle),
             QuoteCard(
@@ -97,8 +97,8 @@ class _DesignSystemPlaygroundScreenState
             ),
           ],
         ),
-        StoicSection(
-          spacing: StoicSectionSpacing.normal,
+        AethorSection(
+          spacing: AethorSectionSpacing.normal,
           children: [
             Text('PracticeCard', style: sectionLabelStyle),
             const PracticeCard(
@@ -118,11 +118,11 @@ class _DesignSystemPlaygroundScreenState
             ),
           ],
         ),
-        StoicSection(
-          spacing: StoicSectionSpacing.normal,
+        AethorSection(
+          spacing: AethorSectionSpacing.normal,
           children: [
             Text('Check-in Card', style: sectionLabelStyle),
-            StoicCheckinCard(
+            AethorCheckinCard(
               noteController: _noteController,
               reflectionPrompt:
                   'Reflexão do dia: Onde você escolheu agir com mais intenção?',
@@ -130,28 +130,28 @@ class _DesignSystemPlaygroundScreenState
               isSubmitting: _ctaLoading,
               savedNote: _noteController.text,
               onApplied: () =>
-                  setState(() => _checkinStatus = StoicCheckinStatus.applied),
+                  setState(() => _checkinStatus = AethorCheckinStatus.applied),
               onNotApplied: () =>
-                  setState(() => _checkinStatus = StoicCheckinStatus.notApplied),
+                  setState(() => _checkinStatus = AethorCheckinStatus.notApplied),
             ),
           ],
         ),
-        StoicSection(
-          spacing: StoicSectionSpacing.normal,
+        AethorSection(
+          spacing: AethorSectionSpacing.normal,
           children: [
             Text('Estados de Tela', style: sectionLabelStyle),
-            if (_showLoading) const StoicLoadingState(),
+            if (_showLoading) const AethorLoadingState(),
             if (_showEmpty)
-              const StoicEmptyState(
+              const AethorEmptyState(
                 title: 'Nenhum item encontrado.',
                 description: 'Adicione favoritos para preencher esta área.',
               ),
             if (_showError)
-              StoicErrorState(
+              AethorErrorState(
                 message: 'Falha ao carregar dados. Tente novamente.',
                 onRetry: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Retry acionado.')),
+                    const SnackBar(content: Text('Tentativa acionada.')),
                   );
                 },
               ),

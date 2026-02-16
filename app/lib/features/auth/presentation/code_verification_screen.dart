@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 
 class CodeVerificationScreen extends StatefulWidget {
@@ -87,7 +88,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: StoicColors.ivory,
+      backgroundColor: AethorColors.ivory,
       body: SafeArea(
         child: Column(
           children: [
@@ -97,10 +98,10 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: widget.onBack,
-                  icon: const Icon(Icons.arrow_back, size: 20),
+                  icon: const Icon(AethorIcons.back, size: 20),
                   label: const Text('Voltar'),
                   style: TextButton.styleFrom(
-                    foregroundColor: StoicColors.stone,
+                    foregroundColor: AethorColors.stone,
                   ),
                 ),
               ),
@@ -109,7 +110,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
                 child: Center(
-                  child: StoicFadeSlideIn(
+                  child: AethorFadeSlideIn(
                     offsetY: 12,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -122,7 +123,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                               ?.copyWith(
                                 fontSize: 32,
                                 height: 1.2,
-                                color: StoicColors.obsidian,
+                                color: AethorColors.obsidian,
                               ),
                           textAlign: TextAlign.center,
                         ),
@@ -131,7 +132,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                           'Enviamos um código de 6 dígitos para',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: StoicColors.stone,
+                                    color: AethorColors.stone,
                                   ),
                           textAlign: TextAlign.center,
                         ),
@@ -141,7 +142,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
-                                    color: StoicColors.obsidian,
+                                    color: AethorColors.obsidian,
                                   ),
                           textAlign: TextAlign.center,
                         ),
@@ -172,7 +173,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                                     .textTheme
                                     .bodySmall
                                     ?.copyWith(
-                                      color: StoicColors.stone,
+                                      color: AethorColors.stone,
                                     ),
                               ),
                             ],
@@ -182,7 +183,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                           'O código expira em 10 minutos',
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: StoicColors.textMuted,
+                                    color: AethorColors.textMuted,
                                   ),
                           textAlign: TextAlign.center,
                         ),
@@ -192,7 +193,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                             'Reenviar em ${_resendCooldown}s',
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: StoicColors.textMuted,
+                                      color: AethorColors.textMuted,
                                     ),
                           )
                         else
@@ -204,18 +205,18 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: StoicColors.deepBlue.withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(StoicRadius.md),
+                            color: AethorColors.deepBlue.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(AethorRadius.md),
                             border: Border.all(
                               color:
-                                  StoicColors.deepBlue.withValues(alpha: 0.2),
+                                  AethorColors.deepBlue.withValues(alpha: 0.2),
                             ),
                           ),
                           child: Text(
                             'Demo: use 123456 ou 000000.',
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: StoicColors.stone,
+                                      color: AethorColors.stone,
                                     ),
                             textAlign: TextAlign.center,
                           ),
@@ -231,7 +232,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
               child: Text(
                 'Verifique também sua pasta de spam',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: StoicColors.textMuted,
+                      color: AethorColors.textMuted,
                     ),
               ),
             ),

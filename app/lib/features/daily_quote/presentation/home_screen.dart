@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../app_state.dart';
@@ -5,6 +7,7 @@ import '../../../core/auth/auth_flow.dart';
 import '../../../core/auth/auth_models.dart';
 import '../../../core/design_system/components/components.dart';
 import '../../../core/paywall/paywall_flow.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,15 +24,168 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   final TextEditingController _noteController = TextEditingController();
   bool _isTogglingFavorite = false;
   bool _isSubmittingCheckin = false;
-  StoicCheckinStatus _checkinStatus = StoicCheckinStatus.pending;
+  AethorCheckinStatus _checkinStatus = AethorCheckinStatus.pending;
   bool _showNotificationNudge = false;
   NotificationResultType? _notificationResult;
   String? _savedCheckinNote;
   String? _currentDateLocal;
+  String? _valuePaywallCheckedForDate;
+
+  // ---------------------------------------------------------------------------
+  // Animação em duas fases — hierarquia temporal contemplativa
+  //
+  // Phase 1 (800ms): Header + data + QuoteCard container entry
+  // Phase 2 (dinâmica): QuoteCard typewriter interno (gerido pelo QuoteCard)
+  // Phase 3 (1400ms): PracticeCard + CheckinCard + Notification cards
+  //                    acionado quando QuoteCard completa suas animações
+  // ---------------------------------------------------------------------------
+
+  late final AnimationController _phase1Controller;
+  late final Animation<double> _headerFade;
+  late final Animation<double> _dateFade;
+  late final Animation<double> _quoteContainerFade;
+  late final Animation<double> _quoteContainerSlide;
+
+  late final AnimationController _phase3Controller;
+  late final Animation<double> _practiceFade;
+  late final Animation<double> _practiceSlide;
+  late final Animation<double> _checkinFade;
+  late final Animation<double> _checkinSlide;
+  late final Animation<double> _notificationFade;
+  late final Animation<double> _notificationSlide;
+
+  bool _entryPlayed = false;
+  bool _animateQuote = false;
+  bool _quoteAnimationDone = false;
+
+  void _setupPhase1() {
+    _phase1Controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
+    // Header "Hoje": 0–260ms (fade)
+    _headerFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _phase1Controller,
+        curve: const Interval(0.0, 0.325, curve: Curves.easeOut),
+      ),
+    );
+
+    // Data subtitle: 60–260ms (fade)
+    _dateFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _phase1Controller,
+        curve: const Interval(0.075, 0.325, curve: Curves.easeOut),
+      ),
+    );
+
+    // QuoteCard container: 200–800ms (fade + slide 20px)
+    const quoteContainerCurve =
+        Interval(0.25, 1.0, curve: Cubic(0.25, 0.1, 0.25, 1.0));
+    _quoteContainerFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _phase1Controller,
+        curve: quoteContainerCurve,
+      ),
+    );
+    _quoteContainerSlide = Tween<double>(begin: 20.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _phase1Controller,
+        curve: quoteContainerCurve,
+      ),
+    );
+  }
+
+  void _setupPhase3() {
+    _phase3Controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    );
+
+    // PracticeCard: 0–600ms
+    const practiceCurve =
+        Interval(0.0, 0.429, curve: Cubic(0.25, 0.1, 0.25, 1.0));
+    _practiceFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _phase3Controller, curve: practiceCurve),
+    );
+    _practiceSlide = Tween<double>(begin: 20.0, end: 0.0).animate(
+      CurvedAnimation(parent: _phase3Controller, curve: practiceCurve),
+    );
+
+    // CheckinCard: 400–1000ms
+    const checkinCurve =
+        Interval(0.286, 0.714, curve: Cubic(0.25, 0.1, 0.25, 1.0));
+    _checkinFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _phase3Controller, curve: checkinCurve),
+    );
+    _checkinSlide = Tween<double>(begin: 20.0, end: 0.0).animate(
+      CurvedAnimation(parent: _phase3Controller, curve: checkinCurve),
+    );
+
+    // Notification cards: 800–1400ms
+    const notifCurve =
+        Interval(0.571, 1.0, curve: Cubic(0.25, 0.1, 0.25, 1.0));
+    _notificationFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _phase3Controller, curve: notifCurve),
+    );
+    _notificationSlide = Tween<double>(begin: 20.0, end: 0.0).animate(
+      CurvedAnimation(parent: _phase3Controller, curve: notifCurve),
+    );
+  }
+
+  void _triggerEntryAnimation() {
+    if (_entryPlayed) return;
+    _entryPlayed = true;
+    // Timer breve para permitir transição de tab FadeThrough estabilizar
+    // quando o usuário retorna de outra página (260ms de duração).
+    Future.delayed(const Duration(milliseconds: 150), () {
+      if (!mounted) return;
+      setState(() => _animateQuote = true);
+      _phase1Controller.forward();
+    });
+  }
+
+  void _onQuoteAnimationsComplete() {
+    if (!mounted) return;
+    setState(() => _quoteAnimationDone = true);
+    _phase3Controller.forward();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Lifecycle — replay animações ao retornar do background
+  // ---------------------------------------------------------------------------
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && widget.state.daily != null) {
+      _resetAndReplayAnimations();
+    }
+  }
+
+  void _resetAndReplayAnimations() {
+    _phase1Controller.reset();
+    _phase3Controller.reset();
+    setState(() {
+      _entryPlayed = false;
+      _animateQuote = false;
+      _quoteAnimationDone = false;
+    });
+    // O próximo build() chamará _triggerEntryAnimation() automaticamente
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _setupPhase1();
+    _setupPhase3();
+  }
 
   String _errorMessage(Object error) {
     final message = error.toString();
@@ -170,6 +326,26 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _maybeShowConsistencyPaywallOnDailyView(
+    AppState state,
+    String dateLocal,
+    CheckinRecord? existingRecord,
+  ) async {
+    if (_valuePaywallCheckedForDate == dateLocal) return;
+    _valuePaywallCheckedForDate = dateLocal;
+
+    if (existingRecord != null) return;
+    if (!state.hasValueBasedMilestone) return;
+
+    await Future.delayed(const Duration(milliseconds: 450));
+    if (!mounted || _currentDateLocal != dateLocal) return;
+    await PaywallFlow.showPaywall(
+      context,
+      state: state,
+      trigger: PaywallTrigger.valueBased,
+    );
+  }
+
   Future<void> _toggleFavorite(
     AppState state,
     String quoteId,
@@ -222,8 +398,8 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
       setState(() {
         _checkinStatus = applied
-            ? StoicCheckinStatus.applied
-            : StoicCheckinStatus.notApplied;
+            ? AethorCheckinStatus.applied
+            : AethorCheckinStatus.notApplied;
         _savedCheckinNote = _noteController.text.trim();
         if (applied &&
             state.notificationPermission ==
@@ -256,6 +432,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _phase1Controller.dispose();
+    _phase3Controller.dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -268,7 +447,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: StoicLoadingState(),
+          child: AethorLoadingState(),
         ),
       );
     }
@@ -277,13 +456,13 @@ class _HomeScreenState extends State<HomeScreen> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: StoicEmptyState(
+          child: AethorEmptyState(
             title: 'Você está offline.',
             description: 'Conecte-se para sincronizar o conteúdo diário.',
             icon: const Icon(
-              Icons.wifi_off_rounded,
-              size: 32,
-              color: StoicColors.deepBlue,
+              AethorIcons.wifiOff,
+              size: AethorIconSize.xl,
+              color: AethorColors.deepBlue,
             ),
             actionLabel: 'Sincronizar',
             onAction: state.bootstrap,
@@ -296,8 +475,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: StoicErrorState(
-            message: 'Não foi possível carregar o conteúdo de hoje.',
+          child: AethorErrorState(
+            message: 'O conteúdo de hoje não carregou. Tente novamente.',
             onRetry: state.bootstrap,
           ),
         ),
@@ -309,13 +488,13 @@ class _HomeScreenState extends State<HomeScreen> {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: StoicEmptyState(
+          child: AethorEmptyState(
             title: 'Sem conteúdo diário disponível.',
             description: 'Tente sincronizar novamente em instantes.',
             icon: Icon(
-              Icons.auto_stories_rounded,
-              size: 32,
-              color: StoicColors.textSubtle,
+              AethorIcons.book,
+              size: AethorIconSize.xl,
+              color: AethorColors.textSubtle,
             ),
           ),
         ),
@@ -330,109 +509,171 @@ class _HomeScreenState extends State<HomeScreen> {
           _currentDateLocal = daily.dateLocal;
           if (existingRecord != null) {
             _checkinStatus = existingRecord.applied
-                ? StoicCheckinStatus.applied
-                : StoicCheckinStatus.notApplied;
+                ? AethorCheckinStatus.applied
+                : AethorCheckinStatus.notApplied;
             _savedCheckinNote = existingRecord.note;
             _noteController.text = existingRecord.note ?? '';
           } else {
-            _checkinStatus = StoicCheckinStatus.pending;
+            _checkinStatus = AethorCheckinStatus.pending;
             _savedCheckinNote = null;
             _noteController.clear();
           }
           _showNotificationNudge = false;
           _notificationResult = null;
+          _valuePaywallCheckedForDate = null;
         });
+        unawaited(
+          _maybeShowConsistencyPaywallOnDailyView(
+            state,
+            daily.dateLocal,
+            existingRecord,
+          ),
+        );
       });
     }
 
     final isFavorite = state.isFavorited(daily.quote.id);
 
+    // Dispara a animação de entrada quando o conteúdo está pronto
+    _triggerEntryAnimation();
+
     return RefreshIndicator(
       onRefresh: state.bootstrap,
-      color: StoicColors.deepBlue,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        children: [
-          Text(
-            'Hoje',
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontSize: 48,
-                  height: 1.1,
-                  fontStyle: FontStyle.italic,
-                  fontFamily: 'Cormorant Garamond',
-                  fontWeight: FontWeight.w500,
-                  color: StoicColors.obsidian,
+      color: AethorColors.deepBlue,
+      child: AnimatedBuilder(
+        animation: Listenable.merge([_phase1Controller, _phase3Controller]),
+        builder: (context, _) {
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            children: [
+              // --- Header "Hoje": Phase 1, fade 0–260ms ---
+              Opacity(
+                opacity: _headerFade.value,
+                child: Text(
+                  'Hoje',
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        fontSize: 48,
+                        height: 1.1,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Cormorant Garamond',
+                        fontWeight: FontWeight.w500,
+                        color: AethorColors.obsidian,
+                      ),
                 ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            _formatLongDate(daily.dateLocal).toUpperCase(),
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  fontSize: 12,
-                  color: StoicColors.textMuted,
-                  letterSpacing: 0.6,
-                  fontWeight: FontWeight.w400,
+              ),
+              const SizedBox(height: 4),
+              // --- Data: Phase 1, fade 60–260ms ---
+              Opacity(
+                opacity: _dateFade.value,
+                child: Text(
+                  _formatLongDate(daily.dateLocal).toUpperCase(),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontSize: 12,
+                        color: AethorColors.textMuted,
+                        letterSpacing: 0.6,
+                        fontWeight: FontWeight.w400,
+                      ),
                 ),
-          ),
-          const SizedBox(height: 24),
-          if (state.offline) ...[
-            StoicOfflineBanner(onSync: state.bootstrap),
-            const SizedBox(height: 16),
-          ],
-          const SizedBox(height: 2),
-          QuoteCard(
-            quoteText: daily.quote.text,
-            author: daily.quote.author,
-            sourceWork: daily.quote.sourceWork,
-            sourceRef: daily.quote.sourceRef,
-            behaviorIntent: daily.quote.behaviorIntent,
-            contextTags: daily.quote.contextTags,
-            favorite: isFavorite,
-            favoriteLoading: _isTogglingFavorite,
-            onToggleFavorite: () =>
-                _toggleFavorite(state, daily.quote.id, isFavorite),
-          ),
-          const SizedBox(height: 24),
-          PracticeCard(
-            title: daily.recommendation.title,
-            quoteLinkExplanation: daily.recommendation.quoteLinkExplanation,
-            practiceContext: daily.recommendation.context,
-            minutes: daily.recommendation.minutes,
-            steps: daily.recommendation.steps,
-            expectedOutcome: daily.recommendation.expectedOutcome,
-            completionCriteria: daily.recommendation.completionCriteria,
-            journalPrompt: daily.recommendation.journalPrompt,
-          ),
-          const SizedBox(height: 24),
-          StoicCheckinCard(
-            noteController: _noteController,
-            reflectionPrompt: daily.recommendation.journalPrompt,
-            status: _checkinStatus,
-            isSubmitting: _isSubmittingCheckin,
-            savedNote: _savedCheckinNote,
-            onApplied: () => _submitCheckin(state, applied: true),
-            onNotApplied: () => _submitCheckin(state, applied: false),
-          ),
-          if (_showNotificationNudge) ...[
-            const SizedBox(height: 20),
-            NotificationNudgeCard(
-              onEnable: () async {
-                setState(() => _showNotificationNudge = false);
-                await _handleEnableNotifications(state);
-              },
-              onDismiss: () => setState(() => _showNotificationNudge = false),
-            ),
-          ],
-          if (_notificationResult != null) ...[
-            const SizedBox(height: 16),
-            NotificationResultCard(
-              type: _notificationResult!,
-              onAdjustTime: widget.onNavigateToSettings,
-              onGoToSettings: widget.onNavigateToSettings,
-            ),
-          ],
-          const SizedBox(height: 24),
-        ],
+              ),
+              const SizedBox(height: 24),
+              if (state.offline) ...[
+                AethorOfflineBanner(onSync: state.bootstrap),
+                const SizedBox(height: 16),
+              ],
+              const SizedBox(height: 2),
+              // --- QuoteCard: Phase 1 container + Phase 2 internal typewriter ---
+              Opacity(
+                opacity: _quoteContainerFade.value,
+                child: Transform.translate(
+                  offset: Offset(0, _quoteContainerSlide.value),
+                  child: QuoteCard(
+                    key: ValueKey(daily.quote.id),
+                    quoteText: daily.quote.text,
+                    author: daily.quote.author,
+                    sourceWork: daily.quote.sourceWork,
+                    sourceRef: daily.quote.sourceRef,
+                    behaviorIntent: daily.quote.behaviorIntent,
+                    contextTags: daily.quote.contextTags,
+                    favorite: isFavorite,
+                    favoriteLoading: _isTogglingFavorite,
+                    onToggleFavorite: () =>
+                        _toggleFavorite(state, daily.quote.id, isFavorite),
+                    animate: _animateQuote,
+                    completed: _quoteAnimationDone,
+                    onAnimationsComplete: _onQuoteAnimationsComplete,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              // --- PracticeCard: Phase 3, 0–600ms após QuoteCard completar ---
+              Opacity(
+                opacity: _practiceFade.value,
+                child: Transform.translate(
+                  offset: Offset(0, _practiceSlide.value),
+                  child: PracticeCard(
+                    title: daily.recommendation.title,
+                    quoteLinkExplanation: daily.recommendation.quoteLinkExplanation,
+                    practiceContext: daily.recommendation.context,
+                    minutes: daily.recommendation.minutes,
+                    steps: daily.recommendation.steps,
+                    expectedOutcome: daily.recommendation.expectedOutcome,
+                    completionCriteria: daily.recommendation.completionCriteria,
+                    journalPrompt: daily.recommendation.journalPrompt,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              // --- CheckinCard: Phase 3, 400–1000ms após QuoteCard completar ---
+              Opacity(
+                opacity: _checkinFade.value,
+                child: Transform.translate(
+                  offset: Offset(0, _checkinSlide.value),
+                  child: AethorCheckinCard(
+                    noteController: _noteController,
+                    reflectionPrompt: daily.recommendation.journalPrompt,
+                    status: _checkinStatus,
+                    isSubmitting: _isSubmittingCheckin,
+                    savedNote: _savedCheckinNote,
+                    onApplied: () => _submitCheckin(state, applied: true),
+                    onNotApplied: () => _submitCheckin(state, applied: false),
+                  ),
+                ),
+              ),
+              if (_showNotificationNudge) ...[
+                const SizedBox(height: 20),
+                Opacity(
+                  opacity: _notificationFade.value,
+                  child: Transform.translate(
+                    offset: Offset(0, _notificationSlide.value),
+                    child: NotificationNudgeCard(
+                      onEnable: () async {
+                        setState(() => _showNotificationNudge = false);
+                        await _handleEnableNotifications(state);
+                      },
+                      onDismiss: () =>
+                          setState(() => _showNotificationNudge = false),
+                    ),
+                  ),
+                ),
+              ],
+              if (_notificationResult != null) ...[
+                const SizedBox(height: 16),
+                Opacity(
+                  opacity: _notificationFade.value,
+                  child: Transform.translate(
+                    offset: Offset(0, _notificationSlide.value),
+                    child: NotificationResultCard(
+                      type: _notificationResult!,
+                      onAdjustTime: widget.onNavigateToSettings,
+                      onGoToSettings: widget.onNavigateToSettings,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 24),
+            ],
+          );
+        },
       ),
     );
   }

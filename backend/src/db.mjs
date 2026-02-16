@@ -6,7 +6,7 @@ import { DatabaseSync } from 'node:sqlite';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const defaultDataDir = join(__dirname, '../data');
 const dataDir = process.env.STOIC_DATA_DIR ?? defaultDataDir;
-const dbPath = process.env.STOIC_DB_PATH ?? join(dataDir, 'estoicismo.db');
+const dbPath = process.env.STOIC_DB_PATH ?? join(dataDir, 'aethor.db');
 
 mkdirSync(dataDir, { recursive: true });
 

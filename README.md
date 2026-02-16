@@ -1,4 +1,4 @@
-# Estoicismo
+# Aethor
 
 Aplicativo mobile com backend e curadoria de conteúdo estoico.
 

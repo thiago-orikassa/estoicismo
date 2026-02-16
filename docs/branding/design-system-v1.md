@@ -1,4 +1,4 @@
-# Design System v1 - Estoicismo
+# Design System v1 - Aethor
 
 ## Objetivo
 Criar um sistema de design consistente, escalável e multiplataforma (Android/iOS) para sustentar o ritual diário do app com foco em clareza, sobriedade e ação prática.
@@ -74,16 +74,32 @@ Criar um sistema de design consistente, escalável e multiplataforma (Android/iO
 - Curva: ease-out para entrada, ease-in-out para transições.
 
 ### 3.7 Iconografia
-- Estilo linear, peso regular.
-- Android: Material Symbols.
-- iOS: SF Symbols equivalentes semânticos.
+- Biblioteca primária cross-platform: **Phosphor Icons** (pacote `phosphor_flutter`).
+- Peso padrão: **Light** (1.5px stroke) — intelectual e contido, legível e grounded.
+- Variantes por contexto:
+  - **Light (outline)**: navegação inativa, toolbar, metadata, settings.
+  - **Duotone**: navegação ativa, estados de completude (Copper + Obsidian).
+  - **Bold/Fill**: CTAs, alertas críticos.
+  - **Thin**: metadata densa em cards.
+- Suplementar por plataforma:
+  - Android: Material Symbols Sharp (pickers de sistema, notificações nativas).
+  - iOS: SF Symbols (equivalentes semânticos via adaptadores de plataforma).
+- Tokens centralizados em `AethorIcons` (`app/lib/core/design_system/tokens/aethor_icons.dart`).
+- Escala de tamanhos:
+  - `icon.size.xs`: 16px (inline com label 12/16)
+  - `icon.size.sm`: 20px (inline com bodyM 14/20)
+  - `icon.size.md`: 24px (primário: UI, navegação)
+  - `icon.size.lg`: 28px (headers de seção)
+  - `icon.size.xl`: 32px (empty states, onboarding)
+- Touch target: visual 24px, área interativa mínima 48dp (Material) / 44pt (Apple).
+- Regra de alinhamento: altura do ícone iguala line-height do texto adjacente.
 
 ## 4. Componentes Core (v1)
 
 ### 4.1 Estruturais
-- `StoicScaffold`: scaffold com tratamento de banner de erro.
-- `StoicSection`: seção com título + conteúdo + espaçamento padrão.
-- `StoicCard`: card semântico para blocos de leitura.
+- `AethorScaffold`: scaffold com tratamento de banner de erro.
+- `AethorSection`: seção com título + conteúdo + espaçamento padrão.
+- `AethorCard`: card semântico para blocos de leitura.
 
 ### 4.2 Conteúdo editorial
 - `QuoteCard`: citação, autor, obra, referência, tags e ação de favorito.
@@ -95,8 +111,8 @@ Criar um sistema de design consistente, escalável e multiplataforma (Android/iO
 - `PrimaryButton`: CTA principal (ex.: Apliquei hoje).
 - `SecondaryButton`: ação secundária (ex.: Não apliquei).
 - `TonalButton`: ação auxiliar (ex.: Sincronizar agora).
-- `StoicTextField`: campo de nota/check-in.
-- `StoicDropdown`: seleção de contexto.
+- `AethorTextField`: campo de nota/check-in.
+- `AethorDropdown`: seleção de contexto.
 
 ### 4.4 Estado
 - `LoadingState`: indicador central + mensagem opcional.
@@ -166,7 +182,7 @@ Regras:
 3. Padronizar botões, campos e cards nas telas existentes.
 
 ### Fase 2
-1. Extrair `QuoteCard`, `PracticeCard` e `StoicSection`.
+1. Extrair `QuoteCard`, `PracticeCard` e `AethorSection`.
 2. Criar biblioteca de estados (`LoadingState`, `EmptyState`, `ErrorState`).
 3. Ajustar favoritos para exibir conteúdo editorial em vez de IDs.
 

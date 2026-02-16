@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 import 'history_types.dart';
 
@@ -65,7 +66,7 @@ class DayDetailSheet extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: StoicColors.cardBackground,
+        color: AethorColors.cardBackground,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
@@ -81,7 +82,7 @@ class DayDetailSheet extends StatelessWidget {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
-                    color: StoicColors.textSubtle.withValues(alpha: 0.3),
+                    color: AethorColors.textSubtle.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(99),
                   ),
                 ),
@@ -91,7 +92,7 @@ class DayDetailSheet extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 11,
                       letterSpacing: 0.6,
-                      color: StoicColors.stone.withValues(alpha: 0.5),
+                      color: AethorColors.stone.withValues(alpha: 0.5),
                     ),
               ),
               const SizedBox(height: 6),
@@ -101,7 +102,7 @@ class DayDetailSheet extends StatelessWidget {
                       fontFamily: 'Cormorant Garamond',
                       fontSize: 32,
                       fontStyle: FontStyle.italic,
-                      color: StoicColors.obsidian,
+                      color: AethorColors.obsidian,
                       height: 1.1,
                     ),
               ),
@@ -115,7 +116,7 @@ class DayDetailSheet extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       letterSpacing: 1,
                       fontSize: 10,
-                      color: StoicColors.stone.withValues(alpha: 0.4),
+                      color: AethorColors.stone.withValues(alpha: 0.4),
                     ),
               ),
               const SizedBox(height: 8),
@@ -125,7 +126,7 @@ class DayDetailSheet extends StatelessWidget {
                       fontFamily: 'Cormorant Garamond',
                       fontSize: 20,
                       fontStyle: FontStyle.italic,
-                      color: StoicColors.obsidian,
+                      color: AethorColors.obsidian,
                       height: 1.5,
                     ),
               ),
@@ -133,7 +134,7 @@ class DayDetailSheet extends StatelessWidget {
               Text(
                 '$author • $work${reference.isNotEmpty ? ' • $reference' : ''}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: StoicColors.textMuted,
+                      color: AethorColors.textMuted,
                       height: 1.4,
                     ),
               ),
@@ -143,7 +144,7 @@ class DayDetailSheet extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       letterSpacing: 1,
                       fontSize: 10,
-                      color: StoicColors.stone.withValues(alpha: 0.4),
+                      color: AethorColors.stone.withValues(alpha: 0.4),
                     ),
               ),
               const SizedBox(height: 8),
@@ -152,8 +153,8 @@ class DayDetailSheet extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(StoicRadius.md),
-                  border: Border.all(color: StoicColors.border.withValues(alpha: 0.5)),
+                  borderRadius: BorderRadius.circular(AethorRadius.md),
+                  border: Border.all(color: AethorColors.border.withValues(alpha: 0.5)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,14 +163,14 @@ class DayDetailSheet extends StatelessWidget {
                       practiceTitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: StoicColors.obsidian,
+                            color: AethorColors.obsidian,
                           ),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       practiceDescription,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: StoicColors.textMuted,
+                            color: AethorColors.textMuted,
                             height: 1.5,
                           ),
                     ),
@@ -183,7 +184,7 @@ class DayDetailSheet extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         letterSpacing: 1,
                         fontSize: 10,
-                        color: StoicColors.textSubtle,
+                        color: AethorColors.textSubtle,
                       ),
                 ),
                 const SizedBox(height: 8),
@@ -192,13 +193,13 @@ class DayDetailSheet extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(StoicRadius.md),
-                    border: Border.all(color: StoicColors.border.withValues(alpha: 0.5)),
+                    borderRadius: BorderRadius.circular(AethorRadius.md),
+                    border: Border.all(color: AethorColors.border.withValues(alpha: 0.5)),
                   ),
                   child: Text(
                     note,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: StoicColors.obsidian,
+                          color: AethorColors.obsidian,
                           height: 1.5,
                         ),
                   ),
@@ -209,11 +210,11 @@ class DayDetailSheet extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: StoicColors.deepBlue,
-                    foregroundColor: StoicColors.ivory,
+                    backgroundColor: AethorColors.deepBlue,
+                    foregroundColor: AethorColors.ivory,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(StoicRadius.md),
+                      borderRadius: BorderRadius.circular(AethorRadius.md),
                     ),
                   ),
                   onPressed: onClose,
@@ -240,13 +241,13 @@ class _StatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: isCompleted
-            ? StoicColors.deepBlue.withValues(alpha: 0.1)
-            : StoicColors.stone.withValues(alpha: 0.06),
+            ? AethorColors.deepBlue.withValues(alpha: 0.1)
+            : AethorColors.stone.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isCompleted
-              ? StoicColors.deepBlue.withValues(alpha: 0.2)
-              : StoicColors.stone.withValues(alpha: 0.1),
+              ? AethorColors.deepBlue.withValues(alpha: 0.2)
+              : AethorColors.stone.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
@@ -254,19 +255,19 @@ class _StatusBadge extends StatelessWidget {
         children: [
           if (isCompleted)
             const Icon(
-              Icons.check_rounded,
+              AethorIcons.check,
               size: 16,
-              color: StoicColors.deepBlue,
+              color: AethorColors.deepBlue,
             ),
           if (isCompleted) const SizedBox(width: 6),
           Text(
-            isCompleted ? 'Prática concluída' : 'Prática pulada',
+            isCompleted ? 'Prática concluída' : 'Não aplicada',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: isCompleted
-                      ? StoicColors.deepBlue
-                      : StoicColors.textSubtle,
+                      ? AethorColors.deepBlue
+                      : AethorColors.textSubtle,
                 ),
           ),
         ],

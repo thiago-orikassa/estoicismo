@@ -1,4 +1,4 @@
-# Motion System v1 - Estoicismo
+# Motion System v1 - Aethor
 
 ## Objetivo
 Definir padrões de movimento consistentes, discretos e funcionais, alinhados à sobriedade da marca e ao ritual diário do app.
@@ -62,7 +62,7 @@ Definir padrões de movimento consistentes, discretos e funcionais, alinhados à
 ## Padrões de Microinteração (Componentes)
 - `PrimaryButton`/`SecondaryButton`: compressão leve (`scale.press`) em `micro`.
 - `Favorite`: micro escala + leve opacidade, sem overshoot.
-- `StoicCard` hover/press: variação de elevação mínima + `scale.press`.
+- `AethorCard` hover/press: variação de elevação mínima + `scale.press`.
 - `TagGroup`: entrada em cascata com `motion.move.xs` e `micro`.
 
 ## Interações Prioritárias (v1)

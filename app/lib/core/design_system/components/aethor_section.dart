@@ -2,34 +2,34 @@ import 'package:flutter/material.dart';
 
 import '../tokens/design_tokens.dart';
 
-enum StoicSectionSpacing {
+enum AethorSectionSpacing {
   tight,
   normal,
   relaxed,
 }
 
-class StoicSection extends StatelessWidget {
-  const StoicSection({
+class AethorSection extends StatelessWidget {
+  const AethorSection({
     super.key,
     required this.children,
-    this.spacing = StoicSectionSpacing.normal,
+    this.spacing = AethorSectionSpacing.normal,
     this.padding,
     this.crossAxisAlignment = CrossAxisAlignment.start,
   });
 
   final List<Widget> children;
-  final StoicSectionSpacing spacing;
+  final AethorSectionSpacing spacing;
   final EdgeInsetsGeometry? padding;
   final CrossAxisAlignment crossAxisAlignment;
 
-  double _gapFor(StoicSectionSpacing value) {
+  double _gapFor(AethorSectionSpacing value) {
     switch (value) {
-      case StoicSectionSpacing.tight:
-        return StoicSpacing.md;
-      case StoicSectionSpacing.normal:
-        return StoicSpacing.xl;
-      case StoicSectionSpacing.relaxed:
-        return StoicSpacing.xxl;
+      case AethorSectionSpacing.tight:
+        return AethorSpacing.md;
+      case AethorSectionSpacing.normal:
+        return AethorSpacing.xl;
+      case AethorSectionSpacing.relaxed:
+        return AethorSpacing.xxl;
     }
   }
 

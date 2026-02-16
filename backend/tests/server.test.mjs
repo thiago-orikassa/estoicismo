@@ -11,6 +11,7 @@ let baseUrl;
 let seed;
 let testUserId;
 let authToken;
+const observabilityToken = 'test-observability-token';
 
 async function createSession(deviceId) {
   const sessionRes = await fetch(`${baseUrl}/v1/session`, {
@@ -23,14 +24,16 @@ async function createSession(deviceId) {
 }
 
 before(async () => {
-  const dataDir = mkdtempSync(join(tmpdir(), 'estoicismo-test-'));
+  const dataDir = mkdtempSync(join(tmpdir(), 'aethor-test-'));
   const __dirname = dirname(fileURLToPath(import.meta.url));
   const seedSourcePath = join(__dirname, '../data/daily_seed.json');
   seed = JSON.parse(readFileSync(seedSourcePath, 'utf-8'));
   writeFileSync(join(dataDir, 'daily_seed.json'), JSON.stringify(seed, null, 2));
 
   process.env.STOIC_DATA_DIR = dataDir;
-  process.env.STOIC_DB_PATH = join(dataDir, 'estoicismo.db');
+  process.env.STOIC_DB_PATH = join(dataDir, 'aethor.db');
+  process.env.STOIC_OBSERVABILITY_TOKEN = observabilityToken;
+  process.env.FCM_DRY_RUN = 'true';
 
   const mod = await import('../src/server.mjs');
   server = mod.server;
@@ -54,6 +57,27 @@ test('GET /health responde ok', async () => {
   assert.equal(res.status, 200);
   const data = await res.json();
   assert.equal(data.ok, true);
+});
+
+test('GET /v1/observability/metrics exige token quando configurado', async () => {
+  const res = await fetch(`${baseUrl}/v1/observability/metrics`);
+  assert.equal(res.status, 401);
+  const data = await res.json();
+  assert.equal(data.error, 'unauthorized');
+});
+
+test('GET /v1/observability/metrics retorna métricas operacionais', async () => {
+  const res = await fetch(`${baseUrl}/v1/observability/metrics`, {
+    headers: {
+      'x-observability-token': observabilityToken
+    }
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.ok(data.generated_at_utc);
+  assert.equal(typeof data.tables.sessions, 'number');
+  assert.equal(typeof data.tables.analytics_events, 'number');
+  assert.ok(Array.isArray(data.analytics_events_by_name));
 });
 
 test('GET /v1/daily-package exige timezone', async () => {
@@ -292,4 +316,153 @@ test('GET /v1/history valida days', async () => {
   assert.equal(res.status, 400);
   const data = await res.json();
   assert.equal(data.error, 'invalid_days');
+});
+
+test('POST /v1/push-tokens exige autenticação', async () => {
+  const res = await fetch(`${baseUrl}/v1/push-tokens`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ fcm_token: 'abc123', platform: 'android' })
+  });
+  assert.equal(res.status, 401);
+  const data = await res.json();
+  assert.equal(data.error, 'unauthorized');
+});
+
+test('POST /v1/push-tokens registra token FCM', async () => {
+  const res = await fetch(`${baseUrl}/v1/push-tokens`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
+    body: JSON.stringify({ fcm_token: 'test-fcm-token-001', platform: 'ios' })
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.user_id, testUserId);
+  assert.equal(data.platform, 'ios');
+  assert.equal(data.registered, true);
+});
+
+test('POST /v1/push-tokens upsert sem duplicar', async () => {
+  const res = await fetch(`${baseUrl}/v1/push-tokens`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
+    body: JSON.stringify({ fcm_token: 'test-fcm-token-001', platform: 'android' })
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.registered, true);
+
+  const analyticsDb = new DatabaseSync(process.env.STOIC_DB_PATH);
+  const count = analyticsDb
+    .prepare('select count(*) as total from push_tokens where user_id = ?')
+    .get(testUserId);
+  analyticsDb.close();
+  assert.equal(Number(count.total), 1);
+});
+
+test('POST /v1/push/send com tokens retorna relatório de entrega (dry-run)', async () => {
+  // First register a token for the test user (already done in earlier test).
+  const res = await fetch(`${baseUrl}/v1/push/send`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-observability-token': observabilityToken,
+    },
+    body: JSON.stringify({
+      user_id: testUserId,
+      title: 'Seu insight do dia',
+      body: 'Sêneca: O sofrimento começa na imaginação.',
+      data: { deeplink: 'aethor://today?date_local=2026-02-15&focus=checkin' },
+    }),
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.dry_run, true);
+  assert.equal(typeof data.token_count, 'number');
+  assert.ok(data.token_count >= 1, 'should have at least 1 token');
+});
+
+test('POST /v1/push/send sem tokens retorna sent=0', async () => {
+  // Create a fresh user with no tokens registered.
+  const session = await createSession('test-device-push-no-tokens');
+  const res = await fetch(`${baseUrl}/v1/push/send`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-observability-token': observabilityToken,
+    },
+    body: JSON.stringify({
+      user_id: session.user_id,
+      title: 'Test',
+      body: 'Test body',
+    }),
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.sent, 0);
+  assert.equal(data.reason, 'no_tokens');
+});
+
+test('POST /v1/push/send com token inactive não é incluído', async () => {
+  // Register a token and then deactivate it directly in the DB.
+  const session = await createSession('test-device-push-inactive');
+  await fetch(`${baseUrl}/v1/push-tokens`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${session.access_token}`,
+    },
+    body: JSON.stringify({ fcm_token: 'inactive-token-001', platform: 'android' }),
+  });
+
+  // Deactivate the token directly.
+  const analyticsDb = new DatabaseSync(process.env.STOIC_DB_PATH);
+  analyticsDb
+    .prepare('update push_tokens set active = 0 where fcm_token = ?')
+    .run('inactive-token-001');
+  analyticsDb.close();
+
+  const res = await fetch(`${baseUrl}/v1/push/send`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-observability-token': observabilityToken,
+    },
+    body: JSON.stringify({
+      user_id: session.user_id,
+      title: 'Test',
+      body: 'Test inactive',
+    }),
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.sent, 0);
+  assert.equal(data.reason, 'no_tokens');
+});
+
+test('POST /v1/purchases/log registra compra', async () => {
+  const res = await fetch(`${baseUrl}/v1/purchases/log`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${authToken}`
+    },
+    body: JSON.stringify({
+      product_id: 'aethor_pro_annual',
+      platform: 'ios',
+      purchase_token: 'sandbox-receipt-token-001',
+      transaction_id: 'txn-001'
+    })
+  });
+  assert.equal(res.status, 201);
+  const data = await res.json();
+  assert.equal(data.user_id, testUserId);
+  assert.equal(data.product_id, 'aethor_pro_annual');
+  assert.equal(data.logged, true);
 });

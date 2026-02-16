@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../app_state.dart';
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 import '../../../core/domain/authors.dart';
 import '../../../core/domain/context_labels.dart';
@@ -18,7 +19,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final List<String> _authors = kStoicAuthors;
+  final List<String> _authors = kAethorAuthors;
   late Set<String> _selectedAuthors;
 
   @override
@@ -120,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context)
                 .colorScheme
-                .copyWith(primary: StoicColors.deepBlue),
+                .copyWith(primary: AethorColors.deepBlue),
           ),
           child: child ?? const SizedBox.shrink(),
         );
@@ -135,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _showAuthorPicker() async {
     await showModalBottomSheet<void>(
       context: context,
-      backgroundColor: StoicColors.cardBackground,
+      backgroundColor: AethorColors.cardBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -161,14 +162,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       (author) => CheckboxListTile(
                         value: _selectedAuthors.contains(author),
                         dense: true,
-                        activeColor: StoicColors.deepBlue,
+                        activeColor: AethorColors.deepBlue,
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 4),
                         title: Text(
                           author,
                           style: const TextStyle(
                             fontSize: 14,
-                            color: StoicColors.obsidian,
+                            color: AethorColors.obsidian,
                           ),
                         ),
                         onChanged: (selected) {
@@ -187,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 8),
                     SizedBox(
                       width: double.infinity,
-                      child: StoicPressScale(
+                      child: AethorPressScale(
                         child: FilledButton(
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('Concluir'),
@@ -209,7 +210,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: StoicColors.cardBackground,
+          backgroundColor: AethorColors.cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -250,7 +251,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     return showModalBottomSheet<T>(
       context: context,
-      backgroundColor: StoicColors.cardBackground,
+      backgroundColor: AethorColors.cardBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -275,8 +276,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     contentPadding: EdgeInsets.zero,
                     title: Text(labelBuilder(option)),
                     trailing: option == currentValue
-                        ? const Icon(Icons.check_rounded,
-                            color: StoicColors.copper)
+                        ? const Icon(AethorIcons.check,
+                            color: AethorColors.copper)
                         : null,
                     onTap: () => Navigator.of(context).pop(option),
                   ),
@@ -304,7 +305,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontSize: 48,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w500,
-                color: StoicColors.obsidian,
+                color: AethorColors.obsidian,
                 height: 1.1,
               ),
         ),
@@ -315,7 +316,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontSize: 11,
                 letterSpacing: 1.1,
                 fontWeight: FontWeight.w400,
-                color: StoicColors.textSubtle,
+                color: AethorColors.textSubtle,
               ),
         ),
         const SizedBox(height: 32),
@@ -324,21 +325,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             children: [
               _SettingsRow(
-                icon: Icons.public,
+                icon: AethorIcons.globe,
                 title: 'Fuso Horário',
                 trailing: _timezoneLabel(widget.state.timezone),
                 onTap: _showTimezonePicker,
                 showDivider: true,
               ),
               _SettingsRow(
-                icon: Icons.person_outline,
+                icon: AethorIcons.user,
                 title: 'Autores Preferidos',
                 trailing: _authorsSummary(),
                 onTap: _showAuthorPicker,
                 showDivider: true,
               ),
               _SettingsRow(
-                icon: Icons.calendar_month_outlined,
+                icon: AethorIcons.calendar,
                 title: 'Contexto Preferencial',
                 subtitle: 'Personalize suas práticas',
                 trailing: contextLabel(widget.state.preferredContext),
@@ -401,9 +402,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              const Divider(height: 1, color: StoicColors.rowDivider),
+              const Divider(height: 1, color: AethorColors.rowDivider),
               const _SettingsRow(
-                icon: Icons.verified_outlined,
+                icon: AethorIcons.verified,
                 title: 'Fontes Verificadas',
                 trailing: 'Sempre',
                 showDivider: false,
@@ -424,14 +425,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: StoicColors.obsidian,
+                        color: AethorColors.obsidian,
                       ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   'Reabra o onboarding para testes.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: StoicColors.textMuted,
+                        color: AethorColors.textMuted,
                       ),
                 ),
                 const SizedBox(height: 12),
@@ -439,7 +440,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: _confirmResetOnboarding,
-                    icon: const Icon(Icons.refresh_rounded),
+                    icon: const Icon(AethorIcons.refresh),
                     label: const Text('Resetar onboarding'),
                   ),
                 ),
@@ -451,20 +452,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Column(
           children: [
             Text(
-              'Figma Make • Versão Protótipo 1.0.0',
+              'Aethor • Versão 1.0.0',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     fontSize: 11,
-                    color: StoicColors.textSubtle,
+                    color: AethorColors.textSubtle,
                   ),
             ),
             const SizedBox(height: 12),
             Text(
-              'Foco na filosofia prática e ação consciente.',
+              'Clareza para agir.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 12,
-                    color: StoicColors.textMuted,
+                    color: AethorColors.textMuted,
                   ),
             ),
             const SizedBox(height: 8),
@@ -474,7 +475,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: TextButton(
                 onPressed: () {},
                 style: TextButton.styleFrom(
-                  backgroundColor: StoicColors.mutedButtonBackground,
+                  backgroundColor: AethorColors.mutedButtonBackground,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -484,7 +485,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: StoicColors.stone,
+                        color: AethorColors.stone,
                       ),
                 ),
               ),
@@ -518,14 +519,14 @@ class _SettingsSection extends StatelessWidget {
                   letterSpacing: 1,
                   fontSize: 10,
                   fontWeight: FontWeight.w500,
-                  color: StoicColors.textSubtle,
+                  color: AethorColors.textSubtle,
                 ),
           ),
         ),
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: StoicColors.cardBackground,
+            color: AethorColors.cardBackground,
             borderRadius: BorderRadius.circular(16),
           ),
           child: child,
@@ -561,7 +562,7 @@ class _SettingsRow extends StatelessWidget {
         border: showDivider
             ? const Border(
                 bottom: BorderSide(
-                  color: StoicColors.rowDivider,
+                  color: AethorColors.rowDivider,
                 ),
               )
             : null,
@@ -573,7 +574,7 @@ class _SettingsRow extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 16),
-            child: Icon(icon, size: 24, color: StoicColors.obsidian),
+            child: Icon(icon, size: 24, color: AethorColors.obsidian),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -587,7 +588,7 @@ class _SettingsRow extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          color: StoicColors.obsidian,
+                          color: AethorColors.obsidian,
                         ),
                   ),
                   if (subtitle != null) ...[
@@ -598,7 +599,7 @@ class _SettingsRow extends StatelessWidget {
                             fontSize: 10,
                             letterSpacing: 0.5,
                             fontWeight: FontWeight.w500,
-                            color: StoicColors.textSubtle,
+                            color: AethorColors.textSubtle,
                           ),
                     ),
                   ],
@@ -616,14 +617,14 @@ class _SettingsRow extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: StoicColors.textMuted,
+                        color: AethorColors.textMuted,
                       ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(
-                  Icons.chevron_right_rounded,
-                  color: StoicColors.textSubtle,
-                  size: 20,
+                Icon(
+                  AethorIcons.chevronRight,
+                  color: AethorColors.textSubtle,
+                  size: AethorIconSize.sm,
                 ),
               ],
             ),

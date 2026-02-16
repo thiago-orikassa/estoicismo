@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/auth/auth_models.dart';
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 
 class LoginPromptSheet extends StatelessWidget {
@@ -24,7 +25,7 @@ class LoginPromptSheet extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
         decoration: const BoxDecoration(
-          color: StoicColors.ivory,
+          color: AethorColors.ivory,
           borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
         ),
         child: Column(
@@ -35,13 +36,13 @@ class LoginPromptSheet extends StatelessWidget {
               child: IconButton(
                 onPressed: onClose,
                 style: IconButton.styleFrom(
-                  backgroundColor: StoicColors.stone.withValues(alpha: 0.1),
+                  backgroundColor: AethorColors.stone.withValues(alpha: 0.1),
                 ),
-                icon: const Icon(Icons.close, color: StoicColors.obsidian),
+                icon: const Icon(AethorIcons.close, color: AethorColors.obsidian),
               ),
             ),
             const SizedBox(height: 8),
-            StoicFadeSlideIn(
+            AethorFadeSlideIn(
               offsetY: 8,
               child: Column(
                 children: [
@@ -50,7 +51,7 @@ class LoginPromptSheet extends StatelessWidget {
                     style: Theme.of(context).textTheme.displayMedium?.copyWith(
                           fontSize: 32,
                           height: 1.2,
-                          color: StoicColors.obsidian,
+                          color: AethorColors.obsidian,
                         ),
                     textAlign: TextAlign.center,
                   ),
@@ -58,7 +59,7 @@ class LoginPromptSheet extends StatelessWidget {
                   Text(
                     'Sincronize check-ins, favoritos e histórico entre dispositivos.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: StoicColors.textMuted,
+                          color: AethorColors.textMuted,
                           height: 1.5,
                         ),
                     textAlign: TextAlign.center,

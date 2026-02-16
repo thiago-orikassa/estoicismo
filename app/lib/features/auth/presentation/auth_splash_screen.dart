@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
@@ -15,27 +16,24 @@ class AuthSplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: StoicColors.obsidian,
+      backgroundColor: AethorColors.obsidian,
       body: SafeArea(
         child: Center(
-          child: StoicFadeIn(
+          child: AethorFadeIn(
             duration: MotionTokens.standard,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Estoicismo',
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: StoicColors.ivory,
-                        fontSize: 52,
-                        height: 1.1,
-                      ),
+                SvgPicture.asset(
+                  'assets/images/aethor_logo.svg',
+                  width: 120,
+                  height: 120,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 Text(
                   'Clareza para agir.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: StoicColors.sand,
+                        color: AethorColors.sand,
                         fontSize: 16,
                       ),
                 ),
@@ -49,7 +47,7 @@ class AuthSplashScreen extends StatelessWidget {
                   Text(
                     'Preparando seu insight de hoje...',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: StoicColors.sand.withValues(alpha: 0.6),
+                          color: AethorColors.sand.withValues(alpha: 0.6),
                         ),
                   ),
                 ],

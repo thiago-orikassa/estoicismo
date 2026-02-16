@@ -2,24 +2,36 @@ id,agente,tarefa,prioridade,esforco,dependencias,criterio_aceite,status
 PS-01,Product Strategist,Fechar escopo MVP congelado (v1),P0,S,-,Documento de escopo com in/out assinado,DONE
 PS-02,Product Strategist,Definir metas D1/D7 + baseline esperado,P0,S,PS-01,Metas registradas com formula de calculo,DONE
 PS-03,Product Strategist,Priorizar backlog por impacto x risco,P0,S,PS-01,Ranking de tarefas P0/P1 aprovado,DONE
+PS-04,Product Strategist,Consolidar regras de monetizacao no MVP (gatilhos frequencia e guardrails de retencao),P0,S,PS-01|PS-02,Regras publicadas e alinhadas no board + escopo MVP,DONE
 SC-01,Stoic Content Curator,Criar matriz editorial (autor x tema x contexto),P0,M,PS-01,Matriz publicada com cobertura minima por celula,DONE
 SC-02,Stoic Content Curator,Curar 90 citacoes com fonte verificavel,P0,L,SC-01,100 por cento com referencia catalogada e validade,DONE
 SC-03,Stoic Content Curator,Criar 40 recomendacoes praticas vinculadas,P0,M,SC-01,Cada recomendacao com principio + acao + criterio,DONE
 SC-04,Stoic Content Curator,Revisao de integridade filosofica,P0,M,SC-02|SC-03,Checklist sem pendencias criticas,DONE
-SC-05,Stoic Content Curator,Expandir catalogo com autores estoicos adicionais (Zenao, Cleantes, Crisipo, Musonio Rufo, Hierocles, Posidonio),P2,L,SC-02,Autores adicionados com fonte canonica definida e 100 por cento das citacoes com referencia,TODO
+SC-05,Stoic Content Curator,Expandir catalogo com autores estoicos adicionais (Zenao Cleantes Crisipo Musonio Rufo Hierocles Posidonio),P2,L,SC-02,Autores adicionados com fonte canonica definida e 100 por cento das citacoes com referencia,TODO
 MA-01,Mobile Architect,Definir arquitetura de pastas e camadas,P0,S,-,Estrutura documentada com exemplos,DONE
 MA-02,Mobile Architect,Contratos de dados (Quote Recommendation Check-in),P0,M,MA-01|SC-01,Schemas versionados + validacoes minimas,DONE
 MA-03,Mobile Architect,Estrategia offline e cache de 7 dias,P0,M,MA-01,Fluxo offline documentado + politica de expiracao,DONE
-BE-01,Backend and Data Engineer,Provisionar backend e banco base,P0,M,MA-02,Ambientes dev/stage com migracoes iniciais,IN_PROGRESS
+MA-04,Mobile Architect,Definir estrategia de feature flags,P0,S,MA-01,Plano de toggles por funcionalidade critica,DONE
+MA-05,Mobile Architect,Orquestrar gatilhos de paywall no app (A/B/C) com regra de frequencia e cooldown,P0,M,MA-04|PS-04,Gatilhos implementados e auditaveis por logs/eventos,IN_PROGRESS
+BE-01,Backend and Data Engineer,Provisionar backend e banco base,P0,M,MA-02,Ambientes dev/stage com migracoes iniciais,DONE
 BE-02,Backend and Data Engineer,API pacote diario por timezone,P0,M,BE-01|SC-02|SC-03,Endpoint retorna citacao + recomendacao validas,DONE
 BE-03,Backend and Data Engineer,API de favoritos e historico,P0,M,BE-01,CRUD funcional com paginacao,DONE
 BE-04,Backend and Data Engineer,API de check-in diario,P0,S,BE-01,Persistencia com timestamp local e UTC,DONE
 BE-05,Backend and Data Engineer,Scheduler diario confiavel,P0,M,BE-02,Entrega diaria sem duplicidade em teste de 7 dias,DONE
+BE-06,Backend and Data Engineer,Telemetria backend e logs estruturados,P1,S,BE-01,Logs e metricas de erro disponiveis,DONE
+BE-07,Backend and Data Engineer,Expor entitlement de assinatura + elegibilidade de trial + restauracao,P0,M,BE-01|MA-05,Contrato de assinatura disponivel e validado em staging,DONE
+BE-08,Backend and Data Engineer,Instrumentar eventos de monetizacao no backend (paywall_* trial_* subscription_*),P0,S,BE-06|PS-04,Eventos publicados com propriedades minimas e versionamento,DONE
 AN-01,Android Specialist,Base UI Android (Material 3),P1,M,MA-01,Home historico e ajustes com padroes M3,DONE
 AN-02,Android Specialist,Fluxo push Android (FCM + permissoes),P0,M,BE-05,Push entregue e aberto com deeplink correto,TODO
+AN-03,Android Specialist,Acessibilidade Android (fonte contraste leitura),P1,S,AN-01,Checklist de acessibilidade sem bloqueadores,TODO
+AN-04,Android Specialist,Integrar compra e restore Android (Billing) com retorno para feature bloqueada,P0,M,MA-05|BE-07,Trial compra restore concluidos com retorno ao contexto correto,TODO
 IOS-01,iOS Specialist,Base UI iOS (HIG + Dynamic Type),P1,M,MA-01,Home historico e ajustes com padroes HIG,DONE
 IOS-02,iOS Specialist,Fluxo push iOS (APNs/FCM + permissoes),P0,M,BE-05,Push entregue e aberto com deeplink correto,TODO
+IOS-03,iOS Specialist,Acessibilidade iOS (Dynamic Type VoiceOver),P1,S,IOS-01,Checklist sem bloqueadores criticos,TODO
+IOS-04,iOS Specialist,Integrar compra e restore iOS (StoreKit) com retorno para feature bloqueada,P0,M,MA-05|BE-07,Trial compra restore concluidos com retorno ao contexto correto,TODO
 QA-01,QA and Analytics Lead,Plano de testes e estrategia de regressao,P0,S,PS-01|MA-01,Plano com suite minima por fluxo critico,DONE
 QA-02,QA and Analytics Lead,Instrumentacao do funil diario,P0,S,PS-02|BE-04,Eventos publicados com naming consistente,DONE
 QA-03,QA and Analytics Lead,Testes E2E do fluxo diario (7 dias simulados),P0,M,BE-05|AN-02|IOS-02,Execucao sem falha critica por 7 ciclos,TODO
 QA-04,QA and Analytics Lead,Gate de release beta,P0,S,QA-03,Crash-free maior que 99.5 por cento e checklist final aprovado,TODO
+QA-05,QA and Analytics Lead,Testes E2E de monetizacao com guardrails de retencao,P0,M,MA-05|BE-07|AN-04|IOS-04,Fluxo paywall trial restore sem quebra do ritual diario free,TODO
+QA-06,QA and Analytics Lead,Dashboard e alertas de monetizacao (trial conversao impacto em D7/check-in),P0,S,BE-08|QA-05,Painel ativo com regras de corte automatizaveis,TODO

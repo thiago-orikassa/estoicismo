@@ -1,6 +1,6 @@
 {
-    "name": "estoicismo_app",
-    "short_name": "estoicismo_app",
+    "name": "Aethor",
+    "short_name": "Aethor",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

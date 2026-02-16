@@ -23,10 +23,13 @@
 - IOS-01: base UI iOS (HIG/Cupertino + Dynamic Type base) implementada em Flutter.
 - SC-02: catálogo editorial fechado com 90/90 referências canônicas e texto literal.
 - SC-04: revisão de integridade concluída com curadoria final para MVP (`40 verified` / `50 rejected`).
+- BE-01: provisionamento dev/stage padronizado com scripts e relatório de migração.
+- BE-06: logs estruturados e endpoint de métricas operacionais publicados.
+- MA-05: orquestração de gatilhos de paywall (A/B/C) fechada com motor de elegibilidade, guardrails (1a sessão, 24h freq, 48h cooldown), flags por trigger, milestone de valor e auditabilidade completa. Validação: 44/44 testes de paywall, 49/49 Flutter total, 0 issues no analyze.
 
 ## Tarefas em andamento
-- BE-01: banco base iniciado com migração SQL e contrato OpenAPI inicial.
-- MA-05: orquestração de gatilhos de paywall em app (A/B/C) implementada com regra de frequência/cooldown, pendente validação E2E completa.
+- AN-02: fluxo push Android (FCM + permissões) em andamento.
+- IOS-02: fluxo push iOS (APNs/FCM + permissões) em andamento.
 
 ## Decisões editoriais confirmadas (SC-02)
 - Fonte de verdade: 1 edição canônica por autor (preferência domínio público).
@@ -39,6 +42,9 @@
 - `/Users/thiagoorikassa/Documents/Estoicismo/backend/migrations/001_init.sql`
 - `/Users/thiagoorikassa/Documents/Estoicismo/backend/openapi/daily-package.openapi.yaml`
 - `/Users/thiagoorikassa/Documents/Estoicismo/backend/src/server.mjs`
+- `/Users/thiagoorikassa/Documents/Estoicismo/backend/src/logger.mjs`
+- `/Users/thiagoorikassa/Documents/Estoicismo/backend/scripts/provision.mjs`
+- `/Users/thiagoorikassa/Documents/Estoicismo/backend/scripts/start-profile.mjs`
 - `/Users/thiagoorikassa/Documents/Estoicismo/backend/tests/server.test.mjs`
 - `/Users/thiagoorikassa/Documents/Estoicismo/backend/migrations/004_subscriptions.sql`
 - `/Users/thiagoorikassa/Documents/Estoicismo/backend/data/daily_seed.json`
@@ -56,8 +62,10 @@
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/main.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/app_state.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/core/paywall/paywall_flow.dart`
+- `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/core/paywall/paywall_policy.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/daily_quote/presentation/home_screen.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/daily_quote/data/daily_repository.dart`
+- `/Users/thiagoorikassa/Documents/Estoicismo/app/test/core/paywall/paywall_policy_test.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/history/presentation/history_screen.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/favorites/presentation/favorites_screen.dart`
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/settings/presentation/settings_screen.dart`
@@ -65,14 +73,25 @@
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/core/theme/app_theme.dart`
 
 ## Validação técnica executada (2026-02-14)
-- `npm test --prefix backend`: 13/13 testes passando (inclui assinatura + `/v1/analytics/events`).
-- `cd app && flutter test`: 1/1 teste passando.
+- `npm test --prefix backend`: 15/15 testes passando (inclui assinatura, `/v1/analytics/events` e observabilidade backend).
+- `cd app && flutter test`: 7/7 testes passando.
 - `cd app && flutter analyze`: sem erros de compilação; pendências em lints informativos históricos.
+- `cd app && flutter analyze lib/core/paywall lib/features/daily_quote/presentation/home_screen.dart lib/app_state.dart`: sem issues.
+
+## Validação técnica executada (2026-02-15) - Fechamento MA-05
+- `npm test --prefix backend`: 15/15 testes passando.
+- `cd app && flutter test`: 49/49 testes passando (44 paywall + 5 existentes).
+- `cd app && flutter analyze lib/core/paywall lib/features/daily_quote/presentation/home_screen.dart lib/app_state.dart`: 0 issues.
+- Cobertura de testes de paywall expandida de 6 para 44 testes:
+  - resolveValueMilestone (5), guardrails globais (5), frequência 24h (4), cooldown 48h (4)
+  - trigger valueBased A/B (5), trigger featureBlock C (3), trigger manual (3)
+  - enforceTriggerRules=false (3), prioridade de avaliação (4), blockedReasonCode (2)
+  - cenário E2E jornada completa de 3 dias (6)
 
 ## Próximo bloco de execução
 1. QA-05: suíte E2E de monetização (feature block -> paywall -> trial/compra/restore).
 2. AN-04 + IOS-04: integração de compra/restore usando contrato BE-07.
-3. BE-01: fechar provisionamento dev/stage com runtime/execução padronizada.
+3. AN-02 + IOS-02: fechar push/deeplink para habilitar QA-03.
 4. QA-03: retomar E2E do fluxo diário em 7 ciclos com o novo seed de conteúdo.
 
 ## Bloqueio técnico atual

@@ -62,10 +62,10 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
   Widget build(BuildContext context) {
     final hasError = widget.error != null && widget.error!.isNotEmpty;
     final borderColor = hasError
-        ? StoicColors.copper
-        : (_focused ? StoicColors.deepBlue : StoicColors.sand);
+        ? AethorColors.copper
+        : (_focused ? AethorColors.deepBlue : AethorColors.sand);
     final fillColor =
-        hasError ? StoicColors.copper.withValues(alpha: 0.05) : Colors.white;
+        hasError ? AethorColors.copper.withValues(alpha: 0.05) : Colors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
         DecoratedBox(
           decoration: BoxDecoration(
             color: fillColor,
-            borderRadius: BorderRadius.circular(StoicRadius.md),
+            borderRadius: BorderRadius.circular(AethorRadius.md),
             border: Border.all(color: borderColor, width: 2),
           ),
           child: SizedBox(
@@ -91,14 +91,14 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
               decoration: InputDecoration(
                 hintText: widget.placeholder,
                 hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: StoicColors.textSubtle,
+                      color: AethorColors.textSubtle,
                     ),
                 border: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               ),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: StoicColors.obsidian,
+                    color: AethorColors.obsidian,
                     fontSize: 16,
                   ),
             ),
@@ -110,7 +110,7 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
             child: Text(
               widget.error!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: StoicColors.copper,
+                    color: AethorColors.copper,
                     fontSize: 13,
                   ),
             ),

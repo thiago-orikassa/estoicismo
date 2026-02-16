@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../tokens/design_tokens.dart';
 
-class StoicScaffold extends StatelessWidget {
-  const StoicScaffold({
+class AethorScaffold extends StatelessWidget {
+  const AethorScaffold({
     super.key,
     required this.child,
     this.showNav = true,
@@ -21,7 +21,7 @@ class StoicScaffold extends StatelessWidget {
     final bottomPadding = showNav ? 80.0 : 32.0;
 
     return Container(
-      color: StoicColors.screenBackground,
+      color: AethorColors.screenBackground,
       child: SafeArea(
         bottom: false,
         child: Center(

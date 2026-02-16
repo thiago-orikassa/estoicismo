@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Estoicismo API
+  title: Aethor API
   version: 1.6.0
 servers:
   - url: http://localhost:8787

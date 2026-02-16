@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../../app_state.dart';
 import '../../../core/design_system/motion/motion.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 import '../../../core/domain/authors.dart';
 import '../../../core/domain/context_labels.dart';
 
 class OnboardingFlow extends StatefulWidget {
-  const OnboardingFlow({super.key, required this.state});
+  const OnboardingFlow({
+    super.key,
+    required this.state,
+    this.onRequestNotificationPermission,
+  });
 
   final AppState state;
+  final Future<bool> Function()? onRequestNotificationPermission;
 
   @override
   State<OnboardingFlow> createState() => _OnboardingFlowState();
@@ -52,7 +58,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     _VoiceOption(
       label: kMixedAuthorsLabel,
       subtitle: 'alternar autores',
-      authors: kStoicAuthors.toSet(),
+      authors: kAethorAuthors.toSet(),
     ),
   ];
 
@@ -66,7 +72,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   @override
   void initState() {
     super.initState();
-    _selectedAuthors = kStoicAuthors.toSet();
+    _selectedAuthors = kAethorAuthors.toSet();
   }
 
   void _goNext() {
@@ -89,7 +95,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context)
                 .colorScheme
-                .copyWith(primary: StoicColors.deepBlue),
+                .copyWith(primary: AethorColors.deepBlue),
           ),
           child: child ?? const SizedBox.shrink(),
         );
@@ -116,7 +122,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   String _summaryVoice() {
-    if (_selectedAuthors.length == kStoicAuthors.length) {
+    if (_selectedAuthors.length == kAethorAuthors.length) {
       return kMixedAuthorsLabel;
     }
     return _selectedVoiceLabel;
@@ -137,7 +143,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   void _showHowItWorks() {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: StoicColors.cardBackground,
+      backgroundColor: AethorColors.cardBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -201,7 +207,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   Widget _buildIntro(BuildContext context) {
     return _StepContent(
       title: 'Menos reação.\nMais intenção.',
-      subtitle: '1 insight estoico e 1 ação prática em poucos minutos.',
+      subtitle: '1 citação verificada. 1 ação para hoje.',
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
@@ -234,7 +240,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
           final label = contextLabel(option.key);
           final selected = _selectedContext == option.key;
           return Padding(
-            padding: const EdgeInsets.only(bottom: StoicSpacing.md),
+            padding: const EdgeInsets.only(bottom: AethorSpacing.md),
             child: _OptionCard(
               title: label,
               selected: selected,
@@ -257,13 +263,13 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   Widget _buildVoice(BuildContext context) {
     return _StepContent(
-      title: 'Escolha a voz que vai te acompanhar',
+      title: 'Escolha o autor que guia sua prática',
       subtitle: 'Você pode trocar depois.',
       body: Column(
         children: _voiceOptions.map((option) {
           final selected = _selectedVoiceLabel == option.label;
           return Padding(
-            padding: const EdgeInsets.only(bottom: StoicSpacing.md),
+            padding: const EdgeInsets.only(bottom: AethorSpacing.md),
             child: _OptionCard(
               title: option.label,
               subtitle: option.subtitle,
@@ -304,7 +310,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               ? (_selectedTime != null && !_isPresetTime() ? 'Selecionado: $_selectedTime' : null)
               : option.label;
           return Padding(
-            padding: const EdgeInsets.only(bottom: StoicSpacing.md),
+            padding: const EdgeInsets.only(bottom: AethorSpacing.md),
             child: _OptionCard(
               title: option.value == 'custom' ? option.label : option.value,
               subtitle: subtitle,
@@ -321,11 +327,11 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         }).toList(),
       ),
       footer: Padding(
-        padding: const EdgeInsets.only(top: StoicSpacing.xs),
+        padding: const EdgeInsets.only(top: AethorSpacing.xs),
         child: Text(
           'Fuso horário: ${widget.state.timezone}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: StoicColors.textSubtle,
+                color: AethorColors.textSubtle,
               ),
         ),
       ),
@@ -353,7 +359,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   Widget _buildReminder(BuildContext context) {
     return _StepContent(
       title: 'Quer um lembrete diário?',
-      subtitle: 'Um lembrete curto ajuda a manter consistência.',
+      subtitle: 'Um lembrete breve para manter o ritmo.',
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -361,29 +367,35 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             width: 72,
             height: 72,
             decoration: const BoxDecoration(
-              color: StoicColors.mist,
+              color: AethorColors.mist,
               shape: BoxShape.circle,
             ),
             child: const Icon(
-              Icons.notifications_none_rounded,
-              color: StoicColors.deepBlue,
+              AethorIcons.bell,
+              color: AethorColors.deepBlue,
               size: 32,
             ),
           ),
-          const SizedBox(height: StoicSpacing.lg),
+          const SizedBox(height: AethorSpacing.lg),
           Text(
             'No próximo passo o sistema vai pedir permissão.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: StoicColors.textMuted,
+                  color: AethorColors.textMuted,
                 ),
           ),
         ],
       ),
       primaryAction: _PrimaryButton(
         label: 'Ativar lembretes',
-        onPressed: () {
-          setState(() => _remindersEnabled = true);
+        onPressed: () async {
+          if (widget.onRequestNotificationPermission != null) {
+            final granted = await widget.onRequestNotificationPermission!();
+            if (!mounted) return;
+            setState(() => _remindersEnabled = granted);
+          } else {
+            setState(() => _remindersEnabled = true);
+          }
           _goNext();
         },
       ),
@@ -448,12 +460,12 @@ class _OnboardingScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: StoicColors.screenBackground,
+      backgroundColor: AethorColors.screenBackground,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: StoicSpacing.sm),
+            const SizedBox(height: AethorSpacing.sm),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: _ProgressBar(value: progress),
@@ -463,10 +475,10 @@ class _OnboardingScaffold extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(8, 6, 20, 0),
                 child: TextButton.icon(
                   onPressed: onBack,
-                  icon: const Icon(Icons.chevron_left),
+                  icon: const Icon(AethorIcons.chevronLeft),
                   label: const Text('Voltar'),
                   style: TextButton.styleFrom(
-                    foregroundColor: StoicColors.textPrimary,
+                    foregroundColor: AethorColors.textPrimary,
                   ),
                 ),
               ),
@@ -516,15 +528,15 @@ class _StepContent extends StatelessWidget {
               height: 1.1,
             ),
           ),
-          const SizedBox(height: StoicSpacing.sm),
+          const SizedBox(height: AethorSpacing.sm),
           Text(
             subtitle,
             style: textTheme.bodyLarge?.copyWith(
-              color: StoicColors.textMuted,
+              color: AethorColors.textMuted,
               height: 1.4,
             ),
           ),
-          const SizedBox(height: StoicSpacing.lg),
+          const SizedBox(height: AethorSpacing.lg),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -532,16 +544,16 @@ class _StepContent extends StatelessWidget {
                 children: [
                   body,
                   if (helperText != null) ...[
-                    const SizedBox(height: StoicSpacing.sm),
+                    const SizedBox(height: AethorSpacing.sm),
                     Text(
                       helperText!,
                       style: textTheme.bodySmall?.copyWith(
-                        color: StoicColors.textMuted,
+                        color: AethorColors.textMuted,
                       ),
                     ),
                   ],
                   if (footer != null) ...[
-                    const SizedBox(height: StoicSpacing.md),
+                    const SizedBox(height: AethorSpacing.md),
                     footer!,
                   ],
                 ],
@@ -549,11 +561,11 @@ class _StepContent extends StatelessWidget {
             ),
           ),
           if (primaryAction != null) ...[
-            const SizedBox(height: StoicSpacing.sm),
+            const SizedBox(height: AethorSpacing.sm),
             primaryAction!,
           ],
           if (secondaryAction != null) ...[
-            const SizedBox(height: StoicSpacing.sm),
+            const SizedBox(height: AethorSpacing.sm),
             secondaryAction!,
           ],
         ],
@@ -579,7 +591,7 @@ class _ProgressBar extends StatelessWidget {
             width: width,
             height: 4,
             decoration: BoxDecoration(
-              color: StoicColors.copper,
+              color: AethorColors.copper,
               borderRadius: BorderRadius.circular(999),
             ),
           ),
@@ -605,20 +617,20 @@ class _OptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderColor =
-        selected ? StoicColors.deepBlue : StoicColors.cardOutline;
+        selected ? AethorColors.deepBlue : AethorColors.cardOutline;
 
-    return StoicPressScale(
+    return AethorPressScale(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(StoicRadius.lg),
+        borderRadius: BorderRadius.circular(AethorRadius.lg),
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: StoicSpacing.lg,
-            vertical: StoicSpacing.md,
+            horizontal: AethorSpacing.lg,
+            vertical: AethorSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: StoicColors.cardBackground,
-            borderRadius: BorderRadius.circular(StoicRadius.lg),
+            color: AethorColors.cardBackground,
+            borderRadius: BorderRadius.circular(AethorRadius.lg),
             border: Border.all(color: borderColor, width: selected ? 1.5 : 1),
           ),
           child: Row(
@@ -640,7 +652,7 @@ class _OptionCard extends StatelessWidget {
                       Text(
                         subtitle!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: StoicColors.textMuted,
+                              color: AethorColors.textMuted,
                             ),
                       ),
                     ],
@@ -669,7 +681,7 @@ class _SelectionIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: selected ? StoicColors.deepBlue : StoicColors.cardOutline,
+          color: selected ? AethorColors.deepBlue : AethorColors.cardOutline,
           width: 2,
         ),
       ),
@@ -681,7 +693,7 @@ class _SelectionIndicator extends StatelessWidget {
             width: 10,
             height: 10,
             decoration: const BoxDecoration(
-              color: StoicColors.deepBlue,
+              color: AethorColors.deepBlue,
               shape: BoxShape.circle,
             ),
           ),
@@ -700,11 +712,11 @@ class _PreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(StoicSpacing.lg),
+      padding: const EdgeInsets.all(AethorSpacing.lg),
       decoration: BoxDecoration(
-        color: StoicColors.cardBackground,
-        borderRadius: BorderRadius.circular(StoicRadius.lg),
-        border: Border.all(color: StoicColors.cardOutline),
+        color: AethorColors.cardBackground,
+        borderRadius: BorderRadius.circular(AethorRadius.lg),
+        border: Border.all(color: AethorColors.cardOutline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -712,15 +724,15 @@ class _PreviewCard extends StatelessWidget {
           Text(
             'Hoje, para começar',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: StoicColors.textSubtle,
+                  color: AethorColors.textSubtle,
                   letterSpacing: 0.8,
                 ),
           ),
-          const SizedBox(height: StoicSpacing.sm),
+          const SizedBox(height: AethorSpacing.sm),
           Text(
             'Insight',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: StoicColors.textMuted,
+                  color: AethorColors.textMuted,
                 ),
           ),
           const SizedBox(height: 4),
@@ -732,18 +744,18 @@ class _PreviewCard extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
           ),
-          const SizedBox(height: StoicSpacing.md),
+          const SizedBox(height: AethorSpacing.md),
           Text(
             'Ação',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: StoicColors.textMuted,
+                  color: AethorColors.textMuted,
                 ),
           ),
           const SizedBox(height: 4),
           Text(
             action,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: StoicColors.textSecondary,
+                  color: AethorColors.textSecondary,
                 ),
           ),
         ],
@@ -767,7 +779,7 @@ class _PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: StoicPressScale(
+      child: AethorPressScale(
         enabled: enabled,
         child: FilledButton(
           onPressed: enabled ? onPressed : null,
@@ -831,14 +843,14 @@ class _SummaryChip extends StatelessWidget {
         vertical: 8,
       ),
       decoration: BoxDecoration(
-        color: StoicColors.cardBackground,
-        borderRadius: BorderRadius.circular(StoicRadius.pill),
-        border: Border.all(color: StoicColors.cardOutline),
+        color: AethorColors.cardBackground,
+        borderRadius: BorderRadius.circular(AethorRadius.pill),
+        border: Border.all(color: AethorColors.cardOutline),
       ),
       child: Text(
         label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: StoicColors.textSecondary,
+              color: AethorColors.textSecondary,
             ),
       ),
     );
@@ -862,7 +874,7 @@ class _BulletItem extends StatelessWidget {
             width: 6,
             height: 6,
             decoration: const BoxDecoration(
-              color: StoicColors.copper,
+              color: AethorColors.copper,
               shape: BoxShape.circle,
             ),
           ),
@@ -871,7 +883,7 @@ class _BulletItem extends StatelessWidget {
             child: Text(
               text,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: StoicColors.textSecondary,
+                    color: AethorColors.textSecondary,
                   ),
             ),
           ),

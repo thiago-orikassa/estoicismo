@@ -1,16 +1,16 @@
-# Componentes de Design - DS v1 (Estoicismo)
+# Componentes de Design - DS v1 (Aethor)
 
 ## Objetivo
 Documentar os componentes reutilizáveis do produto para garantir consistência visual, acessibilidade e velocidade de implementação.
 
 ## Convenções
-- Prefixo de componentes proprietários: `Stoic`.
+- Prefixo de componentes proprietários: `Aethor`.
 - Todos os componentes devem consumir tokens de `Design Tokens` (cores, tipografia, spacing, radius).
 - Estados mínimos por componente interativo: default, hover/focus (quando aplicável), pressed, disabled, loading (quando aplicável).
 
 ## 1. Layout e Estrutura
 
-### StoicScaffold
+### AethorScaffold
 - Finalidade: estrutura base de tela com app bar, conteúdo e tratamento de erro global.
 - Base Flutter: `Scaffold` + `MaterialBanner`.
 - Props sugeridas:
@@ -22,7 +22,7 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 - Exibir banner apenas quando houver erro.
 - Manter body com área segura e padding controlado por seção.
 
-### StoicSection
+### AethorSection
 - Finalidade: agrupar blocos de conteúdo com título e espaçamento consistente.
 - Base Flutter: `Column`.
 - Props sugeridas:
@@ -33,7 +33,7 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 - Título sempre acima do conteúdo.
 - Evitar mais de um CTA primário por seção.
 
-### StoicCard
+### AethorCard
 - Finalidade: superfície semântica para leitura e ações relacionadas.
 - Base Flutter: `Card` customizado.
 - Props sugeridas:
@@ -107,7 +107,7 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 
 ## 3. Inputs e Ações
 
-### StoicTextField
+### AethorTextField
 - Finalidade: entrada de texto para check-in e notas.
 - Base Flutter: `TextField`.
 - Props sugeridas:
@@ -122,7 +122,7 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 - Suporte a Dynamic Type sem clipping.
 - Borda e foco com contraste AA.
 
-### StoicDropdown
+### AethorDropdown
 - Finalidade: seleção de contexto preferencial.
 - Base Flutter: `DropdownButtonFormField<T>`.
 - Props sugeridas:
@@ -193,7 +193,7 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 
 ## 5. Navegação
 
-### StoicBottomNav
+### AethorBottomNav
 - Finalidade: navegação principal entre áreas do app.
 - Base Flutter: `NavigationBar`.
 - Destinos v1:
@@ -207,15 +207,15 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 
 ## 6. Mapeamento Inicial para o Código Atual
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/main.dart`
-- Extrair `StoicScaffold` e `StoicBottomNav`.
+- Extrair `AethorScaffold` e `AethorBottomNav`.
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/daily_quote/presentation/home_screen.dart`
-- Extrair `QuoteCard`, `PracticeCard`, `StoicSection`, `StoicTextField`, `PrimaryButton`, `SecondaryButton`.
+- Extrair `QuoteCard`, `PracticeCard`, `AethorSection`, `AethorTextField`, `PrimaryButton`, `SecondaryButton`.
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/settings/presentation/settings_screen.dart`
-- Extrair `StoicDropdown` e `TonalButton`.
+- Extrair `AethorDropdown` e `TonalButton`.
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/favorites/presentation/favorites_screen.dart`
 - Aplicar `EmptyState` e `IconActionButton` com semântica.
 - `/Users/thiagoorikassa/Documents/Estoicismo/app/lib/features/history/presentation/history_screen.dart`
-- Aplicar `EmptyState` e padronização de `StoicCard`.
+- Aplicar `EmptyState` e padronização de `AethorCard`.
 
 ## 7. Critérios de Qualidade
 - Componente novo só entra se não houver equivalente reutilizável.
@@ -228,4 +228,4 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 - v1.1: componente de detalhe do item de histórico.
 - v1.1: `QuoteListItem` para favoritos com texto completo.
 - v1.2: variantes adaptativas para tablet e iPad.
-- v1.2: biblioteca de ícones semânticos oficial do produto.
+- v1.1: ~~biblioteca de ícones semânticos oficial do produto~~ **IMPLEMENTADO** — Phosphor Icons via `AethorIcons` (tokens/aethor_icons.dart).

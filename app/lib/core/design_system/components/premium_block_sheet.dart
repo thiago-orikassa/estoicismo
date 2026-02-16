@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 import 'paywall_types.dart';
 
@@ -29,7 +30,7 @@ class PremiumBlockSheet extends StatelessWidget {
   String get _description {
     switch (feature) {
       case PremiumFeature.fullHistory:
-        return 'Acesse todos os registros da sua jornada estoica.';
+        return 'Revise cada prática registrada, sem limite de tempo.';
       case PremiumFeature.favoritesLimit:
         return 'Salve quantas citações quiser para revisitar depois.';
       case PremiumFeature.audio:
@@ -54,7 +55,7 @@ class PremiumBlockSheet extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: StoicColors.textSubtle.withValues(alpha: 0.3),
+                  color: AethorColors.textSubtle.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(99),
                 ),
               ),
@@ -66,12 +67,12 @@ class PremiumBlockSheet extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: StoicColors.deepBlue.withValues(alpha: 0.1),
+                    color: AethorColors.deepBlue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: const Icon(
-                    Icons.lock_rounded,
-                    color: StoicColors.deepBlue,
+                    AethorIcons.lock,
+                    color: AethorColors.deepBlue,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -83,14 +84,14 @@ class PremiumBlockSheet extends StatelessWidget {
                         _title,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: StoicColors.obsidian,
+                              color: AethorColors.obsidian,
                             ),
                       ),
                       const SizedBox(height: 6),
                       Text(
                         _description,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: StoicColors.textMuted,
+                              color: AethorColors.textMuted,
                               height: 1.5,
                             ),
                       ),
@@ -104,8 +105,8 @@ class PremiumBlockSheet extends StatelessWidget {
               width: double.infinity,
               child: FilledButton(
                 style: FilledButton.styleFrom(
-                  backgroundColor: StoicColors.deepBlue,
-                  foregroundColor: StoicColors.ivory,
+                  backgroundColor: AethorColors.deepBlue,
+                  foregroundColor: AethorColors.ivory,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -120,9 +121,9 @@ class PremiumBlockSheet extends StatelessWidget {
               width: double.infinity,
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: StoicColors.stone,
+                  foregroundColor: AethorColors.stone,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  side: const BorderSide(color: StoicColors.border),
+                  side: const BorderSide(color: AethorColors.border),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -136,7 +137,7 @@ class PremiumBlockSheet extends StatelessWidget {
               child: TextButton(
                 onPressed: () => onAction(PremiumBlockAction.restorePurchase),
                 style: TextButton.styleFrom(
-                  foregroundColor: StoicColors.textMuted,
+                  foregroundColor: AethorColors.textMuted,
                 ),
                 child: const Text('Restaurar compra'),
               ),
