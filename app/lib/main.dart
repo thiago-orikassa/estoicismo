@@ -109,11 +109,11 @@ class _SplashGateState extends State<SplashGate> {
   @override
   void initState() {
     super.initState();
-    _loadingTimer = Timer(const Duration(milliseconds: 1200), () {
+    _loadingTimer = Timer(const Duration(milliseconds: 500), () {
       if (!mounted) return;
       setState(() => _showLoading = true);
     });
-    _transitionTimer = Timer(const Duration(milliseconds: 800), () {
+    _transitionTimer = Timer(const Duration(milliseconds: 1400), () {
       if (!mounted) return;
       setState(() => _showSplash = false);
     });

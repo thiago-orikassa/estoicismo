@@ -30,34 +30,52 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   String _selectedVoiceLabel = kMixedAuthorsLabel;
   String? _selectedTime;
   bool _remindersEnabled = false;
+  bool _skipTimeStep = false;
 
+  // Contextos com descrição de benefício orientada ao usuário
   final List<_ContextOption> _contextOptions = const [
-    _ContextOption(key: 'ansiedade'),
-    _ContextOption(key: 'foco'),
-    _ContextOption(key: 'trabalho'),
-    _ContextOption(key: 'relacionamentos'),
-    _ContextOption(key: 'decisao_dificil'),
+    _ContextOption(
+      key: 'ansiedade',
+      description: 'Recuperar clareza quando a mente acelera',
+    ),
+    _ContextOption(
+      key: 'foco',
+      description: 'Separar o essencial do urgente',
+    ),
+    _ContextOption(
+      key: 'trabalho',
+      description: 'Agir com intenção no ambiente profissional',
+    ),
+    _ContextOption(
+      key: 'relacionamentos',
+      description: 'Reagir menos, entender mais',
+    ),
+    _ContextOption(
+      key: 'decisao_dificil',
+      description: 'Encontrar firmeza na incerteza',
+    ),
   ];
 
+  // Subtítulos orientados ao benefício, não ao conceito filosófico
   late final List<_VoiceOption> _voiceOptions = [
-    _VoiceOption(
+    const _VoiceOption(
       label: 'Sêneca',
-      subtitle: 'prático e direto',
-      authors: const {'Sêneca'},
+      subtitle: 'direto ao ponto, sem rodeios',
+      authors: {'Sêneca'},
     ),
-    _VoiceOption(
+    const _VoiceOption(
       label: 'Epicteto',
-      subtitle: 'disciplina interna',
-      authors: const {'Epicteto'},
+      subtitle: 'foco no que você pode controlar',
+      authors: {'Epicteto'},
     ),
-    _VoiceOption(
+    const _VoiceOption(
       label: 'Marco Aurélio',
-      subtitle: 'introspecção e dever',
-      authors: const {'Marco Aurélio'},
+      subtitle: 'reflexão e autoconsciência',
+      authors: {'Marco Aurélio'},
     ),
     _VoiceOption(
       label: kMixedAuthorsLabel,
-      subtitle: 'alternar autores',
+      subtitle: 'variedade de perspectivas',
       authors: kAethorAuthors.toSet(),
     ),
   ];
@@ -66,7 +84,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     _TimeOption(value: '07:30', label: 'Manhã'),
     _TimeOption(value: '12:30', label: 'Almoço'),
     _TimeOption(value: '20:30', label: 'Noite'),
-    _TimeOption(value: 'custom', label: 'Escolher outro'),
+    _TimeOption(value: 'custom', label: 'Outro horário'),
   ];
 
   @override
@@ -82,11 +100,17 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   void _goBack() {
     if (_stepIndex == 0) return;
+    // Usuário pulou o step de horário: voltar ao step de lembrete
+    if (_stepIndex == 5 && _skipTimeStep) {
+      setState(() => _stepIndex = 3);
+      return;
+    }
     setState(() => _stepIndex -= 1);
   }
 
   Future<void> _pickCustomTime() async {
-    final initial = _parseTime(_selectedTime) ?? const TimeOfDay(hour: 7, minute: 30);
+    final initial =
+        _parseTime(_selectedTime) ?? const TimeOfDay(hour: 7, minute: 30);
     final picked = await showTimePicker(
       context: context,
       initialTime: initial,
@@ -128,6 +152,32 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     return _selectedVoiceLabel;
   }
 
+  /// Converte timezone IANA para nome legível em português.
+  String _readableTimezone(String tz) {
+    const tzNames = <String, String>{
+      'America/Sao_Paulo': 'Brasília (GMT−3)',
+      'America/Manaus': 'Manaus (GMT−4)',
+      'America/Belem': 'Belém (GMT−3)',
+      'America/Fortaleza': 'Fortaleza (GMT−3)',
+      'America/Recife': 'Recife (GMT−3)',
+      'America/Cuiaba': 'Cuiabá (GMT−4)',
+      'America/Porto_Velho': 'Porto Velho (GMT−4)',
+      'America/Boa_Vista': 'Boa Vista (GMT−4)',
+      'America/Rio_Branco': 'Rio Branco (GMT−5)',
+      'America/Noronha': 'Fernando de Noronha (GMT−2)',
+      'America/New_York': 'Nova York (GMT−5)',
+      'America/Chicago': 'Chicago (GMT−6)',
+      'America/Denver': 'Denver (GMT−7)',
+      'America/Los_Angeles': 'Los Angeles (GMT−8)',
+      'Europe/Lisbon': 'Lisboa (GMT+0)',
+      'Europe/London': 'Londres (GMT+0)',
+      'Europe/Madrid': 'Madri (GMT+1)',
+      'Europe/Paris': 'Paris (GMT+1)',
+      'Europe/Berlin': 'Berlim (GMT+1)',
+    };
+    return tzNames[tz] ?? tz.replaceAll('_', ' ');
+  }
+
   Future<void> _completeOnboarding() async {
     if (_selectedContext != null) {
       await widget.state.setPreferredContext(_selectedContext!);
@@ -154,8 +204,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   'Como funciona',
                   style: TextStyle(
                     fontSize: 22,
@@ -163,10 +213,47 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                     fontFamily: 'Cormorant Garamond',
                   ),
                 ),
-                SizedBox(height: 12),
-                _BulletItem(text: 'Receba um insight estoico direto ao ponto.'),
-                _BulletItem(text: 'Aplique uma ação prática em poucos minutos.'),
-                _BulletItem(text: 'Feche o dia com mais intenção.'),
+                const SizedBox(height: 4),
+                Text(
+                  'Simples. Direto. Todo dia.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AethorColors.textMuted,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                const _BulletItem(
+                  text:
+                      'Uma citação verificada de Sêneca, Epicteto ou Marco Aurélio — não frases de internet.',
+                ),
+                const _BulletItem(
+                  text:
+                      'Uma ação prática para aplicar hoje, no contexto que você escolher.',
+                ),
+                const _BulletItem(
+                  text:
+                      'Sem quiz infinito. Sem gamificação. Só prática real, todo dia.',
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(AethorSpacing.md),
+                  decoration: BoxDecoration(
+                    color: AethorColors.deepBlue.withValues(alpha: 0.06),
+                    borderRadius: BorderRadius.circular(AethorRadius.md),
+                    border: Border.all(
+                      color: AethorColors.deepBlue.withValues(alpha: 0.12),
+                    ),
+                  ),
+                  child: const Text(
+                    '"A filosofia não está nas palavras, mas nos atos."\n— Sêneca',
+                    style: TextStyle(
+                      fontFamily: 'Cormorant Garamond',
+                      fontSize: 17,
+                      fontStyle: FontStyle.italic,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -181,6 +268,9 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
     return _OnboardingScaffold(
       progress: progress,
+      stepKey: ValueKey(_stepIndex),
+      currentStep: _stepIndex + 1,
+      totalSteps: _totalSteps,
       showBack: _stepIndex > 0,
       onBack: _goBack,
       child: _buildStep(context),
@@ -196,9 +286,9 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       case 2:
         return _buildVoice(context);
       case 3:
-        return _buildTime(context);
-      case 4:
         return _buildReminder(context);
+      case 4:
+        return _buildTime(context);
       default:
         return _buildDone(context);
     }
@@ -206,14 +296,17 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   Widget _buildIntro(BuildContext context) {
     return _StepContent(
+      leading: const _BrandHeader(),
       title: 'Menos reação.\nMais intenção.',
       subtitle: '1 citação verificada. 1 ação para hoje.',
-      body: Column(
+      body: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           _PreviewCard(
-            insight: 'Fatos antes de julgamentos.',
-            action: 'Descreva uma situação só com fatos.',
+            quote:
+                '"Não são os acontecimentos que nos perturbam, mas a interpretação que fazemos deles."',
+            author: 'Epicteto',
+            action: 'Reescreva um fato recente sem usar adjetivos.',
           ),
         ],
       ),
@@ -243,6 +336,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             padding: const EdgeInsets.only(bottom: AethorSpacing.md),
             child: _OptionCard(
               title: label,
+              subtitle: option.description,
               selected: selected,
               onTap: () => setState(() => _selectedContext = option.key),
             ),
@@ -264,7 +358,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   Widget _buildVoice(BuildContext context) {
     return _StepContent(
       title: 'Escolha o autor que guia sua prática',
-      subtitle: 'Você pode trocar depois.',
+      subtitle: 'Você pode trocar a qualquer momento nos ajustes.',
       body: Column(
         children: _voiceOptions.map((option) {
           final selected = _selectedVoiceLabel == option.label;
@@ -295,24 +389,91 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     );
   }
 
+  Widget _buildReminder(BuildContext context) {
+    return _StepContent(
+      centered: true,
+      leading: Container(
+        width: 72,
+        height: 72,
+        decoration: const BoxDecoration(
+          color: AethorColors.mist,
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(
+          AethorIcons.bell,
+          color: AethorColors.deepBlue,
+          size: 32,
+        ),
+      ),
+      title: 'Mantenha o ritmo.',
+      subtitle:
+          'Um lembrete diário no horário que você escolher — nada além disso.',
+      body: Text(
+        'Você vai autorizar no próximo passo.',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AethorColors.textMuted,
+            ),
+      ),
+      primaryAction: _PrimaryButton(
+        label: 'Ativar lembretes',
+        onPressed: () async {
+          bool granted = true;
+          if (widget.onRequestNotificationPermission != null) {
+            granted = await widget.onRequestNotificationPermission!();
+          }
+          if (!mounted) return;
+          if (granted) {
+            setState(() {
+              _remindersEnabled = true;
+              _skipTimeStep = false;
+            });
+            _goNext();
+          } else {
+            // Permissão negada pelo sistema: pular horário e ir direto ao fim
+            setState(() {
+              _remindersEnabled = false;
+              _skipTimeStep = true;
+              _stepIndex = 5;
+            });
+          }
+        },
+      ),
+      // TextLink mantém hierarquia visual consistente com os outros steps
+      secondaryAction: _TextLink(
+        label: 'Agora não',
+        onPressed: () {
+          setState(() {
+            _remindersEnabled = false;
+            _skipTimeStep = true;
+            _stepIndex = 5;
+          });
+        },
+      ),
+    );
+  }
+
   Widget _buildTime(BuildContext context) {
     final hasSelection = _selectedTime != null;
 
     return _StepContent(
       title: 'Defina seu horário de prática',
-      subtitle: 'Você pode alterar depois em Ajustes.',
+      subtitle: 'Escolha o horário do seu lembrete diário.',
       body: Column(
         children: _timeOptions.map((option) {
           final isCustom = option.value == 'custom';
-          final selected =
-              isCustom ? _selectedTime != null && !_isPresetTime() : _selectedTime == option.value;
+          final selected = isCustom
+              ? _selectedTime != null && !_isPresetTime()
+              : _selectedTime == option.value;
           final subtitle = isCustom
-              ? (_selectedTime != null && !_isPresetTime() ? 'Selecionado: $_selectedTime' : null)
-              : option.label;
+              ? (_selectedTime != null && !_isPresetTime()
+                  ? 'Selecionado: $_selectedTime'
+                  : null)
+              : option.value;
           return Padding(
             padding: const EdgeInsets.only(bottom: AethorSpacing.md),
             child: _OptionCard(
-              title: option.value == 'custom' ? option.label : option.value,
+              title: option.label,
               subtitle: subtitle,
               selected: selected,
               onTap: () async {
@@ -329,7 +490,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       footer: Padding(
         padding: const EdgeInsets.only(top: AethorSpacing.xs),
         child: Text(
-          'Fuso horário: ${widget.state.timezone}',
+          'Fuso horário: ${_readableTimezone(widget.state.timezone)}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AethorColors.textSubtle,
               ),
@@ -356,103 +517,77 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         .any((option) => option.value == _selectedTime);
   }
 
-  Widget _buildReminder(BuildContext context) {
-    return _StepContent(
-      title: 'Quer um lembrete diário?',
-      subtitle: 'Um lembrete breve para manter o ritmo.',
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: const BoxDecoration(
-              color: AethorColors.mist,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              AethorIcons.bell,
-              color: AethorColors.deepBlue,
-              size: 32,
-            ),
-          ),
-          const SizedBox(height: AethorSpacing.lg),
-          Text(
-            'No próximo passo o sistema vai pedir permissão.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AethorColors.textMuted,
-                ),
-          ),
-        ],
-      ),
-      primaryAction: _PrimaryButton(
-        label: 'Ativar lembretes',
-        onPressed: () async {
-          if (widget.onRequestNotificationPermission != null) {
-            final granted = await widget.onRequestNotificationPermission!();
-            if (!mounted) return;
-            setState(() => _remindersEnabled = granted);
-          } else {
-            setState(() => _remindersEnabled = true);
-          }
-          _goNext();
-        },
-      ),
-      secondaryAction: _SecondaryButton(
-        label: 'Agora não',
-        onPressed: () {
-          setState(() => _remindersEnabled = false);
-          _goNext();
-        },
-      ),
-    );
-  }
-
   Widget _buildDone(BuildContext context) {
-    final summaryArea = _selectedContext == null
-        ? 'Não definido'
-        : contextLabel(_selectedContext!);
-    final summaryTime = _selectedTime ?? 'Não definido';
+    final chips = <Widget>[
+      if (_selectedContext != null)
+        _SummaryChip(label: 'Área: ${contextLabel(_selectedContext!)}'),
+      _SummaryChip(label: 'Voz: ${_summaryVoice()}'),
+      if (_selectedTime != null)
+        _SummaryChip(label: 'Horário: $_selectedTime'),
+      if (_remindersEnabled) const _SummaryChip(label: 'Lembrete: ativo'),
+    ];
+
+    final hasChips = chips.isNotEmpty;
 
     return _StepContent(
+      centered: true,
+      leading: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          color: AethorColors.deepBlue.withValues(alpha: 0.08),
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(
+          AethorIcons.checkCircleFill,
+          color: AethorColors.deepBlue,
+          size: 32,
+        ),
+      ),
       title: 'Pronto. Seu primeiro dia está preparado.',
       subtitle: 'Sem pressa. Um passo de cada vez.',
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _SummaryChip(label: 'Área: $summaryArea'),
-              _SummaryChip(label: 'Voz: ${_summaryVoice()}'),
-              _SummaryChip(label: 'Horário: $summaryTime'),
-            ],
-          ),
-        ],
-      ),
+      body: hasChips
+          ? Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
+              children: chips,
+            )
+          : Text(
+              'Você pode personalizar sua experiência a qualquer momento nos ajustes.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AethorColors.textMuted,
+                    height: 1.5,
+                  ),
+            ),
       primaryAction: _PrimaryButton(
         label: 'Ver meu primeiro insight',
-        onPressed: _completeOnboarding,
-      ),
-      secondaryAction: _TextLink(
-        label: 'Explorar o app',
         onPressed: _completeOnboarding,
       ),
     );
   }
 }
 
+// ---------------------------------------------------------------------------
+// Scaffold
+// ---------------------------------------------------------------------------
+
 class _OnboardingScaffold extends StatelessWidget {
   const _OnboardingScaffold({
     required this.progress,
+    required this.stepKey,
+    required this.currentStep,
+    required this.totalSteps,
     required this.child,
     this.showBack = true,
     this.onBack,
   });
 
   final double progress;
+  final Key stepKey;
+  final int currentStep;
+  final int totalSteps;
   final Widget child;
   final bool showBack;
   final VoidCallback? onBack;
@@ -468,21 +603,37 @@ class _OnboardingScaffold extends StatelessWidget {
             const SizedBox(height: AethorSpacing.sm),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: _ProgressBar(value: progress),
+              child: _ProgressBar(
+                value: progress,
+                currentStep: currentStep,
+                totalSteps: totalSteps,
+              ),
             ),
+            // IconButton ocupa menos espaço vertical que TextButton.icon
+            // e mantém target de toque adequado (48×48 mínimo)
             if (showBack)
               Padding(
-                padding: const EdgeInsets.fromLTRB(8, 6, 20, 0),
-                child: TextButton.icon(
+                padding: const EdgeInsets.fromLTRB(4, 2, 20, 0),
+                child: IconButton(
                   onPressed: onBack,
-                  icon: const Icon(AethorIcons.chevronLeft),
-                  label: const Text('Voltar'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AethorColors.textPrimary,
-                  ),
+                  icon: const Icon(AethorIcons.back),
+                  color: AethorColors.textPrimary,
+                  tooltip: 'Voltar',
                 ),
               ),
-            Expanded(child: child),
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: MotionTokens.standard,
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+                child: KeyedSubtree(
+                  key: stepKey,
+                  child: child,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -490,11 +641,17 @@ class _OnboardingScaffold extends StatelessWidget {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Step content
+// ---------------------------------------------------------------------------
+
 class _StepContent extends StatelessWidget {
   const _StepContent({
     required this.title,
     required this.subtitle,
     required this.body,
+    this.leading,
+    this.centered = false,
     this.primaryAction,
     this.secondaryAction,
     this.helperText,
@@ -504,6 +661,10 @@ class _StepContent extends StatelessWidget {
   final String title;
   final String subtitle;
   final String? helperText;
+  // Widget opcional exibido acima do título (ex.: marca no step de intro)
+  final Widget? leading;
+  // Quando true, centraliza ícone → título → subtítulo verticalmente na tela
+  final bool centered;
   final Widget body;
   final Widget? primaryAction;
   final Widget? secondaryAction;
@@ -511,6 +672,12 @@ class _StepContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return centered ? _buildCentered(context) : _buildLinear(context);
+  }
+
+  /// Layout padrão: título e subtítulo no topo, conteúdo scrollável abaixo.
+  /// Usado em telas com listas de opções (contexto, autor, horário).
+  Widget _buildLinear(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
@@ -518,6 +685,10 @@ class _StepContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(height: AethorSpacing.md),
+          ],
           Text(
             title,
             style: textTheme.displaySmall?.copyWith(
@@ -572,34 +743,175 @@ class _StepContent extends StatelessWidget {
       ),
     );
   }
-}
 
-class _ProgressBar extends StatelessWidget {
-  const _ProgressBar({required this.value});
+  /// Layout de foco: ícone → título → subtítulo → corpo, tudo centralizado.
+  /// Usado em telas de decisão única (lembrete, conclusão).
+  Widget _buildCentered(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
 
-  final double value;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final clamped = value.clamp(0.05, 1.0).toDouble();
-        final width = constraints.maxWidth * clamped;
-        return Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            width: width,
-            height: 4,
-            decoration: BoxDecoration(
-              color: AethorColors.copper,
-              borderRadius: BorderRadius.circular(999),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (leading != null) ...[
+                    leading!,
+                    const SizedBox(height: AethorSpacing.lg),
+                  ],
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: textTheme.displaySmall?.copyWith(
+                      fontFamily: 'Cormorant Garamond',
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w500,
+                      height: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: AethorSpacing.sm),
+                  Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: AethorColors.textMuted,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: AethorSpacing.lg),
+                  body,
+                ],
+              ),
             ),
           ),
-        );
-      },
+          if (primaryAction != null) ...[
+            const SizedBox(height: AethorSpacing.sm),
+            primaryAction!,
+          ],
+          if (secondaryAction != null) ...[
+            const SizedBox(height: AethorSpacing.sm),
+            secondaryAction!,
+          ],
+        ],
+      ),
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Progress bar com trilha de fundo e indicador numérico
+// ---------------------------------------------------------------------------
+
+class _ProgressBar extends StatelessWidget {
+  const _ProgressBar({
+    required this.value,
+    required this.currentStep,
+    required this.totalSteps,
+  });
+
+  final double value;
+  final int currentStep;
+  final int totalSteps;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Passo $currentStep de $totalSteps',
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final clamped = value.clamp(0.05, 1.0).toDouble();
+                final fillWidth = constraints.maxWidth * clamped;
+                return Stack(
+                  children: [
+                    // Trilha de fundo
+                    Container(
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: AethorColors.sand.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
+                    // Preenchimento animado
+                    AnimatedContainer(
+                      duration: MotionTokens.standard,
+                      curve: Curves.easeInOut,
+                      width: fillWidth,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: AethorColors.copper,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Indicador numérico visível — complementa a semântica acima
+          Text(
+            '$currentStep/$totalSteps',
+            style: const TextStyle(
+              fontSize: 11,
+              color: AethorColors.textSubtle,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Marca tipográfica do intro
+// ---------------------------------------------------------------------------
+
+class _BrandHeader extends StatelessWidget {
+  const _BrandHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'AETHOR',
+          style: TextStyle(
+            fontFamily: 'Cormorant Garamond',
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 3.5,
+            color: AethorColors.copper,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Container(
+          width: 28,
+          height: 1.5,
+          decoration: BoxDecoration(
+            color: AethorColors.copper.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(999),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Option card
+// ---------------------------------------------------------------------------
 
 class _OptionCard extends StatelessWidget {
   const _OptionCard({
@@ -619,54 +931,70 @@ class _OptionCard extends StatelessWidget {
     final borderColor =
         selected ? AethorColors.deepBlue : AethorColors.cardOutline;
 
-    return AethorPressScale(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AethorRadius.lg),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AethorSpacing.lg,
-            vertical: AethorSpacing.md,
-          ),
-          decoration: BoxDecoration(
-            color: AethorColors.cardBackground,
-            borderRadius: BorderRadius.circular(AethorRadius.lg),
-            border: Border.all(color: borderColor, width: selected ? 1.5 : 1),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontFamily: 'Cormorant Garamond',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 6),
+    return Semantics(
+      label: subtitle != null ? '$title, $subtitle' : title,
+      selected: selected,
+      button: true,
+      child: AethorPressScale(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AethorRadius.lg),
+          child: AnimatedContainer(
+            duration: MotionTokens.micro,
+            curve: Curves.easeOut,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AethorSpacing.lg,
+              vertical: AethorSpacing.md,
+            ),
+            decoration: BoxDecoration(
+              color: selected
+                  ? AethorColors.deepBlue.withValues(alpha: 0.06)
+                  : AethorColors.cardBackground,
+              borderRadius: BorderRadius.circular(AethorRadius.lg),
+              border: Border.all(color: borderColor, width: selected ? 1.5 : 1),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        subtitle!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AethorColors.textMuted,
-                            ),
+                        title,
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontFamily: 'Cormorant Garamond',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
                       ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 6),
+                        Text(
+                          subtitle!,
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: AethorColors.textMuted,
+                                  ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              _SelectionIndicator(selected: selected),
-            ],
+                ExcludeSemantics(
+                    child: _SelectionIndicator(selected: selected)),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Selection indicator
+// ---------------------------------------------------------------------------
 
 class _SelectionIndicator extends StatelessWidget {
   const _SelectionIndicator({required this.selected});
@@ -703,10 +1031,19 @@ class _SelectionIndicator extends StatelessWidget {
   }
 }
 
-class _PreviewCard extends StatelessWidget {
-  const _PreviewCard({required this.insight, required this.action});
+// ---------------------------------------------------------------------------
+// Preview card com citação real e atribuição ao autor
+// ---------------------------------------------------------------------------
 
-  final String insight;
+class _PreviewCard extends StatelessWidget {
+  const _PreviewCard({
+    required this.quote,
+    required this.author,
+    required this.action,
+  });
+
+  final String quote;
+  final String author;
   final String action;
 
   @override
@@ -730,23 +1067,31 @@ class _PreviewCard extends StatelessWidget {
           ),
           const SizedBox(height: AethorSpacing.sm),
           Text(
-            'Insight',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: AethorColors.textMuted,
-                ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            insight,
+            quote,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontFamily: 'Cormorant Garamond',
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                  height: 1.4,
+                ),
+          ),
+          const SizedBox(height: AethorSpacing.xs),
+          Text(
+            '— $author',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AethorColors.copper,
+                  fontWeight: FontWeight.w600,
                 ),
           ),
           const SizedBox(height: AethorSpacing.md),
+          Container(
+            height: 1,
+            color: AethorColors.cardOutline,
+          ),
+          const SizedBox(height: AethorSpacing.md),
           Text(
-            'Ação',
+            'Ação de hoje',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: AethorColors.textMuted,
                 ),
@@ -763,6 +1108,10 @@ class _PreviewCard extends StatelessWidget {
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Buttons
+// ---------------------------------------------------------------------------
 
 class _PrimaryButton extends StatelessWidget {
   const _PrimaryButton({
@@ -790,24 +1139,6 @@ class _PrimaryButton extends StatelessWidget {
   }
 }
 
-class _SecondaryButton extends StatelessWidget {
-  const _SecondaryButton({required this.label, this.onPressed});
-
-  final String label;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        child: Text(label),
-      ),
-    );
-  }
-}
-
 class _TextLink extends StatelessWidget {
   const _TextLink({required this.label, this.onPressed});
 
@@ -829,6 +1160,10 @@ class _TextLink extends StatelessWidget {
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Summary chip
+// ---------------------------------------------------------------------------
 
 class _SummaryChip extends StatelessWidget {
   const _SummaryChip({required this.label});
@@ -856,6 +1191,10 @@ class _SummaryChip extends StatelessWidget {
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Bullet item
+// ---------------------------------------------------------------------------
 
 class _BulletItem extends StatelessWidget {
   const _BulletItem({required this.text});
@@ -893,10 +1232,15 @@ class _BulletItem extends StatelessWidget {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Data models
+// ---------------------------------------------------------------------------
+
 class _ContextOption {
-  const _ContextOption({required this.key});
+  const _ContextOption({required this.key, required this.description});
 
   final String key;
+  final String description;
 }
 
 class _VoiceOption {
