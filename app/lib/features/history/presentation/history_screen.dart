@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../app_state.dart';
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 import '../../../core/paywall/paywall_flow.dart';
 import '../../daily_quote/domain/models.dart';
@@ -50,26 +51,26 @@ class HistoryScreen extends StatelessWidget {
   }
 
   Widget _buildUpsellCard(BuildContext context, AppState state) {
-    return StoicCard(
-      variant: StoicCardVariant.subtle,
+    return AethorCard(
+      variant: AethorCardVariant.subtle,
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.lock_rounded, color: StoicColors.copper),
+          const Icon(AethorIcons.lock, color: AethorColors.copper),
           const SizedBox(height: 8),
           Text(
             'Histórico completo é Pro',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: StoicColors.obsidian,
+                  color: AethorColors.obsidian,
                 ),
           ),
           const SizedBox(height: 6),
           Text(
-            'Acesse todos os registros da sua jornada e veja sua evolução.',
+            'Revise todas as suas práticas. Observe os padrões.',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: StoicColors.textMuted,
+                  color: AethorColors.textMuted,
                 ),
           ),
           const SizedBox(height: 12),
@@ -77,8 +78,8 @@ class HistoryScreen extends StatelessWidget {
             width: double.infinity,
             child: FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: StoicColors.deepBlue,
-                foregroundColor: StoicColors.ivory,
+                backgroundColor: AethorColors.deepBlue,
+                foregroundColor: AethorColors.ivory,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -98,29 +99,62 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state.loadingHistory && state.history.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: StoicLoadingState(),
+    final header = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Histórico',
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontFamily: 'Cormorant Garamond',
+                fontSize: 48,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w500,
+                color: AethorColors.obsidian,
+                height: 1.1,
+              ),
         ),
+        const SizedBox(height: 16),
+      ],
+    );
+
+    if (state.loadingHistory && state.history.isEmpty) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+        children: [
+          header,
+          if (state.offline) ...[
+            AethorOfflineBanner(onSync: state.bootstrap),
+            const SizedBox(height: 12),
+          ],
+          const AethorLoadingState(),
+        ],
       );
     }
 
     if (state.history.isEmpty) {
       final offline = state.offline;
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: StoicEmptyState(
-            title: offline ? 'Você está offline.' : 'Nenhuma prática registrada',
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+        children: [
+          header,
+          if (offline) ...[
+            AethorOfflineBanner(onSync: state.bootstrap),
+            const SizedBox(height: 12),
+          ],
+          AethorEmptyState(
+            title: offline ? 'Você está offline.' : 'Seu histórico começa com a primeira prática.',
             description: offline
                 ? 'Conecte-se para sincronizar seu histórico.'
-                : 'Complete sua primeira prática para ver o histórico.',
+                : 'A prática de hoje será o primeiro registro.',
+            icon: Icon(
+              offline ? AethorIcons.wifiOff : AethorIcons.history,
+              size: 32,
+              color: offline ? AethorColors.deepBlue : AethorColors.textSubtle,
+            ),
             actionLabel: offline ? 'Sincronizar' : null,
             onAction: offline ? state.bootstrap : null,
           ),
-        ),
+        ],
       );
     }
 
@@ -130,28 +164,12 @@ class HistoryScreen extends StatelessWidget {
     final showUpsell = !isPro && state.history.length > items.length;
 
     final entries = <Widget>[
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Histórico',
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontFamily: 'Cormorant Garamond',
-                  fontSize: 48,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w500,
-                  color: StoicColors.obsidian,
-                  height: 1.1,
-                ),
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
-      if (state.offline) StoicOfflineBanner(onSync: state.bootstrap),
+      header,
+      if (state.offline) AethorOfflineBanner(onSync: state.bootstrap),
       if (state.offline) const SizedBox(height: 4),
       ...items.map((item) {
         final record = state.checkinForDate(item.dateLocal);
-        return StoicFadeSlideIn(
+        return AethorFadeSlideIn(
           child: HistoryListItem(
             date: _parseDate(item.dateLocal),
             author: item.quote.author,

@@ -56,3 +56,54 @@
 - Notificação local/remota.
 - Favoritos, histórico e check-in.
 - Telemetria + testes críticos de fluxo.
+
+---
+
+## Atualização de passagem para release MVP (2026-02-14)
+
+### Objetivo operacional
+Concluir os blocos restantes para liberar o **MVP com paywall v1** sem quebrar o ritual diário free.
+
+### Janela proposta de execução
+
+## Bloco A — Fechamento de base e conteúdo (2026-02-16 a 2026-02-20)
+- SC-02: finalizar curadoria de 90 citações com referência validada.
+- SC-04: revisão de integridade filosófica.
+- BE-01: fechar provisionamento dev/stage com migrações e runtime padronizado.
+- BE-06: telemetria backend/logs estruturados ativa para suporte ao gate de release.
+
+Saída esperada:
+- Conteúdo validado + infraestrutura estável para testes E2E.
+
+## Bloco B — Push e fluxo diário E2E (2026-02-23 a 2026-02-27)
+- AN-02: push Android (FCM + permissões + deeplink).
+- IOS-02: push iOS (APNs/FCM + permissões + deeplink).
+- QA-03: execução de 7 dias simulados do fluxo diário (sem falha crítica).
+
+Saída esperada:
+- Ritual diário comprovado em iOS e Android com entrega de push e abertura correta.
+
+## Bloco C — Monetização E2E e gate beta (2026-03-02 a 2026-03-06)
+- MA-05: validar orquestração de gatilhos A/B/C com frequência e cooldown.
+- AN-04 + IOS-04: trial/compra/restore com retorno ao contexto bloqueado.
+- QA-05: E2E monetização completo sem regressão no fluxo free.
+- QA-06: dashboard + alertas ativos (`paywall_*`, `trial_*`, `subscription_*`).
+- QA-04: gate de release beta (go/no-go).
+
+Saída esperada:
+- Release Candidate do MVP pronto em **2026-03-06**.
+
+### Janela de release
+- Beta fechado: **2026-03-09 a 2026-03-11** (se QA-04 = aprovado).
+
+### Gate de Go/No-Go (obrigatório)
+- 90 citações com fonte verificável (SC-02) e revisão editorial sem pendência crítica (SC-04).
+- Fluxo diário rodando 7/7 ciclos sem erro crítico (QA-03).
+- Push Android e iOS com deeplink funcional (AN-02 + IOS-02).
+- Trial/compra/restore operando nos dois sistemas (AN-04 + IOS-04 + QA-05).
+- Telemetria mínima ativa com eventos versionados e dashboards com alertas (BE-08 + QA-06).
+- Crash-free sessions > 99,5% no beta.
+- Guardrails preservados: sem regressão relevante de D7 e sem queda de check-in acima do limite definido no board.
+
+### Escopo fora da passagem de release MVP
+- SC-05 (expansão de autores adicionais) permanece P2 pós-release.

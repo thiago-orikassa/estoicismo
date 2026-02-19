@@ -5,6 +5,7 @@ class DailyRepository {
   DailyRepository(this._api);
 
   final ApiClient _api;
+  ApiClient get api => _api;
 
   Future<DailyPackage> fetchDailyPackage({
     required String timezone,
@@ -16,7 +17,8 @@ class DailyRepository {
       query: {
         if (dateLocal != null && dateLocal.isNotEmpty) 'date_local': dateLocal,
         'timezone': timezone,
-        if (userContext != null && userContext.isNotEmpty) 'user_context': userContext,
+        if (userContext != null && userContext.isNotEmpty)
+          'user_context': userContext,
       },
     );
     return DailyPackage.fromJson(data);
@@ -34,7 +36,8 @@ class DailyRepository {
         if (dateLocal != null && dateLocal.isNotEmpty) 'date_local': dateLocal,
         'timezone': timezone,
         'days': '$days',
-        if (userContext != null && userContext.isNotEmpty) 'user_context': userContext,
+        if (userContext != null && userContext.isNotEmpty)
+          'user_context': userContext,
       },
     );
 
@@ -83,5 +86,15 @@ class DailyRepository {
   }) async {
     await _api.delete('/v1/favorites',
         query: {'user_id': userId, 'quote_id': quoteId});
+  }
+
+  Future<void> trackEvent({
+    required String eventName,
+    required Map<String, dynamic> properties,
+  }) async {
+    await _api.post('/v1/analytics/events', body: {
+      'event_name': eventName,
+      'properties': properties,
+    });
   }
 }

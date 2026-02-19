@@ -187,17 +187,17 @@ class _AuthCodeFieldState extends State<AuthCodeField> {
         final value = _controllers[index].text;
         final isFocused = _focusedIndex == index;
         final borderColor = widget.error
-            ? StoicColors.copper
+            ? AethorColors.copper
             : isFocused
-                ? StoicColors.deepBlue
+                ? AethorColors.deepBlue
                 : value.isNotEmpty
-                    ? StoicColors.stone.withValues(alpha: 0.3)
-                    : StoicColors.sand;
+                    ? AethorColors.stone.withValues(alpha: 0.3)
+                    : AethorColors.sand;
         final textColor = widget.error
-            ? StoicColors.copper
+            ? AethorColors.copper
             : value.isNotEmpty
-                ? StoicColors.obsidian
-                : StoicColors.textSubtle;
+                ? AethorColors.obsidian
+                : AethorColors.textSubtle;
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -230,21 +230,21 @@ class _AuthCodeFieldState extends State<AuthCodeField> {
                   fillColor: Colors.white,
                   contentPadding: EdgeInsets.zero,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(StoicRadius.md),
+                    borderRadius: BorderRadius.circular(AethorRadius.md),
                     borderSide: BorderSide(color: borderColor, width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(StoicRadius.md),
+                    borderRadius: BorderRadius.circular(AethorRadius.md),
                     borderSide: BorderSide(color: borderColor, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(StoicRadius.md),
+                    borderRadius: BorderRadius.circular(AethorRadius.md),
                     borderSide: BorderSide(color: borderColor, width: 2),
                   ),
                 ),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontSize: 24,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       color: textColor,
                     ),
               ),

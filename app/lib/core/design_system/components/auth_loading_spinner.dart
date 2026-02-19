@@ -23,16 +23,16 @@ class AuthLoadingSpinner extends StatelessWidget {
       case AuthSpinnerSize.md:
         return 24;
       case AuthSpinnerSize.lg:
-        return 32;
+        return 40;
     }
   }
 
   Color get _stroke {
     switch (color) {
       case AuthSpinnerColor.light:
-        return StoicColors.ivory;
+        return AethorColors.ivory;
       case AuthSpinnerColor.dark:
-        return StoicColors.stone;
+        return AethorColors.deepBlue;
     }
   }
 

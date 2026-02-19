@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
+import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 
 class EmailLoginScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: StoicColors.ivory,
+      backgroundColor: AethorColors.ivory,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
@@ -65,13 +66,13 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
               IconButton(
                 onPressed: widget.onBack,
                 style: IconButton.styleFrom(
-                  backgroundColor: StoicColors.stone.withValues(alpha: 0.1),
+                  backgroundColor: AethorColors.stone.withValues(alpha: 0.1),
                 ),
                 icon:
-                    const Icon(Icons.chevron_left, color: StoicColors.obsidian),
+                    const Icon(AethorIcons.chevronLeft, color: AethorColors.obsidian),
               ),
               const SizedBox(height: 24),
-              StoicFadeSlideIn(
+              AethorFadeSlideIn(
                 offsetY: 8,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,14 +83,14 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                           Theme.of(context).textTheme.displayMedium?.copyWith(
                                 fontSize: 36,
                                 height: 1.2,
-                                color: StoicColors.obsidian,
+                                color: AethorColors.obsidian,
                               ),
                     ),
                     const SizedBox(height: 12),
                     Text(
                       'Você receberá um código para entrar sem senha.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: StoicColors.textMuted,
+                            color: AethorColors.textMuted,
                             height: 1.5,
                           ),
                     ),

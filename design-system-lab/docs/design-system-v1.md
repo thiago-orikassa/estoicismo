@@ -1,4 +1,4 @@
-# Design System v1 - Estoicismo
+# Design System v1 - Aethor
 
 ## Objetivo
 Criar um sistema de design consistente, escalável e multiplataforma (Android/iOS) para sustentar o ritual diário do app com foco em clareza, sobriedade e ação prática.
@@ -28,9 +28,9 @@ Criar um sistema de design consistente, escalável e multiplataforma (Android/iO
 - Radius: 8, 12, 16, 999
 
 ## 4. Componentes Core (v1)
-- `StoicScaffold`
-- `StoicSection`
-- `StoicCard`
+- `AethorScaffold`
+- `AethorSection`
+- `AethorCard`
 - `QuoteCard`
 - `PracticeCard`
 - `SourceMeta`
@@ -38,8 +38,8 @@ Criar um sistema de design consistente, escalável e multiplataforma (Android/iO
 - `PrimaryButton`
 - `SecondaryButton`
 - `TonalButton`
-- `StoicTextField`
-- `StoicDropdown`
+- `AethorTextField`
+- `AethorDropdown`
 - `LoadingState`
 - `EmptyState`
 - `ErrorState`

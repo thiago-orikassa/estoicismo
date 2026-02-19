@@ -1,12 +1,12 @@
-# Componentes de Design - DS v1 (Estoicismo)
+# Componentes de Design - DS v1 (Aethor)
 
 ## Objetivo
 Documentar os componentes reutilizáveis do produto para garantir consistência visual, acessibilidade e velocidade de implementação.
 
 ## 1. Layout e Estrutura
-- `StoicScaffold`: estrutura base com tratamento de erro.
-- `StoicSection`: agrupamento com título e spacing padrão.
-- `StoicCard`: superfície semântica para leitura e ações.
+- `AethorScaffold`: estrutura base com tratamento de erro.
+- `AethorSection`: agrupamento com título e spacing padrão.
+- `AethorCard`: superfície semântica para leitura e ações.
 
 ## 2. Editorial
 - `QuoteCard`: citação, fonte, tags e favorito.
@@ -15,8 +15,8 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 - `TagGroup`: chips de contexto.
 
 ## 3. Inputs e Ações
-- `StoicTextField`
-- `StoicDropdown`
+- `AethorTextField`
+- `AethorDropdown`
 - `PrimaryButton`
 - `SecondaryButton`
 - `TonalButton`
@@ -29,7 +29,7 @@ Documentar os componentes reutilizáveis do produto para garantir consistência 
 - `FeedbackBar`
 
 ## 5. Navegação
-- `StoicBottomNav`: Hoje, Histórico, Favoritos, Ajustes.
+- `AethorBottomNav`: Hoje, Histórico, Favoritos, Ajustes.
 
 ## 6. Regras
 - Todo componente interativo deve ter estados mínimo default/focus/disabled.

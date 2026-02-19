@@ -1,3 +1,5 @@
+import '../../../core/domain/authors.dart';
+
 class Quote {
   Quote({
     required this.id,
@@ -20,7 +22,7 @@ class Quote {
   factory Quote.fromJson(Map<String, dynamic> json) {
     return Quote(
       id: json['id'] as String,
-      author: json['author'] as String,
+      author: authorDisplayName(json['author'] as String),
       text: json['text'] as String,
       sourceWork: json['source_work'] as String,
       sourceRef: json['source_ref'] as String,
@@ -42,7 +44,12 @@ class Recommendation {
     required this.expectedOutcome,
     required this.completionCriteria,
     required this.journalPrompt,
-  });
+  }) : assert(quoteLinkExplanation.isNotEmpty,
+            'quoteLinkExplanation vazio — seed incompleto para "$title"'),
+       assert(expectedOutcome.isNotEmpty,
+            'expectedOutcome vazio — seed incompleto para "$title"'),
+       assert(completionCriteria.isNotEmpty,
+            'completionCriteria vazio — seed incompleto para "$title"');
 
   final String context;
   final String title;

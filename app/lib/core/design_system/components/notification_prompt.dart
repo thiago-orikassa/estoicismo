@@ -54,7 +54,7 @@ class _IosPrompt extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '"Estoicismo Diário" quer enviar notificações',
+                  '"Aethor" quer enviar notificações',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
@@ -136,7 +136,7 @@ class _AndroidPrompt extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Permitir que Estoicismo Diário envie notificações?',
+              'Permitir que Aethor envie notificações?',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF1F1F1F),

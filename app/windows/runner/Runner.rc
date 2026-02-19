@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "estoicismo_app" "\0"
+            VALUE "FileDescription", "Aethor" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "estoicismo_app" "\0"
+            VALUE "InternalName", "aethor_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "estoicismo_app.exe" "\0"
-            VALUE "ProductName", "estoicismo_app" "\0"
+            VALUE "OriginalFilename", "aethor_app.exe" "\0"
+            VALUE "ProductName", "Aethor" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -1,4 +1,4 @@
-# PRD - App Mobile de Estoicismo Diário
+# PRD - Aethor: App Mobile de Estoicismo Diário
 
 ## 1. Visão do produto
 Aplicativo mobile que entrega diariamente uma citação estoica autêntica e uma recomendação prática para aplicação no cotidiano, com linguagem guiada pela "personalidade filosófica" do autor escolhido (Sêneca, Epicteto, Marco Aurélio).

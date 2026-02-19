@@ -78,3 +78,28 @@ Garantir qualidade em produção e aprendizado rápido.
 - Sem citação sem fonte.
 - Sem release sem telemetria mínima.
 - Sem feature nova se fluxo diário básico estiver instável.
+
+## 10. Padrão obrigatório de português em dados e conteúdo
+Todo texto voltado ao usuário (títulos, passos, prompts, labels) deve respeitar a ortografia e acentuação do português brasileiro. Esta regra se aplica a arquivos de seed (`daily_seed.json`), CSVs de conteúdo (`recommendations_40.csv`, `quotes_catalog_90.csv`), strings no código Dart e qualquer outro artefato exibido na UI.
+
+### Checklist de acentuação (erros recorrentes)
+| Errado | Correto |
+|---|---|
+| -acao, -cao | -ação, -ção (procrastinação, conclusão, atenção, decisão, interpretação, motivação, etc.) |
+| -oes | -ões (notificações, objeções, opções, respirações, ações) |
+| -ao (substantivo/advérbio) | -ão (não, então, também, manhã, amanhã) |
+| -avel, -ivel | -ável, -ível (controlável, sustentável, aceitável, plausível, inevitável) |
+| -ario, -orio | -ário, -ório (necessário, secundária, diário) |
+| -encia, -ancia | -ência, -ância (evidência, impermanência, constância, benevolência) |
+| -ico, -ica (proparoxítona) | -ético, -ática, -ógica (automático, específico, única, fácil, útil, rápido) |
+| voce, carater, criterio | você, caráter, critério |
+
+### Regra de validação
+- Antes de publicar qualquer arquivo de dados ou conteúdo, executar revisão ortográfica do texto em PT-BR.
+- Ao gerar novos seeds ou recomendações, validar que nenhuma palavra comum esteja sem acento.
+- Esta regra é gate de qualidade: conteúdo sem acentuação correta não deve ser considerado DONE.
+
+## 11. Playbook Operacional (MVP com Paywall)
+- Referência operacional por agente: `/Users/thiagoorikassa/Documents/Estoicismo/docs/execution/agentes-operacionais-mvp-paywall-v1.md`
+- O board oficial de execução permanece em: `/Users/thiagoorikassa/Documents/Estoicismo/docs/board-execucao-agentes.md`
+- Regra: sempre executar com handoff documentado, evidência e gate de qualidade.

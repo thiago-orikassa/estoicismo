@@ -3,7 +3,9 @@ import { readFileSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { db } from './db.mjs';
+import { db, dbPath } from './db.mjs';
+import { logger } from './logger.mjs';
+import { sendPushNotification, FCM_DRY_RUN, PUSH_ENABLED } from './fcm.mjs';
 
 const PORT = process.env.PORT || 8787;
 const HOST = process.env.HOST || '127.0.0.1';
@@ -11,6 +13,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const defaultDataDir = join(__dirname, '../data');
 const dataDir = process.env.STOIC_DATA_DIR ?? defaultDataDir;
 const seedPath = process.env.STOIC_SEED_PATH ?? join(dataDir, 'daily_seed.json');
+const observabilityToken = process.env.STOIC_OBSERVABILITY_TOKEN ?? '';
 
 const seed = JSON.parse(readFileSync(seedPath, 'utf-8'));
 
@@ -106,6 +109,167 @@ const deleteFavorite = db.prepare(`
   where user_id = ? and quote_id = ?
 `);
 
+const selectSubscriptionProfileByUser = db.prepare(`
+  select
+    user_id,
+    status,
+    plan,
+    trial_started_at_utc,
+    trial_ends_at_utc,
+    next_billing_at_utc,
+    trial_used,
+    updated_at_utc
+  from subscription_profiles
+  where user_id = ?
+`);
+
+const upsertSubscriptionProfile = db.prepare(`
+  insert into subscription_profiles (
+    user_id,
+    status,
+    plan,
+    trial_started_at_utc,
+    trial_ends_at_utc,
+    next_billing_at_utc,
+    trial_used,
+    updated_at_utc
+  ) values (?, ?, ?, ?, ?, ?, ?, ?)
+  on conflict(user_id) do update set
+    status = excluded.status,
+    plan = excluded.plan,
+    trial_started_at_utc = excluded.trial_started_at_utc,
+    trial_ends_at_utc = excluded.trial_ends_at_utc,
+    next_billing_at_utc = excluded.next_billing_at_utc,
+    trial_used = excluded.trial_used,
+    updated_at_utc = excluded.updated_at_utc
+`);
+
+const selectRestoreRequestByUserAndKey = db.prepare(`
+  select restored, created_at_utc
+  from subscription_restore_requests
+  where user_id = ? and idempotency_key = ?
+`);
+
+const insertRestoreRequest = db.prepare(`
+  insert into subscription_restore_requests (
+    id,
+    user_id,
+    idempotency_key,
+    restored,
+    created_at_utc
+  ) values (?, ?, ?, ?, ?)
+`);
+
+const countSchemaMigrations = db.prepare(`
+  select count(*) as total
+  from schema_migrations
+`);
+
+const countSessions = db.prepare(`
+  select count(*) as total
+  from sessions
+`);
+
+const countCheckins = db.prepare(`
+  select count(*) as total
+  from checkins
+`);
+
+const countFavorites = db.prepare(`
+  select count(*) as total
+  from favorites
+`);
+
+const countAnalyticsEvents = db.prepare(`
+  select count(*) as total
+  from analytics_events
+`);
+
+const countAnalyticsEventsByName = db.prepare(`
+  select event_name, count(*) as total
+  from analytics_events
+  group by event_name
+  order by total desc, event_name asc
+`);
+
+const countSubscriptionProfiles = db.prepare(`
+  select count(*) as total
+  from subscription_profiles
+`);
+
+const countSubscriptionProfilesByStatus = db.prepare(`
+  select status, count(*) as total
+  from subscription_profiles
+  group by status
+`);
+
+const upsertPushToken = db.prepare(`
+  insert into push_tokens (id, user_id, fcm_token, platform, created_at_utc, updated_at_utc)
+  values (?, ?, ?, ?, ?, ?)
+  on conflict(user_id, fcm_token) do update set
+    platform = excluded.platform,
+    updated_at_utc = excluded.updated_at_utc
+`);
+
+const countPushTokens = db.prepare(`
+  select count(*) as total
+  from push_tokens
+`);
+
+const selectPushTokensByUser = db.prepare(`
+  select fcm_token, platform
+  from push_tokens
+  where user_id = ?
+`);
+
+const selectActivePushTokensByUser = db.prepare(`
+  select fcm_token, platform
+  from push_tokens
+  where user_id = ? and active = 1
+`);
+
+const selectAllActiveTokens = db.prepare(`
+  select pt.fcm_token, pt.platform, pt.user_id
+  from push_tokens pt
+  where pt.active = 1
+`);
+
+const deactivatePushToken = db.prepare(`
+  update push_tokens
+  set active = 0, updated_at_utc = ?
+  where fcm_token = ?
+`);
+
+const markPushTokenDelivery = db.prepare(`
+  update push_tokens
+  set last_delivery_at_utc = ?, failure_count = 0, updated_at_utc = ?
+  where fcm_token = ?
+`);
+
+const incrementPushTokenFailure = db.prepare(`
+  update push_tokens
+  set failure_count = failure_count + 1, updated_at_utc = ?
+  where fcm_token = ?
+`);
+
+const countActivePushTokens = db.prepare(`
+  select count(*) as total
+  from push_tokens
+  where active = 1
+`);
+
+const countPushTokensByPlatform = db.prepare(`
+  select platform, count(*) as total
+  from push_tokens
+  where active = 1
+  group by platform
+`);
+
+const insertPurchaseLog = db.prepare(`
+  insert into purchase_logs (id, user_id, product_id, platform, purchase_token, transaction_id, created_at_utc)
+  values (?, ?, ?, ?, ?, ?, ?)
+`);
+
 const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -122,12 +286,71 @@ function normalizeCheckin(row) {
   return { ...row, applied: Boolean(row.applied) };
 }
 
-function appendAnalyticsEvent(eventName, properties) {
+function isSubscriptionPlan(value) {
+  return value === 'monthly' || value === 'annual';
+}
+
+function plusDays(days) {
+  const date = new Date();
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString();
+}
+
+function normalizeSubscriptionProfile(row) {
+  if (!row) return null;
+  return {
+    ...row,
+    trial_used: Boolean(row.trial_used)
+  };
+}
+
+function toEntitlement(userId, row) {
+  const profile = normalizeSubscriptionProfile(row);
+  const status = profile?.status ?? 'free';
+  const plan = profile?.plan ?? null;
+  const trialEligible = !Boolean(profile?.trial_used) && status === 'free';
+  return {
+    user_id: userId,
+    status,
+    plan,
+    trial_eligible: trialEligible,
+    trial_ends_at_utc: profile?.trial_ends_at_utc ?? null,
+    next_billing_at_utc: profile?.next_billing_at_utc ?? null
+  };
+}
+
+function persistSubscriptionProfile({
+  userId,
+  status,
+  plan,
+  trialStartedAtUtc = null,
+  trialEndsAtUtc = null,
+  nextBillingAtUtc = null,
+  trialUsed = false
+}) {
+  const now = new Date().toISOString();
+  upsertSubscriptionProfile.run(
+    userId,
+    status,
+    plan,
+    trialStartedAtUtc,
+    trialEndsAtUtc,
+    nextBillingAtUtc,
+    trialUsed ? 1 : 0,
+    now
+  );
+}
+
+function isPlainObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function appendAnalyticsEvent(eventName, properties, eventVersion = 1) {
   const now = new Date().toISOString();
   insertAnalyticsEvent.run(
     randomUUID(),
     eventName,
-    1,
+    eventVersion,
     now,
     JSON.stringify(properties ?? {})
   );
@@ -145,11 +368,66 @@ function readBearerToken(req) {
   return token;
 }
 
-function requireSession(req) {
+function requireSession(req, requestMeta) {
   const token = readBearerToken(req);
   if (!token) return null;
   const tokenHash = hashToken(token);
-  return selectSessionByToken.get(tokenHash);
+  const session = selectSessionByToken.get(tokenHash);
+  if (session?.user_id && requestMeta) {
+    requestMeta.userId = session.user_id;
+  }
+  return session;
+}
+
+function isObservabilityAuthorized(req) {
+  if (!observabilityToken) return true;
+  const providedToken = req.headers['x-observability-token'];
+  return typeof providedToken === 'string' && providedToken === observabilityToken;
+}
+
+function collectOperationalMetrics() {
+  const subscriptionsByStatus = {
+    free: 0,
+    trial: 0,
+    active: 0,
+    canceled: 0
+  };
+  for (const row of countSubscriptionProfilesByStatus.all()) {
+    subscriptionsByStatus[row.status] = Number(row.total ?? 0);
+  }
+
+  const tokensByPlatform = {};
+  for (const row of countPushTokensByPlatform.all()) {
+    tokensByPlatform[row.platform] = Number(row.total ?? 0);
+  }
+
+  return {
+    generated_at_utc: new Date().toISOString(),
+    storage: {
+      data_dir: dataDir,
+      db_path: dbPath,
+      seed_path: seedPath
+    },
+    tables: {
+      schema_migrations: Number(countSchemaMigrations.get().total ?? 0),
+      sessions: Number(countSessions.get().total ?? 0),
+      checkins: Number(countCheckins.get().total ?? 0),
+      favorites: Number(countFavorites.get().total ?? 0),
+      analytics_events: Number(countAnalyticsEvents.get().total ?? 0),
+      subscription_profiles: Number(countSubscriptionProfiles.get().total ?? 0),
+      push_tokens: Number(countPushTokens.get().total ?? 0)
+    },
+    subscriptions: subscriptionsByStatus,
+    push: {
+      total_tokens: Number(countPushTokens.get().total ?? 0),
+      active_tokens: Number(countActivePushTokens.get().total ?? 0),
+      tokens_by_platform: tokensByPlatform,
+    },
+    analytics_events_by_name: countAnalyticsEventsByName.all().map((row) => ({
+      event_name: row.event_name,
+      total: Number(row.total ?? 0)
+    }))
+  };
 }
 
 function stableHash(input) {
@@ -244,9 +522,38 @@ function parseBody(req) {
 
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
+  const requestMeta = {
+    requestId: randomUUID(),
+    userId: null
+  };
+  const startedAtNs = process.hrtime.bigint();
+  res.setHeader('x-request-id', requestMeta.requestId);
+  res.on('finish', () => {
+    const elapsedNs = process.hrtime.bigint() - startedAtNs;
+    const durationMs = Number(elapsedNs) / 1_000_000;
+    logger.info('http_request_completed', {
+      request_id: requestMeta.requestId,
+      method: req.method,
+      path: url.pathname,
+      status_code: res.statusCode,
+      duration_ms: Number(durationMs.toFixed(2)),
+      remote_ip: req.socket.remoteAddress ?? null,
+      user_id: requestMeta.userId
+    });
+  });
 
   if (req.method === 'GET' && url.pathname === '/health') {
-    return sendJson(res, 200, { ok: true, service: 'estoicismo-backend' });
+    return sendJson(res, 200, { ok: true, service: 'aethor-backend' });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/v1/observability/metrics') {
+    if (!isObservabilityAuthorized(req)) {
+      logger.warn('observability_metrics_unauthorized', {
+        request_id: requestMeta.requestId
+      });
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+    return sendJson(res, 200, collectOperationalMetrics());
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/session') {
@@ -289,6 +596,177 @@ const server = createServer(async (req, res) => {
     }
   }
 
+  if (req.method === 'GET' && url.pathname === '/v1/subscription/entitlement') {
+    const session = requireSession(req, requestMeta);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+    const profile = selectSubscriptionProfileByUser.get(session.user_id);
+    return sendJson(res, 200, toEntitlement(session.user_id, profile));
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/subscription/trial/start') {
+    const session = requireSession(req, requestMeta);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const plan = body.plan ?? 'annual';
+      if (plan !== 'annual') {
+        return sendJson(res, 400, {
+          error: 'invalid_plan_for_trial',
+          message: 'trial is available only for annual plan'
+        });
+      }
+
+      const current = normalizeSubscriptionProfile(
+        selectSubscriptionProfileByUser.get(session.user_id)
+      );
+      if (current?.status === 'active' || current?.status === 'trial') {
+        return sendJson(res, 200, {
+          entitlement: toEntitlement(session.user_id, current)
+        });
+      }
+
+      if (current?.trial_used) {
+        return sendJson(res, 409, {
+          error: 'trial_already_used',
+          entitlement: toEntitlement(session.user_id, current)
+        });
+      }
+
+      const now = new Date().toISOString();
+      const trialEndsAtUtc = plusDays(7);
+      persistSubscriptionProfile({
+        userId: session.user_id,
+        status: 'trial',
+        plan: 'annual',
+        trialStartedAtUtc: now,
+        trialEndsAtUtc,
+        nextBillingAtUtc: null,
+        trialUsed: true
+      });
+
+      appendAnalyticsEvent('trial_started', {
+        user_id: session.user_id,
+        plan_selected: 'annual',
+        trial_eligible: true,
+        event_version: 1
+      });
+
+      const updated = selectSubscriptionProfileByUser.get(session.user_id);
+      return sendJson(res, 201, {
+        entitlement: toEntitlement(session.user_id, updated)
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/subscription/activate') {
+    const session = requireSession(req, requestMeta);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const plan = body.plan;
+      if (!isSubscriptionPlan(plan)) {
+        return sendJson(res, 400, {
+          error: 'invalid_plan',
+          message: 'plan must be monthly or annual'
+        });
+      }
+
+      const current = normalizeSubscriptionProfile(
+        selectSubscriptionProfileByUser.get(session.user_id)
+      );
+      const trialUsed = Boolean(current?.trial_used);
+      const nextBillingAtUtc = plusDays(plan === 'monthly' ? 30 : 365);
+
+      persistSubscriptionProfile({
+        userId: session.user_id,
+        status: 'active',
+        plan,
+        trialStartedAtUtc: null,
+        trialEndsAtUtc: null,
+        nextBillingAtUtc,
+        trialUsed
+      });
+
+      appendAnalyticsEvent('subscription_activated', {
+        user_id: session.user_id,
+        plan_selected: plan,
+        trial_eligible: !trialUsed && plan === 'annual',
+        event_version: 1
+      });
+
+      const updated = selectSubscriptionProfileByUser.get(session.user_id);
+      return sendJson(res, 200, {
+        entitlement: toEntitlement(session.user_id, updated)
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/subscription/restore') {
+    const session = requireSession(req, requestMeta);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const key =
+        typeof body.idempotency_key === 'string' ? body.idempotency_key.trim() : '';
+      if (key.length === 0 || key.length > 128) {
+        return sendJson(res, 400, {
+          error: 'invalid_idempotency_key',
+          message: 'idempotency_key must be non-empty string (<= 128 chars)'
+        });
+      }
+
+      const existing = selectRestoreRequestByUserAndKey.get(session.user_id, key);
+      if (existing) {
+        const current = selectSubscriptionProfileByUser.get(session.user_id);
+        return sendJson(res, 200, {
+          restored: Boolean(existing.restored),
+          idempotent: true,
+          entitlement: toEntitlement(session.user_id, current)
+        });
+      }
+
+      const current = normalizeSubscriptionProfile(
+        selectSubscriptionProfileByUser.get(session.user_id)
+      );
+      const restored = current?.status === 'active' || current?.status === 'trial';
+      const now = new Date().toISOString();
+
+      insertRestoreRequest.run(randomUUID(), session.user_id, key, restored ? 1 : 0, now);
+      appendAnalyticsEvent(
+        restored ? 'restore_purchase_success' : 'restore_purchase_failed',
+        {
+          user_id: session.user_id,
+          restored,
+          idempotency_key: key,
+          event_version: 1
+        }
+      );
+
+      return sendJson(res, 200, {
+        restored,
+        idempotent: false,
+        entitlement: toEntitlement(session.user_id, current)
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
   if (req.method === 'GET' && url.pathname === '/v1/daily-package') {
     const dateLocalParam = url.searchParams.get('date_local');
     const timezone = url.searchParams.get('timezone');
@@ -318,6 +796,53 @@ const server = createServer(async (req, res) => {
       context: pack.recommendation.context
     });
     return sendJson(res, 200, pack);
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/analytics/events') {
+    const session = requireSession(req, requestMeta);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const eventName = typeof body.event_name === 'string' ? body.event_name.trim() : '';
+      if (eventName.length === 0 || eventName.length > 64) {
+        return sendJson(res, 400, {
+          error: 'invalid_event_name',
+          message: 'event_name must be non-empty string (<= 64 chars)'
+        });
+      }
+
+      if (!isPlainObject(body.properties)) {
+        return sendJson(res, 400, {
+          error: 'invalid_properties',
+          message: 'properties must be a JSON object'
+        });
+      }
+
+      const requestedVersion = body.properties.event_version;
+      const eventVersion = requestedVersion === undefined ? 1 : Number(requestedVersion);
+      if (!Number.isInteger(eventVersion) || eventVersion < 1 || eventVersion > 999) {
+        return sendJson(res, 400, {
+          error: 'invalid_event_version',
+          message: 'event_version must be an integer between 1 and 999'
+        });
+      }
+
+      const normalizedProperties = {
+        ...body.properties,
+        user_id: session.user_id,
+        event_version: eventVersion
+      };
+      appendAnalyticsEvent(eventName, normalizedProperties, eventVersion);
+      return sendJson(res, 201, {
+        event_name: eventName,
+        event_version: eventVersion
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/checkins') {
@@ -352,7 +877,7 @@ const server = createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'invalid_applied', message: 'applied must be boolean' });
       }
 
-      const session = requireSession(req);
+      const session = requireSession(req, requestMeta);
       if (!session) {
         return sendJson(res, 401, { error: 'unauthorized' });
       }
@@ -409,7 +934,7 @@ const server = createServer(async (req, res) => {
       return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
     }
 
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -436,7 +961,7 @@ const server = createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'invalid_quote_id', message: 'quote_id must be string' });
       }
 
-      const session = requireSession(req);
+      const session = requireSession(req, requestMeta);
       if (!session) {
         return sendJson(res, 401, { error: 'unauthorized' });
       }
@@ -480,7 +1005,7 @@ const server = createServer(async (req, res) => {
       return sendJson(res, 400, { error: 'invalid_user_id', message: 'user_id must be uuid' });
     }
 
-    const session = requireSession(req);
+    const session = requireSession(req, requestMeta);
     if (!session) {
       return sendJson(res, 401, { error: 'unauthorized' });
     }
@@ -536,6 +1061,160 @@ const server = createServer(async (req, res) => {
     return sendJson(res, 200, { items });
   }
 
+  if (req.method === 'POST' && url.pathname === '/v1/push-tokens') {
+    const session = requireSession(req, requestMeta);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const fcmToken = typeof body.fcm_token === 'string' ? body.fcm_token.trim() : '';
+      if (fcmToken.length === 0 || fcmToken.length > 4096) {
+        return sendJson(res, 400, {
+          error: 'invalid_fcm_token',
+          message: 'fcm_token must be non-empty string (<= 4096 chars)'
+        });
+      }
+
+      const platform = typeof body.platform === 'string' ? body.platform.trim() : 'android';
+      if (platform !== 'android' && platform !== 'ios') {
+        return sendJson(res, 400, {
+          error: 'invalid_platform',
+          message: 'platform must be android or ios'
+        });
+      }
+
+      const now = new Date().toISOString();
+      upsertPushToken.run(randomUUID(), session.user_id, fcmToken, platform, now, now);
+
+      return sendJson(res, 200, {
+        user_id: session.user_id,
+        platform,
+        registered: true
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/push/send') {
+    if (!isObservabilityAuthorized(req)) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const userId = body.user_id;
+      const title = body.title ?? '';
+      const bodyText = body.body ?? '';
+      const data = body.data ?? {};
+
+      if (!isUuid(userId)) {
+        return sendJson(res, 400, {
+          error: 'invalid_user_id',
+          message: 'user_id must be uuid'
+        });
+      }
+
+      const tokens = selectActivePushTokensByUser.all(userId);
+      if (tokens.length === 0) {
+        return sendJson(res, 200, { sent: 0, failed: 0, invalid_tokens_removed: 0, reason: 'no_tokens' });
+      }
+
+      if (FCM_DRY_RUN || !PUSH_ENABLED) {
+        return sendJson(res, 200, {
+          sent: 0,
+          failed: 0,
+          invalid_tokens_removed: 0,
+          dry_run: true,
+          token_count: tokens.length,
+          payload: { title, body: bodyText, data }
+        });
+      }
+
+      let sent = 0;
+      let failed = 0;
+      let invalidTokensRemoved = 0;
+      const now = new Date().toISOString();
+
+      for (const row of tokens) {
+        const result = await sendPushNotification({
+          fcmToken: row.fcm_token,
+          title,
+          body: bodyText,
+          data,
+        });
+
+        if (result.success) {
+          sent += 1;
+          markPushTokenDelivery.run(now, now, row.fcm_token);
+        } else {
+          failed += 1;
+          if (result.unregistered) {
+            deactivatePushToken.run(now, row.fcm_token);
+            invalidTokensRemoved += 1;
+          } else {
+            incrementPushTokenFailure.run(now, row.fcm_token);
+          }
+        }
+      }
+
+      return sendJson(res, 200, { sent, failed, invalid_tokens_removed: invalidTokensRemoved });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/purchases/log') {
+    const session = requireSession(req, requestMeta);
+    if (!session) {
+      return sendJson(res, 401, { error: 'unauthorized' });
+    }
+
+    try {
+      const body = await parseBody(req);
+      const productId = typeof body.product_id === 'string' ? body.product_id.trim() : '';
+      const platform = typeof body.platform === 'string' ? body.platform.trim() : '';
+      const purchaseToken = typeof body.purchase_token === 'string' ? body.purchase_token : null;
+      const transactionId = typeof body.transaction_id === 'string' ? body.transaction_id : null;
+
+      if (productId.length === 0) {
+        return sendJson(res, 400, {
+          error: 'invalid_product_id',
+          message: 'product_id must be non-empty string'
+        });
+      }
+
+      if (platform !== 'android' && platform !== 'ios') {
+        return sendJson(res, 400, {
+          error: 'invalid_platform',
+          message: 'platform must be android or ios'
+        });
+      }
+
+      const now = new Date().toISOString();
+      insertPurchaseLog.run(
+        randomUUID(),
+        session.user_id,
+        productId,
+        platform,
+        purchaseToken,
+        transactionId,
+        now
+      );
+
+      return sendJson(res, 201, {
+        user_id: session.user_id,
+        product_id: productId,
+        platform,
+        logged: true
+      });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
   return sendJson(res, 404, { error: 'not_found' });
 });
 
@@ -545,8 +1224,18 @@ const isMain =
   process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isMain) {
+  logger.info('server_bootstrap', {
+    host: HOST,
+    port: Number(PORT),
+    data_dir: dataDir,
+    db_path: dbPath,
+    seed_path: seedPath,
+    observability_metrics_protected: Boolean(observabilityToken)
+  });
   server.listen(PORT, HOST, () => {
-    // eslint-disable-next-line no-console
-    console.log(`estoicismo-backend listening on ${HOST}:${PORT}`);
+    logger.info('server_listening', {
+      host: HOST,
+      port: Number(PORT)
+    });
   });
 }

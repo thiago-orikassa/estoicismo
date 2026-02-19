@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
 enum RestorePurchaseState {
@@ -16,11 +15,13 @@ class RestorePurchaseDialog extends StatefulWidget {
     required this.onClose,
     required this.onSuccess,
     required this.onContactSupport,
+    required this.onPerformRestore,
   });
 
   final VoidCallback onClose;
   final VoidCallback onSuccess;
   final VoidCallback onContactSupport;
+  final Future<bool> Function() onPerformRestore;
 
   @override
   State<RestorePurchaseDialog> createState() => _RestorePurchaseDialogState();
@@ -37,17 +38,21 @@ class _RestorePurchaseDialogState extends State<RestorePurchaseDialog> {
 
   Future<void> _startRestore() async {
     setState(() => _state = RestorePurchaseState.loading);
-    await Future.delayed(const Duration(milliseconds: 1600));
-    final success = Random().nextBool();
-    if (!mounted) return;
-    setState(() =>
-        _state = success ? RestorePurchaseState.success : RestorePurchaseState.error);
+    try {
+      final success = await widget.onPerformRestore();
+      if (!mounted) return;
+      setState(() => _state =
+          success ? RestorePurchaseState.success : RestorePurchaseState.error);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _state = RestorePurchaseState.error);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: StoicColors.cardBackground,
+      backgroundColor: AethorColors.cardBackground,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
@@ -62,12 +67,12 @@ class _RestorePurchaseDialogState extends State<RestorePurchaseDialog> {
                   'Restaurar compra',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: StoicColors.obsidian,
+                        color: AethorColors.obsidian,
                       ),
                 ),
                 IconButton(
                   onPressed: widget.onClose,
-                  icon: const Icon(Icons.close_rounded),
+                  icon: const Icon(AethorIcons.close),
                 ),
               ],
             ),
@@ -99,14 +104,14 @@ class _LoadingState extends StatelessWidget {
           height: 32,
           child: CircularProgressIndicator(
             strokeWidth: 3,
-            valueColor: AlwaysStoppedAnimation<Color>(StoicColors.copper),
+            valueColor: AlwaysStoppedAnimation<Color>(AethorColors.copper),
           ),
         ),
         const SizedBox(height: 12),
         Text(
           'Restaurando compra...',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: StoicColors.textMuted,
+                color: AethorColors.textMuted,
               ),
         ),
         const SizedBox(height: 16),
@@ -128,7 +133,7 @@ class _SuccessState extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: StoicColors.deepBlue),
+            const Icon(AethorIcons.checkCircleFill, color: AethorColors.deepBlue),
             const SizedBox(width: 8),
             Text(
               'Compra restaurada',
@@ -142,7 +147,7 @@ class _SuccessState extends StatelessWidget {
         Text(
           'Seu acesso Pro está ativo novamente.',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: StoicColors.textMuted,
+                color: AethorColors.textMuted,
               ),
         ),
         const SizedBox(height: 16),
@@ -150,8 +155,8 @@ class _SuccessState extends StatelessWidget {
           width: double.infinity,
           child: FilledButton(
             style: FilledButton.styleFrom(
-              backgroundColor: StoicColors.deepBlue,
-              foregroundColor: StoicColors.ivory,
+              backgroundColor: AethorColors.deepBlue,
+              foregroundColor: AethorColors.ivory,
             ),
             onPressed: onContinue,
             child: const Text('Continuar'),
@@ -176,7 +181,7 @@ class _ErrorState extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: [
-            const Icon(Icons.error_outline_rounded, color: StoicColors.copper),
+            const Icon(AethorIcons.error, color: AethorColors.copper),
             const SizedBox(width: 8),
             Text(
               'Não foi possível restaurar',
@@ -190,7 +195,7 @@ class _ErrorState extends StatelessWidget {
         Text(
           'Tente novamente ou fale com o suporte.',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: StoicColors.textMuted,
+                color: AethorColors.textMuted,
               ),
         ),
         const SizedBox(height: 16),
@@ -200,7 +205,7 @@ class _ErrorState extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: onRetry,
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: StoicColors.deepBlue,
+                  foregroundColor: AethorColors.deepBlue,
                 ),
                 child: const Text('Tentar novamente'),
               ),
@@ -210,8 +215,8 @@ class _ErrorState extends StatelessWidget {
               child: FilledButton(
                 onPressed: onContactSupport,
                 style: FilledButton.styleFrom(
-                  backgroundColor: StoicColors.deepBlue,
-                  foregroundColor: StoicColors.ivory,
+                  backgroundColor: AethorColors.deepBlue,
+                  foregroundColor: AethorColors.ivory,
                 ),
                 child: const Text('Falar com suporte'),
               ),

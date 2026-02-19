@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
 class NotificationSettingRow extends StatelessWidget {
@@ -37,12 +38,12 @@ class NotificationSettingRow extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: StoicColors.deepBlue.withValues(alpha: 0.1),
+                  color: AethorColors.deepBlue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
-                  Icons.notifications_none_rounded,
-                  color: StoicColors.deepBlue,
+                  AethorIcons.bell,
+                  color: AethorColors.deepBlue,
                 ),
               ),
               const SizedBox(width: 16),
@@ -55,7 +56,7 @@ class NotificationSettingRow extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: StoicColors.obsidian,
+                            color: AethorColors.obsidian,
                           ),
                     ),
                     if (enabled && !systemPermissionDenied) ...[
@@ -64,7 +65,7 @@ class NotificationSettingRow extends StatelessWidget {
                         'Todos os dias às $time',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 12,
-                              color: StoicColors.textMuted,
+                              color: AethorColors.textMuted,
                             ),
                       ),
                     ],
@@ -84,10 +85,10 @@ class NotificationSettingRow extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: StoicColors.copper.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(StoicRadius.md),
+                color: AethorColors.copper.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AethorRadius.md),
                 border: Border.all(
-                  color: StoicColors.copper.withValues(alpha: 0.2),
+                  color: AethorColors.copper.withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -95,15 +96,15 @@ class NotificationSettingRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.warning_rounded,
-                          size: 16, color: StoicColors.copper),
+                      const Icon(AethorIcons.warning,
+                          size: 16, color: AethorColors.copper),
                       const SizedBox(width: 6),
                       Text(
                         'Permissão negada',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: StoicColors.copper,
+                              color: AethorColors.copper,
                             ),
                       ),
                     ],
@@ -113,7 +114,7 @@ class NotificationSettingRow extends StatelessWidget {
                     'Ative notificações nas configurações do sistema para receber lembretes.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 11,
-                          color: StoicColors.textMuted,
+                          color: AethorColors.textMuted,
                           height: 1.5,
                         ),
                   ),
@@ -123,14 +124,14 @@ class NotificationSettingRow extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: onOpenSystemSettings,
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: StoicColors.copper,
+                        foregroundColor: AethorColors.copper,
                         backgroundColor: Colors.white.withValues(alpha: 0.6),
                         side: BorderSide(
-                          color: StoicColors.copper.withValues(alpha: 0.2),
+                          color: AethorColors.copper.withValues(alpha: 0.2),
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(StoicRadius.sm),
+                          borderRadius: BorderRadius.circular(AethorRadius.sm),
                         ),
                       ),
                       child: const Text('Abrir Configurações'),
@@ -146,27 +147,27 @@ class NotificationSettingRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(height: 1, color: StoicColors.border.withValues(alpha: 0.3)),
+                Divider(height: 1, color: AethorColors.border.withValues(alpha: 0.3)),
                 const SizedBox(height: 12),
                 Text(
                   'HORÁRIO DO LEMBRETE',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontSize: 11,
                         letterSpacing: 1,
-                        color: StoicColors.stone.withValues(alpha: 0.5),
+                        color: AethorColors.stone.withValues(alpha: 0.5),
                       ),
                 ),
                 const SizedBox(height: 8),
                 InkWell(
                   onTap: onTimeTap,
-                  borderRadius: BorderRadius.circular(StoicRadius.md),
+                  borderRadius: BorderRadius.circular(AethorRadius.md),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(StoicRadius.md),
-                      border: Border.all(color: StoicColors.border),
+                      borderRadius: BorderRadius.circular(AethorRadius.md),
+                      border: Border.all(color: AethorColors.border),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,8 +178,8 @@ class NotificationSettingRow extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                         ),
-                        const Icon(Icons.chevron_right_rounded,
-                            color: StoicColors.textSubtle),
+                        const Icon(AethorIcons.chevronRight,
+                            color: AethorColors.textSubtle),
                       ],
                     ),
                   ),
@@ -189,7 +190,7 @@ class NotificationSettingRow extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontSize: 11,
                         letterSpacing: 1,
-                        color: StoicColors.stone.withValues(alpha: 0.5),
+                        color: AethorColors.stone.withValues(alpha: 0.5),
                       ),
                 ),
                 const SizedBox(height: 8),
@@ -198,14 +199,14 @@ class NotificationSettingRow extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(StoicRadius.md),
-                    border: Border.all(color: StoicColors.border.withValues(alpha: 0.6)),
+                    borderRadius: BorderRadius.circular(AethorRadius.md),
+                    border: Border.all(color: AethorColors.border.withValues(alpha: 0.6)),
                   ),
                   child: Text(
                     timezone,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 14,
-                          color: StoicColors.textMuted,
+                          color: AethorColors.textMuted,
                         ),
                   ),
                 ),
@@ -214,7 +215,7 @@ class NotificationSettingRow extends StatelessWidget {
                   'Você receberá um lembrete todos os dias no horário escolhido.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 11,
-                        color: StoicColors.textSubtle,
+                        color: AethorColors.textSubtle,
                         height: 1.5,
                       ),
                 ),
@@ -230,8 +231,8 @@ class NotificationSettingRow extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: StoicColors.cardBackground,
-        borderRadius: BorderRadius.circular(StoicRadius.lg),
+        color: AethorColors.cardBackground,
+        borderRadius: BorderRadius.circular(AethorRadius.lg),
       ),
       child: content,
     );
@@ -254,7 +255,7 @@ class _ToggleSwitch extends StatelessWidget {
         height: 28,
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: value ? StoicColors.deepBlue : StoicColors.sand,
+          color: value ? AethorColors.deepBlue : AethorColors.sand,
           borderRadius: BorderRadius.circular(99),
         ),
         child: AnimatedAlign(

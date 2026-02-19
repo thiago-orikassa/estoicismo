@@ -1,0 +1,3 @@
+ALTER TABLE push_tokens ADD COLUMN active INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE push_tokens ADD COLUMN last_delivery_at_utc TEXT;
+ALTER TABLE push_tokens ADD COLUMN failure_count INTEGER NOT NULL DEFAULT 0;

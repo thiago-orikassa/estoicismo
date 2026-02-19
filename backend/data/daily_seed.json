@@ -8,8 +8,11 @@
       "source_ref": "Letter 1",
       "language": "pt",
       "theme_primary": "disciplina",
-      "behavior_intent": "proteger o tempo para o que importa hoje",
-      "context_tags": ["trabalho", "foco"],
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
       "authenticity_level": "verified"
     },
     {
@@ -20,8 +23,131 @@
       "source_ref": "Letter 2",
       "language": "pt",
       "theme_primary": "controle",
-      "behavior_intent": "reduzir dispersão e agir com foco único",
-      "context_tags": ["ansiedade", "foco"],
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-3",
+      "author": "seneca",
+      "text": "Enviaste-me uma carta pelas mãos de um ‘amigo’, como o chamas.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 3",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-4",
+      "author": "seneca",
+      "text": "Permanece como começaste e apressa-te, para desfrutar por mais tempo de uma mente em paz consigo.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 4",
+      "language": "pt",
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-5",
+      "author": "seneca",
+      "text": "Alegro-me por perseverares nos estudos e por te empenhares, todos os dias, em te tornares melhor.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 5",
+      "language": "pt",
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-6",
+      "author": "seneca",
+      "text": "Sinto, Lucílio, que não estou apenas sendo corrigido, mas transformado.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 6",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-11",
+      "author": "seneca",
+      "text": "Pelas primeiras palavras do teu amigo, percebe-se seu espírito, entendimento e progresso.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 11",
+      "language": "pt",
+      "theme_primary": "controle",
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-12",
+      "author": "seneca",
+      "text": "Por onde olho, vejo sinais de que a velhice avança.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 12",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-9",
+      "author": "seneca",
+      "text": "O sábio é autossuficiente; ainda assim, deseja amigos.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 9",
+      "language": "pt",
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-sen-10",
+      "author": "seneca",
+      "text": "Não mudo de opinião: evita a multidão, evita o pequeno grupo e evita até o isolamento improdutivo.",
+      "source_work": "Moral Letters to Lucilius",
+      "source_ref": "Letter 10",
+      "language": "pt",
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
       "authenticity_level": "verified"
     },
     {
@@ -31,21 +157,297 @@
       "source_work": "Enchiridion",
       "source_ref": "Section 1",
       "language": "pt",
-      "theme_primary": "controle",
-      "behavior_intent": "direcionar energia apenas ao que depende de mim",
-      "context_tags": ["ansiedade", "decisao_dificil"],
+      "theme_primary": "disciplina",
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
       "authenticity_level": "verified"
     },
     {
       "id": "q-epi-2",
       "author": "epictetus",
+      "text": "Lembra: quem falha no que deseja é infeliz; e quem cai no que tenta evitar também.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 2",
+      "language": "pt",
+      "theme_primary": "controle",
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-3",
+      "author": "epictetus",
+      "text": "Em tudo que agrada à alma, lembra-te de perguntar: qual é a natureza desta coisa?",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 3",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-4",
+      "author": "epictetus",
+      "text": "Antes de agir, recorda que tipo de ação estás prestes a realizar.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 4",
+      "language": "pt",
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-5",
+      "author": "epictetus",
       "text": "Os homens não se perturbam pelas coisas que acontecem, mas pelas opiniões sobre elas.",
       "source_work": "Enchiridion",
       "source_ref": "Section 5",
       "language": "pt",
-      "theme_primary": "julgamento",
-      "behavior_intent": "revisar interpretações antes de reagir",
-      "context_tags": ["relacionamentos", "ansiedade"],
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-6",
+      "author": "epictetus",
+      "text": "Não te exaltes por vantagem que pertence a outro.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 6",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-7",
+      "author": "epictetus",
+      "text": "Como numa viagem, mantém a atenção no navio; na vida, não te distraias do que é essencial.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 7",
+      "language": "pt",
+      "theme_primary": "controle",
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-8",
+      "author": "epictetus",
+      "text": "Não busques que os acontecimentos ocorram como queres; quer que ocorram como são.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 8",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-9",
+      "author": "epictetus",
+      "text": "A doença impede o corpo, mas não a vontade, a menos que a própria vontade permita.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 9",
+      "language": "pt",
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-10",
+      "author": "epictetus",
+      "text": "Em cada acontecimento, volta-te para ti e pergunta que recurso tens para fazer bom uso dele.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 10",
+      "language": "pt",
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-11",
+      "author": "epictetus",
+      "text": "Nunca digas: ‘perdi’; diz antes: ‘foi devolvido’.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 11",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-21",
+      "author": "epictetus",
+      "text": "Mantém diante dos olhos, todos os dias, a morte e o exílio; assim evitarás desejos mesquinhos.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 21",
+      "language": "pt",
+      "theme_primary": "controle",
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-13",
+      "author": "epictetus",
+      "text": "Se queres progredir, aceita parecer tolo e sem prestígio nas coisas externas.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 13",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-14",
+      "author": "epictetus",
+      "text": "Se queres que filhos, cônjuge e amigos vivam para sempre, queres controlar o que não depende de ti.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 14",
+      "language": "pt",
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-15",
+      "author": "epictetus",
+      "text": "Na vida, comporta-te como num banquete: toma com decência o que chega até ti.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 15",
+      "language": "pt",
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-16",
+      "author": "epictetus",
+      "text": "Ao ver alguém em dor, não te deixes arrastar pela aparência de que o mal está nas coisas externas.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 16",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-17",
+      "author": "epictetus",
+      "text": "Lembra-te: és ator de uma peça, no papel que te foi dado.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 17",
+      "language": "pt",
+      "theme_primary": "controle",
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-23",
+      "author": "epictetus",
+      "text": "Se te voltas aos externos para agradar alguém, perdeste teu propósito.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 23",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-19",
+      "author": "epictetus",
+      "text": "Serás invencível se não entrares em disputa na qual não podes vencer.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 19",
+      "language": "pt",
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-epi-20",
+      "author": "epictetus",
+      "text": "Lembre-se: não é quem o insulta ou fere que o ofende, mas a sua opinião de que isso é insulto.",
+      "source_work": "Enchiridion",
+      "source_ref": "Section 20",
+      "language": "pt",
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
       "authenticity_level": "verified"
     },
     {
@@ -55,9 +457,12 @@
       "source_work": "Meditations",
       "source_ref": "Book 2.1",
       "language": "pt",
-      "theme_primary": "dever",
-      "behavior_intent": "agir com caráter apesar das fricções do dia",
-      "context_tags": ["trabalho", "relacionamentos"],
+      "theme_primary": "disciplina",
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
       "authenticity_level": "verified"
     },
     {
@@ -67,33 +472,12 @@
       "source_work": "Meditations",
       "source_ref": "Book 4.3",
       "language": "pt",
-      "theme_primary": "impermanencia",
-      "behavior_intent": "voltar ao eixo interno antes de decidir",
-      "context_tags": ["ansiedade"],
-      "authenticity_level": "verified"
-    },
-    {
-      "id": "q-sen-3",
-      "author": "seneca",
-      "text": "O sábio é autossuficiente; ainda assim, deseja amigos.",
-      "source_work": "Moral Letters to Lucilius",
-      "source_ref": "Letter 9",
-      "language": "pt",
-      "theme_primary": "justica",
-      "behavior_intent": "cultivar relações úteis e éticas",
-      "context_tags": ["relacionamentos"],
-      "authenticity_level": "verified"
-    },
-    {
-      "id": "q-epi-3",
-      "author": "epictetus",
-      "text": "Lembre-se: não é quem o insulta ou fere que o ofende, mas a sua opinião de que isso é insulto.",
-      "source_work": "Enchiridion",
-      "source_ref": "Section 20",
-      "language": "pt",
-      "theme_primary": "disciplina",
-      "behavior_intent": "interromper a reação automática",
-      "context_tags": ["foco", "relacionamentos"],
+      "theme_primary": "controle",
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
       "authenticity_level": "verified"
     },
     {
@@ -103,9 +487,12 @@
       "source_work": "Meditations",
       "source_ref": "Book 6.19",
       "language": "pt",
-      "theme_primary": "proposito",
-      "behavior_intent": "trocar desculpa por progresso mínimo",
-      "context_tags": ["trabalho", "decisao_dificil"],
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
       "authenticity_level": "verified"
     },
     {
@@ -115,9 +502,102 @@
       "source_work": "Meditations",
       "source_ref": "Book 5.16",
       "language": "pt",
-      "theme_primary": "emocao",
-      "behavior_intent": "elevar a qualidade dos pensamentos que guiam ações",
-      "context_tags": ["ansiedade", "foco"],
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-mar-5",
+      "author": "marcus_aurelius",
+      "text": "A cada momento, pensa e age como romano e como ser humano: com dignidade simples, justiça e liberdade interior.",
+      "source_work": "Meditations",
+      "source_ref": "Book 2.5",
+      "language": "pt",
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-mar-11",
+      "author": "marcus_aurelius",
+      "text": "Como podes deixar a vida a qualquer instante, regula cada ato e pensamento de acordo com isso.",
+      "source_work": "Meditations",
+      "source_ref": "Book 2.11",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "agir com foco no dever essencial de hoje",
+      "context_tags": [
+        "trabalho",
+        "foco"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-mar-7",
+      "author": "marcus_aurelius",
+      "text": "As coisas externas te distraem? Reserva tempo para aprender algo bom e deixa de ser arrastado.",
+      "source_work": "Meditations",
+      "source_ref": "Book 2.7",
+      "language": "pt",
+      "theme_primary": "controle",
+      "behavior_intent": "reduzir reatividade e escolher resposta racional",
+      "context_tags": [
+        "ansiedade",
+        "emoção"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-mar-8",
+      "author": "marcus_aurelius",
+      "text": "Raramente alguém é infeliz por não entender a mente alheia; quem ignora a própria mente, porém, sofre necessariamente.",
+      "source_work": "Meditations",
+      "source_ref": "Book 2.8",
+      "language": "pt",
+      "theme_primary": "disciplina",
+      "behavior_intent": "proteger atenção em uma tarefa de cada vez",
+      "context_tags": [
+        "foco",
+        "disciplina"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-mar-9",
+      "author": "marcus_aurelius",
+      "text": "Lembra sempre a natureza do todo, a tua própria natureza e como tua parte se relaciona com esse todo.",
+      "source_work": "Meditations",
+      "source_ref": "Book 2.9",
+      "language": "pt",
+      "theme_primary": "justiça",
+      "behavior_intent": "responder com respeito e autocontrole",
+      "context_tags": [
+        "relacionamentos",
+        "justiça"
+      ],
+      "authenticity_level": "verified"
+    },
+    {
+      "id": "q-mar-12",
+      "author": "marcus_aurelius",
+      "text": "Quão depressa tudo desaparece: os corpos no universo e sua lembrança no tempo.",
+      "source_work": "Meditations",
+      "source_ref": "Book 2.12",
+      "language": "pt",
+      "theme_primary": "propósito",
+      "behavior_intent": "decidir por virtude, não por impulso",
+      "context_tags": [
+        "decisao_dificil",
+        "propósito"
+      ],
       "authenticity_level": "verified"
     }
   ],
@@ -126,121 +606,641 @@
       "id": "r-001",
       "quote_id": "q-sen-1",
       "context": "trabalho",
-      "action_title": "Bloco de tempo protegido",
-      "quote_link_explanation": "A citação reforça que tempo é o único bem realmente nosso — portanto precisa ser protegido.",
-      "action_steps": ["Cancele ou adie 1 tarefa sem impacto", "Reserve 10 minutos para a prioridade central", "Execute sem interrupções"],
+      "action_title": "Planejamento do controlável",
+      "action_steps": [
+        "Liste 3 ações sob seu controle",
+        "Defina 1 primeira ação de 10 min",
+        "Execute agora"
+      ],
       "estimated_minutes": 10,
-      "expected_outcome": "Uma tarefa relevante avançada hoje.",
-      "completion_criteria": "Você finalizou 1 bloco de 10 minutos sem interrupções.",
-      "journal_prompt": "Onde eu estava perdendo tempo sem perceber?"
+      "journal_prompt": "O que mudou quando foquei no controlável?",
+      "quote_link_explanation": "Se o tempo é tudo que possuímos, investir em ações controláveis é a forma mais sábia de usá-lo.",
+      "expected_outcome": "Clareza sobre o que depende de você e ação imediata no que importa.",
+      "completion_criteria": "Você executou a primeira ação de 10 minutos da sua lista."
     },
     {
       "id": "r-002",
       "quote_id": "q-sen-2",
-      "context": "foco",
-      "action_title": "Uma tela, uma tarefa",
-      "quote_link_explanation": "A prática traduz a ideia de que dispersão constante elimina presença real.",
-      "action_steps": ["Feche abas e notificações", "Defina apenas 1 entrega para os próximos 10 minutos", "Conclua antes de trocar de contexto"],
-      "estimated_minutes": 10,
-      "expected_outcome": "Maior concentração e menor ansiedade por sobrecarga.",
-      "completion_criteria": "Você concluiu a tarefa sem trocar de contexto.",
-      "journal_prompt": "O que mudou quando eu parei de fazer tudo ao mesmo tempo?"
+      "context": "ansiedade",
+      "action_title": "Nomear o medo",
+      "action_steps": [
+        "Escreva o que teme em 1 frase",
+        "Separe fato de interpretação",
+        "Escolha uma resposta objetiva"
+      ],
+      "estimated_minutes": 8,
+      "journal_prompt": "Qual parte era fato e qual era imaginação?",
+      "quote_link_explanation": "Quando a mente dispersa entre medos, não enfrenta nenhum. Nomeá-los é o primeiro passo para estar presente.",
+      "expected_outcome": "Redução da ansiedade difusa ao transformar medo vago em fato específico.",
+      "completion_criteria": "Você separou fato de interpretação e definiu uma resposta objetiva."
     },
     {
       "id": "r-003",
-      "quote_id": "q-epi-1",
-      "context": "decisao_dificil",
-      "action_title": "Mapa do controlável",
-      "quote_link_explanation": "A citação pede distinção clara entre o que depende e o que não depende de você.",
-      "action_steps": ["Escreva 2 colunas: controlável e não controlável", "Risque a coluna do não controlável", "Escolha 1 ação da coluna útil"],
-      "estimated_minutes": 10,
-      "expected_outcome": "Decisão com menos ruído emocional.",
-      "completion_criteria": "Você executou ao menos 1 ação da coluna controlável.",
-      "journal_prompt": "Que preocupação eu soltei hoje por não depender de mim?"
+      "quote_id": "q-sen-3",
+      "context": "foco",
+      "action_title": "Bloco sem distração",
+      "action_steps": [
+        "Ative 25 min sem notificações",
+        "Escolha uma única tarefa",
+        "Finalize um entregável pequeno"
+      ],
+      "estimated_minutes": 25,
+      "journal_prompt": "O que permitiu manter atenção única?",
+      "quote_link_explanation": "A confiança verdadeira exige atenção plena. Assim como na amizade, no trabalho a presença é inegociável.",
+      "expected_outcome": "Um entregável concreto finalizado com foco sustentado.",
+      "completion_criteria": "Você completou 25 minutos ininterruptos e finalizou um entregável."
     },
     {
       "id": "r-004",
-      "quote_id": "q-epi-2",
+      "quote_id": "q-sen-4",
       "context": "relacionamentos",
-      "action_title": "Fato versus interpretação",
-      "quote_link_explanation": "A prática aplica o princípio de que o sofrimento vem do juízo, não do fato em si.",
-      "action_steps": ["Descreva o fato em 1 frase neutra", "Escreva sua interpretação ao lado", "Reescreva uma resposta baseada apenas no fato"],
-      "estimated_minutes": 8,
-      "expected_outcome": "Menor reatividade e comunicação mais clara.",
-      "completion_criteria": "Sua resposta final não contém ataque pessoal nem suposição.",
-      "journal_prompt": "Qual interpretação estava amplificando meu incômodo?"
+      "action_title": "Resposta sem impulso",
+      "action_steps": [
+        "Pause 60 segundos antes de responder",
+        "Reescreva a mensagem com respeito",
+        "Envie apenas o essencial"
+      ],
+      "estimated_minutes": 6,
+      "journal_prompt": "Como a pausa mudou meu tom?",
+      "quote_link_explanation": "Perseverar no caminho exige paciência. Responder sem impulso é prova de constância interior.",
+      "expected_outcome": "Comunicação mais clara e relações preservadas pela moderação.",
+      "completion_criteria": "Você pausou, reescreveu e enviou apenas o essencial."
     },
     {
       "id": "r-005",
-      "quote_id": "q-mar-1",
-      "context": "trabalho",
-      "action_title": "Dever antes do ruído",
-      "quote_link_explanation": "A citação prepara para fricção social; a prática prioriza conduta correta no presente.",
-      "action_steps": ["Defina seu dever principal do dia", "Faça-o antes de abrir mensagens", "Registre o resultado em 1 linha"],
+      "quote_id": "q-sen-5",
+      "context": "decisao_dificil",
+      "action_title": "Critério de virtude",
+      "action_steps": [
+        "Liste 2 opções",
+        "Avalie por justiça e coragem",
+        "Escolha a opção mais íntegra"
+      ],
       "estimated_minutes": 10,
-      "expected_outcome": "Sensação de direção e responsabilidade cumprida.",
-      "completion_criteria": "O dever principal foi iniciado antes de distrações externas.",
-      "journal_prompt": "Como mantive meu caráter diante de atritos hoje?"
+      "journal_prompt": "Escolhi o fácil ou o correto?",
+      "quote_link_explanation": "O empenho nos estudos só tem valor quando guiado pela virtude. O critério ético é o filtro de toda decisão.",
+      "expected_outcome": "Uma decisão tomada com integridade, independente da conveniência.",
+      "completion_criteria": "Você avaliou as opções por justiça e coragem e escolheu a mais íntegra."
     },
     {
       "id": "r-006",
-      "quote_id": "q-mar-2",
-      "context": "ansiedade",
-      "action_title": "Retorno ao eixo interno",
-      "quote_link_explanation": "A citação aponta que a estabilidade é interna; a prática cria esse retorno de forma objetiva.",
-      "action_steps": ["Respire por 60 segundos", "Nomeie a emoção sem julgamento", "Escolha o próximo passo mais sereno"],
-      "estimated_minutes": 5,
-      "expected_outcome": "Redução da ansiedade aguda e retomada de clareza.",
-      "completion_criteria": "Você nomeou a emoção e executou 1 passo concreto.",
-      "journal_prompt": "O que mudou quando busquei calma dentro de mim?"
+      "quote_id": "q-sen-6",
+      "context": "trabalho",
+      "action_title": "Limite de agenda",
+      "action_steps": [
+        "Remova 1 compromisso não essencial",
+        "Proteja 1 bloco profundo",
+        "Comunique o novo limite"
+      ],
+      "estimated_minutes": 12,
+      "journal_prompt": "Que custo evitei ao dizer não?",
+      "quote_link_explanation": "Ser transformado exige espaço. Eliminar o supérfluo da agenda é proteger o essencial.",
+      "expected_outcome": "Mais tempo para trabalho profundo e menos esgotamento por excesso.",
+      "completion_criteria": "Você removeu um compromisso e comunicou o novo limite."
     },
     {
       "id": "r-007",
-      "quote_id": "q-sen-3",
-      "context": "relacionamentos",
-      "action_title": "Ato de amizade útil",
-      "quote_link_explanation": "A prática transforma amizade em ação concreta, não só sentimento.",
-      "action_steps": ["Escolha 1 pessoa importante", "Ofereça ajuda específica e realista", "Cumpra hoje o combinado"],
-      "estimated_minutes": 10,
-      "expected_outcome": "Fortalecimento de vínculo com utilidade mútua.",
-      "completion_criteria": "Você entregou uma ajuda concreta ainda hoje.",
-      "journal_prompt": "Minha amizade hoje foi concreta ou apenas intenção?"
+      "quote_id": "q-sen-11",
+      "context": "ansiedade",
+      "action_title": "Premeditatio breve",
+      "action_steps": [
+        "Imagine o pior plausível",
+        "Planeje sua resposta racional",
+        "Volte ao presente"
+      ],
+      "estimated_minutes": 7,
+      "journal_prompt": "Estou preparado ou apenas preocupado?",
+      "quote_link_explanation": "Assim como o caráter se revela nas primeiras palavras, a preparação mental revela o estoico. Antecipe para não reagir.",
+      "expected_outcome": "Redução da surpresa emocional diante de adversidades.",
+      "completion_criteria": "Você imaginou o pior plausível, planejou a resposta e voltou ao presente."
     },
     {
       "id": "r-008",
-      "quote_id": "q-epi-3",
+      "quote_id": "q-sen-12",
       "context": "foco",
-      "action_title": "Pausa antes da reação",
-      "quote_link_explanation": "A citação pede revisão do juízo; a prática cria uma interrupção deliberada da reação automática.",
-      "action_steps": ["Quando irritar, faça pausa de 30 segundos", "Pergunte: qual é o fato objetivo?", "Escolha resposta proporcional"],
-      "estimated_minutes": 6,
-      "expected_outcome": "Menos impulsividade e mais autocontrole.",
-      "completion_criteria": "Você evitou pelo menos 1 reação impulsiva hoje.",
-      "journal_prompt": "Qual reação eu evitei ao revisar meu juízo?"
+      "action_title": "Uma coisa de cada vez",
+      "action_steps": [
+        "Feche abas excedentes",
+        "Defina meta de 1 entrega",
+        "Conclua antes de abrir nova tarefa"
+      ],
+      "estimated_minutes": 15,
+      "journal_prompt": "Qual ganho tive ao reduzir contexto?",
+      "quote_link_explanation": "A velhice avança sem pedir permissão e cada momento disperso é irrecuperável. Fazer uma coisa de cada vez honra o tempo.",
+      "expected_outcome": "Progresso tangível sem o desgaste da alternância de contexto.",
+      "completion_criteria": "Você concluiu uma entrega antes de iniciar outra tarefa."
     },
     {
       "id": "r-009",
-      "quote_id": "q-mar-3",
-      "context": "decisao_dificil",
-      "action_title": "Progresso mínimo corajoso",
-      "quote_link_explanation": "A prática converte o “não é impossível” em movimento real e imediato.",
-      "action_steps": ["Quebre o desafio em um passo de 10 minutos", "Execute agora sem buscar perfeição", "Anote o próximo passo"],
-      "estimated_minutes": 10,
-      "expected_outcome": "Inércia quebrada e avanço mensurável.",
-      "completion_criteria": "Você concluiu um micro-passo verificável.",
-      "journal_prompt": "O que pareceu possível depois que comecei pequeno?"
+      "quote_id": "q-sen-9",
+      "context": "relacionamentos",
+      "action_title": "Escuta justa",
+      "action_steps": [
+        "Escute 3 minutos sem interromper",
+        "Repita o ponto da outra pessoa",
+        "Responda ao ponto real"
+      ],
+      "estimated_minutes": 8,
+      "journal_prompt": "Eu ouvi para entender ou para vencer?",
+      "quote_link_explanation": "O sábio deseja amigos não por necessidade, mas por valor. Escutar com justiça é o primeiro ato de amizade verdadeira.",
+      "expected_outcome": "Conexão mais profunda ao demonstrar interesse genuíno.",
+      "completion_criteria": "Você escutou sem interromper, repetiu o ponto e respondeu ao que foi dito."
     },
     {
       "id": "r-010",
-      "quote_id": "q-mar-4",
-      "context": "ansiedade",
-      "action_title": "Higiene mental de 10 minutos",
-      "quote_link_explanation": "A prática melhora a qualidade dos pensamentos que orientam sua conduta.",
-      "action_steps": ["Escreva 1 pensamento recorrente", "Reescreva em versão mais útil e realista", "Aja com base na nova formulação"],
+      "quote_id": "q-sen-10",
+      "context": "decisao_dificil",
+      "action_title": "Teste da posteridade",
+      "action_steps": [
+        "Pergunte se aprovaria essa decisão em 1 ano",
+        "Anote risco moral",
+        "Decida"
+      ],
+      "estimated_minutes": 9,
+      "journal_prompt": "Essa decisão honraria meus valores no futuro?",
+      "quote_link_explanation": "Evitar a multidão é proteger o juízo. Testar a decisão pelo olhar do futuro é proteger o caráter.",
+      "expected_outcome": "Decisão mais robusta, validada contra o risco moral.",
+      "completion_criteria": "Você avaliou a decisão pela perspectiva de 1 ano e anotou o risco."
+    },
+    {
+      "id": "r-011",
+      "quote_id": "q-epi-1",
+      "context": "trabalho",
+      "action_title": "Dicotomia no início do dia",
+      "action_steps": [
+        "Escreva 2 colunas: controlável e não controlável",
+        "Risque a segunda",
+        "Aja na primeira"
+      ],
       "estimated_minutes": 10,
-      "expected_outcome": "Pensamento mais claro e ação menos ansiosa.",
-      "completion_criteria": "Você agiu hoje a partir do pensamento reformulado.",
-      "journal_prompt": "Que pensamento de hoje elevou ou piorou meu dia?"
+      "journal_prompt": "Quanto da minha energia foi para o inútil?",
+      "quote_link_explanation": "Separar o que depende de nós do que não depende é o fundamento de toda ação estoica. Comece o dia com essa clareza.",
+      "expected_outcome": "Energia direcionada apenas ao que você pode influenciar.",
+      "completion_criteria": "Você escreveu as duas colunas, riscou a segunda e agiu na primeira."
+    },
+    {
+      "id": "r-012",
+      "quote_id": "q-epi-2",
+      "context": "ansiedade",
+      "action_title": "Reenquadrar julgamento",
+      "action_steps": [
+        "Detecte pensamento automático",
+        "Troque por descrição neutra",
+        "Escolha atitude útil"
+      ],
+      "estimated_minutes": 8,
+      "journal_prompt": "Qual julgamento me enfraquecia?",
+      "quote_link_explanation": "A infelicidade nasce de desejar o que não controlamos. Reenquadrar o julgamento devolve o poder à razão.",
+      "expected_outcome": "Pensamento mais equilibrado ao substituir reação automática por análise.",
+      "completion_criteria": "Você detectou o pensamento automático e o substituiu por descrição neutra."
+    },
+    {
+      "id": "r-013",
+      "quote_id": "q-epi-3",
+      "context": "foco",
+      "action_title": "Disciplina de entrada",
+      "action_steps": [
+        "Defina critério de início claro",
+        "Comece sem esperar motivação",
+        "Cronometre 10 min"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "O que acontece quando início sem negociar?",
+      "quote_link_explanation": "Perguntar a natureza de cada coisa evita ilusões. Aplicar disciplina de início evita a procrastinação.",
+      "expected_outcome": "Ação iniciada sem depender de motivação externa.",
+      "completion_criteria": "Você definiu critério, começou sem negociar e cronometrou 10 minutos."
+    },
+    {
+      "id": "r-014",
+      "quote_id": "q-epi-4",
+      "context": "relacionamentos",
+      "action_title": "Controle da reatividade",
+      "action_steps": [
+        "Não discuta no pico emocional",
+        "Respire 4 ciclos lentos",
+        "Retome com linguagem factual"
+      ],
+      "estimated_minutes": 6,
+      "journal_prompt": "Que conflito evitei ao regular a reação?",
+      "quote_link_explanation": "Recordar o tipo de ação antes de agir previne o impulso. Controlar a reatividade é exercer razão sobre emoção.",
+      "expected_outcome": "Conflitos evitados ou resolvidos com linguagem factual.",
+      "completion_criteria": "Você respirou, esperou o pico emocional passar e retomou com clareza."
+    },
+    {
+      "id": "r-015",
+      "quote_id": "q-epi-5",
+      "context": "decisao_dificil",
+      "action_title": "Escolha pelo papel",
+      "action_steps": [
+        "Defina seu papel (líder pai amigo)",
+        "Aja conforme esse papel virtuoso",
+        "Registre"
+      ],
+      "estimated_minutes": 9,
+      "journal_prompt": "Atuei conforme meu papel ou meu ego?",
+      "quote_link_explanation": "Se não são os eventos que perturbam mas nossas opiniões, escolher pelo papel virtuoso é escolher pela razão.",
+      "expected_outcome": "Ação alinhada ao papel que você quer desempenhar, não ao impulso.",
+      "completion_criteria": "Você definiu seu papel, agiu conforme ele e registrou a experiência."
+    },
+    {
+      "id": "r-016",
+      "quote_id": "q-epi-6",
+      "context": "trabalho",
+      "action_title": "Compromisso com o processo",
+      "action_steps": [
+        "Escolha meta de processo, não de aplauso",
+        "Execute etapa de hoje",
+        "Revise sem autocondenação"
+      ],
+      "estimated_minutes": 12,
+      "journal_prompt": "Executei o processo independentemente de reconhecimento?",
+      "quote_link_explanation": "Exaltar-se por vantagem alheia é fragilidade. Comprometer-se com o próprio processo é a verdadeira fortaleza.",
+      "expected_outcome": "Progresso consistente sem dependência de validação externa.",
+      "completion_criteria": "Você executou a etapa do dia e revisou sem autocondenação."
+    },
+    {
+      "id": "r-017",
+      "quote_id": "q-epi-7",
+      "context": "ansiedade",
+      "action_title": "Prova de realidade",
+      "action_steps": [
+        "Escreva previsão catastrofica",
+        "Busque 2 evidências contra",
+        "Adote ação proporcional"
+      ],
+      "estimated_minutes": 9,
+      "journal_prompt": "Meu medo era evidencia ou suposição?",
+      "quote_link_explanation": "Manter atenção no navio é cuidar do real. Provar a realidade dos medos é aterrar a mente no que existe.",
+      "expected_outcome": "Ação proporcional ao risco real, sem magnificação catastrófica.",
+      "completion_criteria": "Você escreveu a previsão, encontrou evidências contrárias e agiu."
+    },
+    {
+      "id": "r-018",
+      "quote_id": "q-epi-8",
+      "context": "foco",
+      "action_title": "Higiene mental",
+      "action_steps": [
+        "Bloqueie notificações por 30 min",
+        "Afaste gatilhos de comparação",
+        "Volte ao trabalho escolhido"
+      ],
+      "estimated_minutes": 30,
+      "journal_prompt": "Quais gatilhos roubam minha atenção?",
+      "quote_link_explanation": "Aceitar os acontecimentos como são liberta energia. A higiene mental remove o que compete com sua atenção.",
+      "expected_outcome": "Foco restaurado após eliminar distrações e gatilhos de comparação.",
+      "completion_criteria": "Você bloqueou notificações, afastou gatilhos e voltou ao trabalho."
+    },
+    {
+      "id": "r-019",
+      "quote_id": "q-epi-9",
+      "context": "relacionamentos",
+      "action_title": "Expectativas realistas",
+      "action_steps": [
+        "Defina o que depende de você na conversa",
+        "Aceite o que depende do outro",
+        "Conduza com clareza"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "Tentei controlar o outro ou minha conduta?",
+      "quote_link_explanation": "A doença impede o corpo, mas não a vontade. Expectativas realistas protegem a vontade nas relações.",
+      "expected_outcome": "Conversas mais produtivas ao focar no que depende de você.",
+      "completion_criteria": "Você definiu sua parte, aceitou a do outro e conduziu com clareza."
+    },
+    {
+      "id": "r-020",
+      "quote_id": "q-epi-10",
+      "context": "decisao_dificil",
+      "action_title": "Clareza de perda aceitável",
+      "action_steps": [
+        "Liste pior perda aceitável",
+        "Defina limite de risco",
+        "Decida dentro do limite"
+      ],
+      "estimated_minutes": 11,
+      "journal_prompt": "Qual limite protegeu minha integridade?",
+      "quote_link_explanation": "Voltar-se para os próprios recursos é o conselho de Epicteto. Conhecer a perda aceitável é usar esse recurso com sabedoria.",
+      "expected_outcome": "Decisão tomada dentro de limites claros, sem risco desmedido.",
+      "completion_criteria": "Você listou a pior perda aceitável, definiu limite e decidiu."
+    },
+    {
+      "id": "r-021",
+      "quote_id": "q-epi-11",
+      "context": "trabalho",
+      "action_title": "Fechar ciclo curto",
+      "action_steps": [
+        "Escolha tarefa de 20 min",
+        "Entregue versão imperfeita",
+        "Colete feedback rápido"
+      ],
+      "estimated_minutes": 20,
+      "journal_prompt": "Progresso hoje foi melhor que perfeccionismo?",
+      "quote_link_explanation": "Nada se perde, tudo é devolvido. Fechar ciclos curtos pratica o desapego do resultado perfeito.",
+      "expected_outcome": "Progresso concreto em vez de paralisia por perfeccionismo.",
+      "completion_criteria": "Você entregou uma versão imperfeita e coletou feedback."
+    },
+    {
+      "id": "r-022",
+      "quote_id": "q-epi-21",
+      "context": "ansiedade",
+      "action_title": "Aceitação ativa",
+      "action_steps": [
+        "Nomeie o evento inevitável",
+        "Defina resposta digna",
+        "Execute o primeiro passo"
+      ],
+      "estimated_minutes": 7,
+      "journal_prompt": "Resisti ao inevitável ou respondi com dignidade?",
+      "quote_link_explanation": "Manter morte e exílio diante dos olhos elimina pensamentos baixos. Aceitar o inevitável libera coragem para agir.",
+      "expected_outcome": "Resposta digna ao inevitável em vez de resistência improdutiva.",
+      "completion_criteria": "Você nomeou o evento, definiu resposta digna e executou o primeiro passo."
+    },
+    {
+      "id": "r-023",
+      "quote_id": "q-epi-13",
+      "context": "foco",
+      "action_title": "Contrato de prioridade",
+      "action_steps": [
+        "Escreva prioridade única do dia",
+        "Compartilhe com 1 pessoa",
+        "Preste contas no fim"
+      ],
+      "estimated_minutes": 8,
+      "journal_prompt": "O compromisso público melhorou minha constância?",
+      "quote_link_explanation": "Aceitar parecer tolo é liberdade. Um contrato de prioridade exige essa coragem de simplificar.",
+      "expected_outcome": "Constância aumentada pela prestação de contas externa.",
+      "completion_criteria": "Você definiu prioridade única, compartilhou e prestou contas."
+    },
+    {
+      "id": "r-024",
+      "quote_id": "q-epi-14",
+      "context": "relacionamentos",
+      "action_title": "Correção sem humilhar",
+      "action_steps": [
+        "Descreva fato observável",
+        "Explique impacto",
+        "Peça ajuste específico"
+      ],
+      "estimated_minutes": 9,
+      "journal_prompt": "Consegui firmeza sem agressão?",
+      "quote_link_explanation": "Desejar que outros vivam para sempre é negar a realidade. Corrigir sem humilhar aceita a imperfeição humana com firmeza.",
+      "expected_outcome": "Feedback entregue com clareza e respeito, sem ressentimento.",
+      "completion_criteria": "Você descreveu o fato, explicou o impacto e pediu ajuste específico."
+    },
+    {
+      "id": "r-025",
+      "quote_id": "q-epi-15",
+      "context": "decisao_dificil",
+      "action_title": "Separar valor de resultado",
+      "action_steps": [
+        "Defina a decisão correta",
+        "Execute",
+        "Aceite resultado externo"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "O resultado externo alterou meu compromisso interno?",
+      "quote_link_explanation": "Num banquete, toma o que é servido com decência. Separar valor de resultado é aceitar o que a vida oferece sem exigir mais.",
+      "expected_outcome": "Paz interior ao desacoplar a decisão correta do resultado externo.",
+      "completion_criteria": "Você definiu a decisão correta, executou e aceitou o resultado."
+    },
+    {
+      "id": "r-026",
+      "quote_id": "q-epi-16",
+      "context": "trabalho",
+      "action_title": "Rotina anti-procrastinação",
+      "action_steps": [
+        "Quebre tarefa em 3 partes",
+        "Faça apenas a parte 1 agora",
+        "Marque conclusão"
+      ],
+      "estimated_minutes": 12,
+      "journal_prompt": "Que desculpa caiu quando comecei pequeno?",
+      "quote_link_explanation": "Não se deixar arrastar pela aparência da dor é agir com razão. Dividir a tarefa em partes vence a procrastinação sem drama.",
+      "expected_outcome": "Tarefa iniciada e primeira parte concluída, quebrando a inércia.",
+      "completion_criteria": "Você dividiu em 3 partes, fez a primeira e marcou conclusão."
+    },
+    {
+      "id": "r-027",
+      "quote_id": "q-epi-17",
+      "context": "ansiedade",
+      "action_title": "Reduzir antecipação",
+      "action_steps": [
+        "Limite planejamento a 15 min",
+        "Pare de simular cenários",
+        "Volte ao presente"
+      ],
+      "estimated_minutes": 15,
+      "journal_prompt": "Planejei para agir ou para me distrair?",
+      "quote_link_explanation": "Somos atores no papel que nos foi dado. Reduzir a antecipação é aceitar que o roteiro não nos pertence.",
+      "expected_outcome": "Menos energia gasta em cenários imaginários, mais presença.",
+      "completion_criteria": "Você limitou o planejamento, parou de simular e voltou ao presente."
+    },
+    {
+      "id": "r-028",
+      "quote_id": "q-epi-23",
+      "context": "foco",
+      "action_title": "Atenção ao presente",
+      "action_steps": [
+        "Faça 5 respirações conscientes",
+        "Defina próxima ação fisica",
+        "Execute imediatamente"
+      ],
+      "estimated_minutes": 5,
+      "journal_prompt": "Qual ação concreta me trouxe ao presente?",
+      "quote_link_explanation": "Voltar-se aos externos para agradar é perder o rumo. A atenção ao presente reconecta com o que é interno e real.",
+      "expected_outcome": "Retorno imediato ao presente através de ação física concreta.",
+      "completion_criteria": "Você respirou, definiu próxima ação e a executou imediatamente."
+    },
+    {
+      "id": "r-029",
+      "quote_id": "q-epi-19",
+      "context": "relacionamentos",
+      "action_title": "Autodomínio em crítica",
+      "action_steps": [
+        "Ouça a crítica inteira",
+        "Extraia 1 ponto útil",
+        "Descarte o resto sem rancor"
+      ],
+      "estimated_minutes": 7,
+      "journal_prompt": "Que parte da crítica me fez crescer?",
+      "quote_link_explanation": "Ser invencível é não entrar em disputas que não se pode vencer. Extrair o útil da crítica sem rancor é vitória interior.",
+      "expected_outcome": "Crescimento a partir de crítica, sem desgaste emocional.",
+      "completion_criteria": "Você ouviu a crítica, extraiu 1 ponto útil e descartou o resto."
+    },
+    {
+      "id": "r-030",
+      "quote_id": "q-epi-20",
+      "context": "decisao_dificil",
+      "action_title": "Ensaiar objeções",
+      "action_steps": [
+        "Liste 3 objeções a sua decisão",
+        "Responda cada uma com fatos",
+        "Reavalie"
+      ],
+      "estimated_minutes": 12,
+      "journal_prompt": "Minha decisão suportou objeções fortes?",
+      "quote_link_explanation": "Não é quem insulta que ofende, mas a opinião sobre o insulto. Ensaiar objeções fortalece a decisão contra opiniões externas.",
+      "expected_outcome": "Decisão mais sólida, testada contra os melhores argumentos contrários.",
+      "completion_criteria": "Você listou 3 objeções, respondeu com fatos e reavaliou."
+    },
+    {
+      "id": "r-031",
+      "quote_id": "q-mar-1",
+      "context": "trabalho",
+      "action_title": "Dever da manhã",
+      "action_steps": [
+        "Defina dever principal de hoje",
+        "Comece antes de abrir mensagens",
+        "Conclua bloco inicial"
+      ],
+      "estimated_minutes": 20,
+      "journal_prompt": "Honrei meu dever antes do ruído?",
+      "quote_link_explanation": "Se encontraremos o intrometido e o ingrato a cada manhã, a melhor defesa é cumprir nosso dever antes do ruído.",
+      "expected_outcome": "Dever principal concluído antes que distrações externas interfiram.",
+      "completion_criteria": "Você definiu o dever, começou antes das mensagens e concluiu o bloco."
+    },
+    {
+      "id": "r-032",
+      "quote_id": "q-mar-2",
+      "context": "ansiedade",
+      "action_title": "Lembrar impermanência",
+      "action_steps": [
+        "Escreva: isto também passa",
+        "Nomeie 1 ação correta agora",
+        "Execute"
+      ],
+      "estimated_minutes": 6,
+      "journal_prompt": "Como a impermanência reduziu meu medo?",
+      "quote_link_explanation": "A tranquilidade mora dentro de nós. Lembrar a impermanência dissolve o medo ao revelar que tudo passa.",
+      "expected_outcome": "Ansiedade reduzida pela perspectiva de que a dificuldade é temporária.",
+      "completion_criteria": "Você escreveu a lembrança, nomeou uma ação correta e a executou."
+    },
+    {
+      "id": "r-033",
+      "quote_id": "q-mar-3",
+      "context": "foco",
+      "action_title": "Simplicidade deliberada",
+      "action_steps": [
+        "Remova 1 tarefa secundária",
+        "Mantenha apenas o essencial",
+        "Finalize o essencial"
+      ],
+      "estimated_minutes": 15,
+      "journal_prompt": "O que ficou melhor ao simplificar?",
+      "quote_link_explanation": "Se algo é difícil mas não impossível, a simplicidade deliberada remove o supérfluo para tornar o essencial viável.",
+      "expected_outcome": "Essencial finalizado com qualidade ao eliminar o desnecessário.",
+      "completion_criteria": "Você removeu uma tarefa secundária e finalizou o essencial."
+    },
+    {
+      "id": "r-034",
+      "quote_id": "q-mar-4",
+      "context": "relacionamentos",
+      "action_title": "Benevolência firme",
+      "action_steps": [
+        "Assuma boa intenção inicial",
+        "Corrija com clareza",
+        "Mantenha respeito"
+      ],
+      "estimated_minutes": 8,
+      "journal_prompt": "Consegui ser firme e benevolente ao mesmo tempo?",
+      "quote_link_explanation": "A mente assume o caráter dos seus pensamentos. Colorir os pensamentos com benevolência transforma as relações.",
+      "expected_outcome": "Relação fortalecida por firmeza respeitosa, sem passividade nem agressão.",
+      "completion_criteria": "Você assumiu boa intenção, corrigiu com clareza e manteve respeito."
+    },
+    {
+      "id": "r-035",
+      "quote_id": "q-mar-5",
+      "context": "decisao_dificil",
+      "action_title": "Agir segundo natureza racional",
+      "action_steps": [
+        "Escolha a opção mais racional e justa",
+        "Evite vaidade",
+        "Aja"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "Minha escolha serviu ao bem comum?",
+      "quote_link_explanation": "Pensar e agir como ser humano racional exige cuidado em cada ato. A razão é o critério de toda decisão virtuosa.",
+      "expected_outcome": "Decisão alinhada à razão e ao bem comum, livre de vaidade.",
+      "completion_criteria": "Você escolheu a opção mais racional e justa e agiu."
+    },
+    {
+      "id": "r-036",
+      "quote_id": "q-mar-11",
+      "context": "trabalho",
+      "action_title": "Disciplina silenciosa",
+      "action_steps": [
+        "Trabalhe 30 min sem anunciar",
+        "Registre resultado objetivo",
+        "Repita"
+      ],
+      "estimated_minutes": 30,
+      "journal_prompt": "Quanto produzi quando parei de performar?",
+      "quote_link_explanation": "Se a vida pode acabar a qualquer instante, cada ato deve ser regulado. Disciplina silenciosa é trabalhar sem performar.",
+      "expected_outcome": "Produção real sem o ruído da autoexibição.",
+      "completion_criteria": "Você trabalhou 30 minutos, registrou resultado e repetiu."
+    },
+    {
+      "id": "r-037",
+      "quote_id": "q-mar-7",
+      "context": "ansiedade",
+      "action_title": "Retorno ao corpo",
+      "action_steps": [
+        "Descruze ombros e mandíbula",
+        "Respire profundo 1 min",
+        "Retome com calma"
+      ],
+      "estimated_minutes": 5,
+      "journal_prompt": "Meu corpo estava alimentando a ansiedade?",
+      "quote_link_explanation": "Se coisas externas distraem, reservar tempo para o corpo é voltar ao que é interno. O corpo é a âncora do presente.",
+      "expected_outcome": "Tensão física reduzida e retorno da calma para decisões melhores.",
+      "completion_criteria": "Você relaxou ombros e mandíbula, respirou por 1 minuto e retomou."
+    },
+    {
+      "id": "r-038",
+      "quote_id": "q-mar-8",
+      "context": "foco",
+      "action_title": "Presença sem pressa",
+      "action_steps": [
+        "Defina ritmo sustentável",
+        "Evite multitarefa",
+        "Conclua 1 ciclo completo"
+      ],
+      "estimated_minutes": 18,
+      "journal_prompt": "Que qualidade surgiu com ritmo constante?",
+      "quote_link_explanation": "A infelicidade vem de não observar a própria mente. Presença sem pressa é o antídoto contra a dispersão interior.",
+      "expected_outcome": "Trabalho com mais qualidade ao manter ritmo sustentável.",
+      "completion_criteria": "Você definiu ritmo, evitou multitarefa e concluiu 1 ciclo completo."
+    },
+    {
+      "id": "r-039",
+      "quote_id": "q-mar-9",
+      "context": "relacionamentos",
+      "action_title": "Cooperação humana",
+      "action_steps": [
+        "Pergunte como pode ajudar concretamente",
+        "Ofereça 1 apoio real hoje",
+        "Cumpra"
+      ],
+      "estimated_minutes": 10,
+      "journal_prompt": "Minha ação fortaleceu cooperação?",
+      "quote_link_explanation": "Lembrar a natureza do todo e como nos relacionamos com ela transforma dever em cooperação. Ajudar é agir conforme a natureza.",
+      "expected_outcome": "Fortalecimento de vínculos por meio de ação concreta.",
+      "completion_criteria": "Você perguntou como ajudar, ofereceu apoio real e cumpriu."
+    },
+    {
+      "id": "r-040",
+      "quote_id": "q-mar-12",
+      "context": "decisao_dificil",
+      "action_title": "Noite de revisão",
+      "action_steps": [
+        "Revise 3 escolhas do dia",
+        "Marque 1 ajuste para amanhã",
+        "Comprometa-se"
+      ],
+      "estimated_minutes": 12,
+      "journal_prompt": "Qual ajuste de caráter levo para amanhã?",
+      "quote_link_explanation": "Tudo desaparece depressa. Revisar as escolhas do dia é o último ato de quem trata cada dia como se fosse inteiro.",
+      "expected_outcome": "Ajuste consciente de caráter para o dia seguinte.",
+      "completion_criteria": "Você revisou 3 escolhas, marcou 1 ajuste e se comprometeu."
     }
   ]
 }

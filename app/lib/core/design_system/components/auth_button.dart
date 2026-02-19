@@ -24,7 +24,7 @@ class AuthButton extends StatelessWidget {
     final colors = _AuthButtonColors.fromVariant(variant);
     final isDisabled = disabled;
 
-    return StoicPressScale(
+    return AethorPressScale(
       enabled: !isDisabled,
       child: Opacity(
         opacity: isDisabled ? 0.4 : 1.0,
@@ -38,11 +38,12 @@ class AuthButton extends StatelessWidget {
               foregroundColor: colors.foreground,
               side: BorderSide(color: colors.border, width: 1),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(StoicRadius.md),
+                borderRadius: BorderRadius.circular(AethorRadius.md),
               ),
               textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
             ),
             child: Text(label),
@@ -74,8 +75,8 @@ class AuthLink extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 decoration: TextDecoration.underline,
-                decorationColor: StoicColors.stone,
-                color: StoicColors.stone,
+                decorationColor: AethorColors.stone,
+                color: AethorColors.stone,
               ),
         ),
       ),
@@ -98,27 +99,27 @@ class _AuthButtonColors {
     switch (variant) {
       case AuthButtonVariant.apple:
         return const _AuthButtonColors(
-          background: StoicColors.obsidian,
-          foreground: StoicColors.ivory,
-          border: StoicColors.obsidian,
+          background: AethorColors.obsidian,
+          foreground: AethorColors.ivory,
+          border: AethorColors.obsidian,
         );
       case AuthButtonVariant.google:
         return const _AuthButtonColors(
-          background: StoicColors.ivory,
-          foreground: StoicColors.obsidian,
-          border: StoicColors.sand,
+          background: AethorColors.ivory,
+          foreground: AethorColors.obsidian,
+          border: AethorColors.sand,
         );
       case AuthButtonVariant.email:
       case AuthButtonVariant.primary:
         return const _AuthButtonColors(
-          background: StoicColors.deepBlue,
-          foreground: StoicColors.ivory,
-          border: StoicColors.deepBlue,
+          background: AethorColors.deepBlue,
+          foreground: AethorColors.ivory,
+          border: AethorColors.deepBlue,
         );
       case AuthButtonVariant.secondary:
-        return _AuthButtonColors(
+        return const _AuthButtonColors(
           background: Colors.transparent,
-          foreground: StoicColors.stone,
+          foreground: AethorColors.stone,
           border: Colors.transparent,
         );
     }

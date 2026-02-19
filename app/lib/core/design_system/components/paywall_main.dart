@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/subscription.dart';
+import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 import 'paywall_types.dart';
 
@@ -31,7 +32,7 @@ class PaywallMain extends StatelessWidget {
         : 'Assinar agora';
 
     return Material(
-      color: StoicColors.obsidian,
+      color: AethorColors.obsidian,
       child: SafeArea(
         child: Stack(
           children: [
@@ -43,20 +44,20 @@ class PaywallMain extends StatelessWidget {
                   children: [
                     const SizedBox(height: 40),
                     Text(
-                      'Evolua sua prática estoica com profundidade',
+                      'Pratique com profundidade. Sem limites.',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
                             fontFamily: 'Cormorant Garamond',
                             fontStyle: FontStyle.italic,
                             fontSize: 32,
-                            color: StoicColors.ivory,
+                            color: AethorColors.ivory,
                             height: 1.1,
                           ),
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Ritual diário sem bloqueio, com recursos completos para quem quer ir além.',
+                      'Ritual diário completo. Histórico, favoritos e trilhas sem restrição.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: StoicColors.sand,
+                            color: AethorColors.sand,
                             height: 1.5,
                           ),
                     ),
@@ -73,7 +74,7 @@ class PaywallMain extends StatelessWidget {
                     Text(
                       'Cancele quando quiser. Sem compromisso.',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: StoicColors.sand.withValues(alpha: 0.8),
+                            color: AethorColors.sand.withValues(alpha: 0.8),
                           ),
                     ),
                     const SizedBox(height: 20),
@@ -81,8 +82,8 @@ class PaywallMain extends StatelessWidget {
                       width: double.infinity,
                       child: FilledButton(
                         style: FilledButton.styleFrom(
-                          backgroundColor: StoicColors.copper,
-                          foregroundColor: StoicColors.ivory,
+                          backgroundColor: AethorColors.copper,
+                          foregroundColor: AethorColors.ivory,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
@@ -97,9 +98,9 @@ class PaywallMain extends StatelessWidget {
                       width: double.infinity,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: StoicColors.ivory,
+                          foregroundColor: AethorColors.ivory,
                           side: BorderSide(
-                            color: StoicColors.sand.withValues(alpha: 0.3),
+                            color: AethorColors.sand.withValues(alpha: 0.3),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -115,7 +116,7 @@ class PaywallMain extends StatelessWidget {
                       child: TextButton(
                         onPressed: onRestorePurchase,
                         style: TextButton.styleFrom(
-                          foregroundColor: StoicColors.sand,
+                          foregroundColor: AethorColors.sand,
                         ),
                         child: const Text('Restaurar compra'),
                       ),
@@ -129,7 +130,7 @@ class PaywallMain extends StatelessWidget {
               right: 8,
               child: IconButton(
                 onPressed: onClose,
-                icon: const Icon(Icons.close_rounded, color: StoicColors.ivory),
+                icon: const Icon(AethorIcons.close, color: AethorColors.ivory),
                 tooltip: 'Fechar',
               ),
             ),
@@ -146,7 +147,7 @@ class _ValueBullets extends StatelessWidget {
     final items = [
       'Histórico completo e ilimitado.',
       'Favoritos sem limite e revisita rápida.',
-      'Trilhas guiadas para aprofundar a prática.',
+      'Trilhas guiadas de aprofundamento.',
     ];
 
     return Column(
@@ -163,7 +164,7 @@ class _ValueBullets extends StatelessWidget {
                     width: 6,
                     height: 6,
                     decoration: const BoxDecoration(
-                      color: StoicColors.copper,
+                      color: AethorColors.copper,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -172,7 +173,7 @@ class _ValueBullets extends StatelessWidget {
                     child: Text(
                       item,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: StoicColors.ivory,
+                            color: AethorColors.ivory,
                             height: 1.5,
                           ),
                     ),
@@ -202,8 +203,8 @@ class _PlanSelector extends StatelessWidget {
         _PlanCard(
           title: 'Plano Anual',
           subtitle: '7 dias grátis',
-          price: 'R\$ 119,90/ano',
-          highlight: 'Melhor custo-benefício',
+          price: 'R\$ 149,00/ano',
+          highlight: 'Mais vantajoso',
           selected: selectedPlan == SubscriptionPlan.annual,
           onTap: () => onPlanChange(SubscriptionPlan.annual),
         ),
@@ -240,7 +241,9 @@ class _PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? StoicColors.copper.withValues(alpha: 0.15) : StoicColors.stone,
+      color: selected
+          ? AethorColors.copper.withValues(alpha: 0.15)
+          : AethorColors.stone,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         onTap: onTap,
@@ -251,8 +254,8 @@ class _PlanCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
               color: selected
-                  ? StoicColors.copper
-                  : StoicColors.sand.withValues(alpha: 0.2),
+                  ? AethorColors.copper
+                  : AethorColors.sand.withValues(alpha: 0.2),
             ),
           ),
           child: Row(
@@ -264,7 +267,7 @@ class _PlanCard extends StatelessWidget {
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: StoicColors.ivory,
+                            color: AethorColors.ivory,
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -272,25 +275,26 @@ class _PlanCard extends StatelessWidget {
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: StoicColors.sand,
+                            color: AethorColors.sand,
                           ),
                     ),
                     if (highlight != null) ...[
                       const SizedBox(height: 6),
                       Container(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: StoicColors.copper.withValues(alpha: 0.2),
+                          color: AethorColors.copper.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           highlight!,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: StoicColors.ivory,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: AethorColors.ivory,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                       ),
                     ],
@@ -301,7 +305,7 @@ class _PlanCard extends StatelessWidget {
               Text(
                 price,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: StoicColors.ivory,
+                      color: AethorColors.ivory,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -329,22 +333,23 @@ class _ComparisonTable extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: StoicColors.stone.withValues(alpha: 0.4),
+        color: AethorColors.stone.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: StoicColors.sand.withValues(alpha: 0.2)),
+        border: Border.all(color: AethorColors.sand.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
           Row(
             children: [
               const Expanded(
-                child: Text('Recursos', style: TextStyle(color: StoicColors.sand)),
+                child:
+                    Text('Recursos', style: TextStyle(color: AethorColors.sand)),
               ),
               const SizedBox(width: 12),
               Text(
-                'Free',
+                'Gratuito',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: StoicColors.sand,
+                      color: AethorColors.sand,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -352,7 +357,7 @@ class _ComparisonTable extends StatelessWidget {
               Text(
                 'Pro',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: StoicColors.ivory,
+                      color: AethorColors.ivory,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -368,7 +373,7 @@ class _ComparisonTable extends StatelessWidget {
                     child: Text(
                       row.$1,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: StoicColors.ivory,
+                            color: AethorColors.ivory,
                           ),
                     ),
                   ),
@@ -394,9 +399,9 @@ class _CheckMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Icon(
-      enabled ? Icons.check_rounded : Icons.close_rounded,
+      enabled ? AethorIcons.check : AethorIcons.close,
       size: 18,
-      color: enabled ? StoicColors.copper : StoicColors.sand,
+      color: enabled ? AethorColors.copper : AethorColors.sand,
     );
   }
 }
