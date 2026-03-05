@@ -5,6 +5,7 @@ import '../../features/auth/presentation/email_login_flow.dart';
 import '../../features/auth/presentation/login_prompt_sheet.dart';
 import '../../features/auth/presentation/login_success_screen.dart';
 import 'auth_models.dart';
+import 'oauth_service.dart';
 
 class AuthFlow {
   static Future<bool> showLoginPrompt(
@@ -39,25 +40,45 @@ class AuthFlow {
     switch (method) {
       case AuthMethod.email:
         final result = await Navigator.of(context).push<bool>(
-          MaterialPageRoute(builder: (_) => const EmailLoginFlow()),
+          MaterialPageRoute(builder: (_) => EmailLoginFlow(state: state)),
         );
         final loggedIn = result == true;
         if (loggedIn) {
+          await state.refreshSession();
           state.markAuthenticated(true);
         }
         return loggedIn;
       case AuthMethod.apple:
       case AuthMethod.google:
-        // TODO: Integrate native OAuth. For now, simulate success.
-        final success = await Navigator.of(context).push<bool>(
-          MaterialPageRoute(
-            builder: (routeContext) => LoginSuccessScreen(
-              onContinue: () => Navigator.of(routeContext).pop(true),
+        final OAuthCredential? credential;
+        try {
+          credential = method == AuthMethod.apple
+              ? await OAuthService.signInWithApple()
+              : await OAuthService.signInWithGoogle();
+        } catch (_) {
+          return false;
+        }
+        if (credential == null) return false;
+
+        final bool oauthResult;
+        try {
+          oauthResult = await state.authenticateWithOAuth(
+            provider: credential.provider,
+            identityToken: credential.identityToken,
+            email: credential.email,
+          );
+        } catch (_) {
+          return false;
+        }
+
+        if (oauthResult) {
+          await Navigator.of(context).push<void>(
+            MaterialPageRoute(
+              builder: (ctx) => LoginSuccessScreen(
+                onContinue: () => Navigator.of(ctx).pop(),
+              ),
             ),
-          ),
-        );
-        if (success == true) {
-          state.markAuthenticated(true);
+          );
           return true;
         }
         return false;

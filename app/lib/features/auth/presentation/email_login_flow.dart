@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../app_state.dart';
 import 'code_verification_screen.dart';
 import 'email_login_screen.dart';
 import 'email_sent_screen.dart';
@@ -9,7 +10,9 @@ import 'login_success_screen.dart';
 enum _EmailFlowStep { input, sent, verify, success, error }
 
 class EmailLoginFlow extends StatefulWidget {
-  const EmailLoginFlow({super.key});
+  const EmailLoginFlow({super.key, required this.state});
+
+  final AppState state;
 
   @override
   State<EmailLoginFlow> createState() => _EmailLoginFlowState();
@@ -31,6 +34,14 @@ class _EmailLoginFlowState extends State<EmailLoginFlow> {
     setState(() => _step = _EmailFlowStep.verify);
   }
 
+  Future<void> _handleResend() async {
+    try {
+      await widget.state.api.post('/v1/auth/send-otp', body: {'email': _email});
+    } catch (_) {
+      // Cooldown na tela já protege contra spam; erro silencioso aqui é aceitável.
+    }
+  }
+
   void _handleVerified(String _) {
     setState(() => _step = _EmailFlowStep.success);
   }
@@ -48,6 +59,7 @@ class _EmailLoginFlowState extends State<EmailLoginFlow> {
     switch (_step) {
       case _EmailFlowStep.input:
         return EmailLoginScreen(
+          api: widget.state.api,
           onBack: _handleDismiss,
           onSubmit: _handleSubmit,
           onDismiss: _handleDismiss,
@@ -62,9 +74,11 @@ class _EmailLoginFlowState extends State<EmailLoginFlow> {
       case _EmailFlowStep.verify:
         return CodeVerificationScreen(
           email: _email,
+          api: widget.state.api,
+          sessionService: widget.state.sessionService,
           onBack: () => setState(() => _step = _EmailFlowStep.sent),
           onVerified: _handleVerified,
-          onResend: () {},
+          onResend: _handleResend,
         );
       case _EmailFlowStep.success:
         return LoginSuccessScreen(

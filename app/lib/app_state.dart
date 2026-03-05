@@ -31,6 +31,7 @@ class AppState extends ChangeNotifier {
   final AnalyticsService? analytics;
 
   ApiClient get api => _repo.api;
+  SessionService get sessionService => _sessionService;
   SharedPreferences? _prefs;
 
   static const _onboardingKey = 'onboarding_complete';
@@ -243,6 +244,28 @@ class AppState extends ChangeNotifier {
 
   bool get shouldPromptAfterFavorite =>
       canShowLoginPrompt && !hasShownFavoritePrompt;
+
+  Future<void> refreshSession() async {
+    await _initializeSession();
+  }
+
+  Future<bool> authenticateWithOAuth({
+    required String provider,
+    required String identityToken,
+    required String email,
+  }) async {
+    final data = await api.post('/v1/auth/oauth', body: {
+      'provider': provider,
+      'identity_token': identityToken,
+      'email': email,
+    });
+    final newUserId = data['user_id'] as String;
+    final token = data['access_token'] as String;
+    await _sessionService.storeCredentials(userId: newUserId, accessToken: token);
+    userId = newUserId;
+    markAuthenticated(true);
+    return true;
+  }
 
   void markAuthenticated(bool value) {
     isAuthenticated = value;
@@ -599,6 +622,9 @@ class AppState extends ChangeNotifier {
 
   Future<void> bootstrap() async {
     error = null;
+    if (!sessionReady || userId.isEmpty) {
+      await _initializeSession();
+    }
     await Future.wait([loadDaily(), loadHistory(), loadFavorites()]);
   }
 
@@ -655,9 +681,23 @@ class AppState extends ChangeNotifier {
       favorites = await _repo.listFavorites(userId: userId);
       offline = false;
     } catch (e) {
-      error = e.toString();
-      if (e is SocketException) {
-        offline = true;
+      if (e is HttpException && e.message.contains(': 401')) {
+        // Sessão no Keychain está obsoleta; recria e tenta novamente
+        await _sessionService.clearSession();
+        await _initializeSession();
+        if (userId.isNotEmpty) {
+          try {
+            favorites = await _repo.listFavorites(userId: userId);
+            offline = false;
+          } catch (retryError) {
+            error = retryError.toString();
+          }
+        }
+      } else {
+        error = e.toString();
+        if (e is SocketException) {
+          offline = true;
+        }
       }
     } finally {
       loadingFavorites = false;
@@ -670,11 +710,31 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> toggleFavorite(String quoteId) async {
-    if (userId.isEmpty) return;
-    if (isFavorited(quoteId)) {
-      await _repo.removeFavorite(userId: userId, quoteId: quoteId);
-    } else {
-      await _repo.addFavorite(userId: userId, quoteId: quoteId);
+    if (userId.isEmpty) {
+      await _initializeSession();
+      if (userId.isEmpty) throw Exception('Sessão não inicializada. Tente novamente.');
+    }
+
+    Future<void> doToggle() async {
+      if (isFavorited(quoteId)) {
+        await _repo.removeFavorite(userId: userId, quoteId: quoteId);
+      } else {
+        await _repo.addFavorite(userId: userId, quoteId: quoteId);
+      }
+    }
+
+    try {
+      await doToggle();
+    } on HttpException catch (e) {
+      if (e.message.contains(': 401')) {
+        // Sessão no Keychain está obsoleta; recria e tenta novamente
+        await _sessionService.clearSession();
+        await _initializeSession();
+        if (userId.isEmpty) throw Exception('Sessão expirada. Tente novamente.');
+        await doToggle();
+      } else {
+        rethrow;
+      }
     }
     await loadFavorites();
   }

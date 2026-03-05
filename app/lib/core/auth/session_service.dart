@@ -53,6 +53,15 @@ class SessionService {
     );
   }
 
+  Future<void> storeCredentials({
+    required String userId,
+    required String accessToken,
+  }) async {
+    await _secureStore.writeUserId(userId);
+    await _secureStore.writeAccessToken(accessToken);
+    _api.setAccessToken(accessToken);
+  }
+
   Future<void> clearSession() async {
     await _secureStore.clear();
     _api.setAccessToken(null);
