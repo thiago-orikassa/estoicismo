@@ -270,6 +270,36 @@ const insertPurchaseLog = db.prepare(`
   values (?, ?, ?, ?, ?, ?, ?)
 `);
 
+const selectUserIdentity = db.prepare(`
+  select user_id from user_identities where provider = ? and provider_id = ?
+`);
+
+const insertUserIdentity = db.prepare(`
+  insert into user_identities (id, user_id, provider, provider_id, email, created_at_utc)
+  values (?, ?, ?, ?, ?, ?)
+`);
+
+const selectAuthCodeByEmail = db.prepare(`
+  select id, code_hash, expires_at_utc, used
+  from auth_codes
+  where email = ? and used = 0
+  order by created_at_utc desc
+  limit 1
+`);
+
+const insertAuthCode = db.prepare(`
+  insert into auth_codes (id, email, code_hash, expires_at_utc, used, created_at_utc)
+  values (?, ?, ?, ?, 0, ?)
+`);
+
+const markAuthCodeUsed = db.prepare(`
+  update auth_codes set used = 1 where id = ?
+`);
+
+const selectSessionByUserId = db.prepare(`
+  select id, device_id from sessions where user_id = ? limit 1
+`);
+
 const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -518,6 +548,51 @@ function parseBody(req) {
     });
     req.on('error', reject);
   });
+}
+
+let _appleKeysCache = null;
+let _appleKeysCacheExpiry = 0;
+
+async function getApplePublicKeys() {
+  if (_appleKeysCache && Date.now() < _appleKeysCacheExpiry) {
+    return _appleKeysCache;
+  }
+  const res = await fetch('https://appleid.apple.com/auth/keys');
+  const { keys } = await res.json();
+  _appleKeysCache = keys;
+  _appleKeysCacheExpiry = Date.now() + 3_600_000;
+  return keys;
+}
+
+async function verifyAppleJwt(identityToken) {
+  const parts = identityToken.split('.');
+  if (parts.length !== 3) throw new Error('invalid_jwt_format');
+  const [headerB64, payloadB64, signatureB64] = parts;
+
+  const header = JSON.parse(Buffer.from(headerB64, 'base64url').toString('utf-8'));
+  const keys = await getApplePublicKeys();
+  const jwk = keys.find((k) => k.kid === header.kid);
+  if (!jwk) throw new Error('key_not_found');
+
+  const { webcrypto } = await import('node:crypto');
+  const publicKey = await webcrypto.subtle.importKey(
+    'jwk', jwk,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false, ['verify']
+  );
+
+  const signingInput = `${headerB64}.${payloadB64}`;
+  const signature = Buffer.from(signatureB64, 'base64url');
+  const valid = await webcrypto.subtle.verify(
+    { name: 'RSASSA-PKCS1-v1_5' },
+    publicKey,
+    signature,
+    Buffer.from(signingInput)
+  );
+
+  if (!valid) throw new Error('invalid_signature');
+
+  return JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
 }
 
 const server = createServer(async (req, res) => {
@@ -1210,6 +1285,168 @@ const server = createServer(async (req, res) => {
         platform,
         logged: true
       });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/auth/send-otp') {
+    try {
+      const body = await parseBody(req);
+      const email = typeof body.email === 'string' ? body.email.toLowerCase().trim() : '';
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return sendJson(res, 400, { error: 'invalid_email' });
+      }
+
+      // Find or create user identity for this email
+      let identity = selectUserIdentity.get('email', email);
+      const now = new Date().toISOString();
+      if (!identity) {
+        const userId = randomUUID();
+        insertUserIdentity.run(randomUUID(), userId, 'email', email, email, now);
+        identity = { user_id: userId };
+      }
+
+      // Generate 6-digit code and store hash
+      const code = String(Math.floor(100000 + Math.random() * 900000));
+      const codeHash = createHash('sha256').update(code).digest('hex');
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+      insertAuthCode.run(randomUUID(), email, codeHash, expiresAt, now);
+
+      // Send email via Resend
+      const resendApiKey = process.env.RESEND_API_KEY;
+      if (resendApiKey) {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${resendApiKey}`
+          },
+          body: JSON.stringify({
+            from: 'Aethor <noreply@aethor.co>',
+            to: [email],
+            subject: 'Seu código de acesso Aethor',
+            text: `Seu código de acesso é: ${code}\n\nEste código expira em 10 minutos.`
+          })
+        });
+      } else {
+        logger.info('otp_code_dev', { email, code });
+      }
+
+      return sendJson(res, 200, { ok: true });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/auth/verify-otp') {
+    try {
+      const body = await parseBody(req);
+      const email = typeof body.email === 'string' ? body.email.toLowerCase().trim() : '';
+      const code = typeof body.code === 'string' ? body.code.trim() : '';
+
+      if (!email || !code) {
+        return sendJson(res, 400, { error: 'missing_fields' });
+      }
+
+      const record = selectAuthCodeByEmail.get(email);
+      if (!record) {
+        return sendJson(res, 401, { error: 'invalid_code' });
+      }
+
+      if (new Date(record.expires_at_utc) < new Date()) {
+        return sendJson(res, 410, { error: 'expired_code' });
+      }
+
+      const codeHash = createHash('sha256').update(code).digest('hex');
+      if (codeHash !== record.code_hash) {
+        return sendJson(res, 401, { error: 'invalid_code' });
+      }
+
+      markAuthCodeUsed.run(record.id);
+
+      const identity = selectUserIdentity.get('email', email);
+      if (!identity) {
+        return sendJson(res, 500, { error: 'identity_not_found' });
+      }
+      const userId = identity.user_id;
+
+      const token = randomUUID();
+      const tokenHash = hashToken(token);
+      const now = new Date().toISOString();
+      const existingSession = selectSessionByUserId.get(userId);
+      if (existingSession) {
+        updateSessionToken.run(tokenHash, now, existingSession.device_id);
+      } else {
+        insertSession.run(randomUUID(), userId, `email:${userId}`, tokenHash, now, now);
+      }
+
+      return sendJson(res, 200, { user_id: userId, access_token: token });
+    } catch {
+      return sendJson(res, 400, { error: 'invalid_json' });
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/v1/auth/oauth') {
+    try {
+      const body = await parseBody(req);
+      const provider = typeof body.provider === 'string' ? body.provider : '';
+      const identityToken = typeof body.identity_token === 'string' ? body.identity_token : '';
+      const emailFromBody = typeof body.email === 'string' ? body.email.toLowerCase().trim() : '';
+
+      if (!['apple', 'google'].includes(provider) || !identityToken) {
+        return sendJson(res, 400, { error: 'invalid_request' });
+      }
+
+      let providerId, providerEmail;
+
+      if (provider === 'google') {
+        const verifyRes = await fetch(
+          `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(identityToken)}`
+        );
+        if (!verifyRes.ok) {
+          return sendJson(res, 401, { error: 'invalid_token' });
+        }
+        const tokenInfo = await verifyRes.json();
+        providerId = tokenInfo.sub;
+        providerEmail = tokenInfo.email || emailFromBody;
+      } else {
+        // Apple: verify JWT using Apple's JWKS via Node.js webcrypto
+        try {
+          const applePayload = await verifyAppleJwt(identityToken);
+          providerId = applePayload.sub;
+          providerEmail = applePayload.email || emailFromBody;
+        } catch {
+          return sendJson(res, 401, { error: 'invalid_token' });
+        }
+      }
+
+      if (!providerId) {
+        return sendJson(res, 401, { error: 'invalid_token' });
+      }
+
+      const existingIdentity = selectUserIdentity.get(provider, providerId);
+      const now = new Date().toISOString();
+      let userId;
+
+      if (existingIdentity) {
+        userId = existingIdentity.user_id;
+      } else {
+        const session = requireSession(req, requestMeta);
+        userId = session?.user_id ?? randomUUID();
+        insertUserIdentity.run(randomUUID(), userId, provider, providerId, providerEmail, now);
+      }
+
+      const token = randomUUID();
+      const tokenHash = hashToken(token);
+      const existingSession = selectSessionByUserId.get(userId);
+      if (existingSession) {
+        updateSessionToken.run(tokenHash, now, existingSession.device_id);
+      } else {
+        insertSession.run(randomUUID(), userId, `${provider}:${userId}`, tokenHash, now, now);
+      }
+
+      return sendJson(res, 200, { user_id: userId, access_token: token });
     } catch {
       return sendJson(res, 400, { error: 'invalid_json' });
     }

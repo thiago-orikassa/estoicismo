@@ -4,15 +4,18 @@ import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
 import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
+import '../../../core/networking/api_client.dart';
 
 class EmailLoginScreen extends StatefulWidget {
   const EmailLoginScreen({
     super.key,
+    required this.api,
     required this.onBack,
     required this.onSubmit,
     required this.onDismiss,
   });
 
+  final ApiClient api;
   final VoidCallback onBack;
   final ValueChanged<String> onSubmit;
   final VoidCallback onDismiss;
@@ -46,11 +49,18 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
 
     setState(() => _isLoading = true);
 
-    await Future.delayed(const Duration(milliseconds: 1000));
-
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-    widget.onSubmit(_email.trim());
+    try {
+      await widget.api.post('/v1/auth/send-otp', body: {'email': _email.trim()});
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      widget.onSubmit(_email.trim());
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _error = 'Falha ao enviar código. Tente novamente.';
+      });
+    }
   }
 
   @override

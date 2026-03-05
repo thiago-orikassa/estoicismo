@@ -1,22 +1,28 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/auth/session_service.dart';
 import '../../../core/design_system/components/components.dart';
-import '../../../core/design_system/motion/motion.dart';
 import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
+import '../../../core/networking/api_client.dart';
 
 class CodeVerificationScreen extends StatefulWidget {
   const CodeVerificationScreen({
     super.key,
     required this.email,
+    required this.api,
+    required this.sessionService,
     this.onBack,
     this.onVerified,
     this.onResend,
   });
 
   final String email;
+  final ApiClient api;
+  final SessionService sessionService;
   final VoidCallback? onBack;
   final ValueChanged<String>? onVerified;
   final VoidCallback? onResend;
@@ -25,17 +31,40 @@ class CodeVerificationScreen extends StatefulWidget {
   State<CodeVerificationScreen> createState() => _CodeVerificationScreenState();
 }
 
-class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
+class _CodeVerificationScreenState extends State<CodeVerificationScreen>
+    with WidgetsBindingObserver {
   String _code = '';
   bool _isVerifying = false;
   String? _error;
   int _resendCooldown = 0;
   Timer? _resendTimer;
 
+  // Stable keyboard height — only updated when keyboard shows/hides (>50 px change).
+  // Avoids rebuilding on tiny height fluctuations iOS fires on every key press.
+  double _keyboardHeight = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _resendTimer?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final h = MediaQuery.viewInsetsOf(context).bottom;
+      if ((h - _keyboardHeight).abs() > 50) {
+        setState(() => _keyboardHeight = h);
+      }
+    });
   }
 
   Future<void> _handleCodeComplete(String code) async {
@@ -45,20 +74,32 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
       _isVerifying = true;
     });
 
-    await Future.delayed(const Duration(milliseconds: 1200));
-
-    if (!mounted) return;
-
-    if (code == '123456' || code == '000000') {
+    try {
+      final data = await widget.api.post('/v1/auth/verify-otp', body: {
+        'email': widget.email,
+        'code': code,
+      });
+      if (!mounted) return;
+      await widget.sessionService.storeCredentials(
+        userId: data['user_id'] as String,
+        accessToken: data['access_token'] as String,
+      );
       widget.onVerified?.call(code);
-      return;
+    } on HttpException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isVerifying = false;
+        _error = e.message.contains('expired')
+            ? 'Código expirado.'
+            : 'Código inválido.';
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isVerifying = false;
+        _error = 'Erro ao verificar código. Tente novamente.';
+      });
     }
-
-    setState(() {
-      _error = 'Código inválido. Tente novamente.';
-      _code = '';
-      _isVerifying = false;
-    });
   }
 
   void _startCooldown() {
@@ -89,32 +130,33 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AethorColors.ivory,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: widget.onBack,
-                  icon: const Icon(AethorIcons.back, size: 20),
-                  label: const Text('Voltar'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AethorColors.stone,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: _keyboardHeight),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: widget.onBack,
+                    icon: const Icon(AethorIcons.back, size: 20),
+                    label: const Text('Voltar'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AethorColors.stone,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-                child: Center(
-                  child: AethorFadeSlideIn(
-                    offsetY: 12,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  child: Center(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                         Text(
                           'Confirme seu email',
                           style: Theme.of(context)
@@ -149,7 +191,11 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                         const SizedBox(height: 24),
                         AuthCodeField(
                           value: _code,
-                          onChanged: (value) => setState(() => _code = value),
+                          onChanged: (value) {
+                            _code = value;
+                            // Only rebuild to clear the error banner; don't rebuild on every keystroke.
+                            if (_error != null) setState(() => _error = null);
+                          },
                           onComplete: _handleCodeComplete,
                           error: _error != null,
                         ),
@@ -201,42 +247,13 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen> {
                             label: 'Não recebeu? Reenviar código',
                             onPressed: _handleResend,
                           ),
-                        const SizedBox(height: 16),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: AethorColors.deepBlue.withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(AethorRadius.md),
-                            border: Border.all(
-                              color:
-                                  AethorColors.deepBlue.withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: Text(
-                            'Demo: use 123456 ou 000000.',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: AethorColors.stone,
-                                    ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                'Verifique também sua pasta de spam',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AethorColors.textMuted,
-                    ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -10,6 +10,9 @@ class ApiClient {
   static String _defaultBaseUrl() {
     // Android emulator uses 10.0.2.2 to reach host machine.
     if (Platform.isAndroid) return 'http://10.0.2.2:8787';
+    // Use DEV_SERVER_URL env var or local IP for physical device testing.
+    const devUrl = String.fromEnvironment('DEV_SERVER_URL');
+    if (devUrl.isNotEmpty) return devUrl;
     return 'http://127.0.0.1:8787';
   }
 

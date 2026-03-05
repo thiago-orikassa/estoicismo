@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "dependencies": {},
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  },
   "scripts": {
     "validate:seed": "node scripts/validate-seed.mjs",
     "start": "node scripts/validate-seed.mjs && node src/server.mjs",
