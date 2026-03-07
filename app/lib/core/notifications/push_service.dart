@@ -55,9 +55,9 @@ class PushService {
   /// Request notification permission from the user.
   /// On Android 13+, uses permission_handler; on iOS, uses Firebase Messaging.
   /// Returns true if permission was granted.
+  /// Note: Firebase.initializeApp() is called in main() before the widget tree,
+  /// so FirebaseMessaging.instance is always available here.
   Future<bool> requestPermission() async {
-    if (!_firebaseAvailable) return false;
-
     if (Platform.isAndroid) {
       final status = await Permission.notification.request();
       return status.isGranted;
@@ -89,9 +89,9 @@ class PushService {
     TokenRefreshCallback? onTokenRefresh,
   }) async {
     try {
-      // Firebase may already be initialized from main.dart.
-      // initializeApp is idempotent when called with the same options.
-      await Firebase.initializeApp();
+      // Firebase is initialized in main() with DefaultFirebaseOptions.
+      // Accessing Firebase.app() verifies it is available without re-initializing.
+      Firebase.app();
       _firebaseAvailable = true;
     } catch (_) {
       _firebaseAvailable = false;
@@ -102,6 +102,16 @@ class PushService {
 
     final messaging = FirebaseMessaging.instance;
     await messaging.setAutoInitEnabled(true);
+
+    // On iOS, suppress system banners while the app is in the foreground —
+    // we handle foreground display ourselves via InAppNotificationBanner.
+    if (Platform.isIOS) {
+      await messaging.setForegroundNotificationPresentationOptions(
+        alert: false,
+        badge: true,
+        sound: false,
+      );
+    }
 
     FirebaseMessaging.onBackgroundMessage(
       _firebaseMessagingBackgroundHandler,
