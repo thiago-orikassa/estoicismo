@@ -38,7 +38,7 @@ Baseado em:
 | BE-06 | Backend and Data Engineer | Telemetria backend e logs estruturados | P1 | S | BE-01 | Logs e métricas de erro disponíveis | DONE |
 | BE-07 | Backend and Data Engineer | Expor entitlement de assinatura + elegibilidade de trial + restauração | P0 | M | BE-01, MA-05 | Contrato de assinatura disponível e validado em staging | DONE |
 | BE-08 | Backend and Data Engineer | Instrumentar eventos de monetização no backend (`paywall_*`, `trial_*`, `subscription_*`) | P0 | S | BE-06, PS-04 | Eventos publicados com propriedades mínimas e versionamento | DONE |
-| BE-09 | Backend and Data Engineer | Deploy Railway com Railway Volume para persistência SQLite | P0 | S | BE-01 | SQLite sobrevive a redeploy; dados não são zerados em produção | TODO |
+| BE-09 | Backend and Data Engineer | Deploy Railway com Railway Volume para persistência SQLite | P0 | S | BE-01 | SQLite sobrevive a redeploy; dados não são zerados em produção | DONE |
 | BE-10 | Backend and Data Engineer | Validação de recibos server-side (Apple/Google) | P1 | M | BE-07, IOS-04, AN-04 | Backend verifica recibo com App Store/Play antes de ativar entitlement | TODO |
 | BE-11 | Backend and Data Engineer | Hardening de segurança backend (rate limit, TTL sessão, body limit, token forte) | P0 | S | BE-01 | Rate limiting em auth, sessions expiram, payload > 100KB rejeitado | DONE |
 | BE-12 | Backend and Data Engineer | Log de auditoria de mudanças de assinatura | P2 | S | BE-07 | Tabela `subscription_audit_log` com motivo + timestamp de cada transição | TODO |
@@ -69,7 +69,7 @@ Baseado em:
 - QA-04
 - QA-05
 - QA-06
-- BE-09 ← **bloqueador de release** (dados ephemeral em produção)
+- ~~BE-09~~ ✅ DONE
 - BE-10
 - BE-12
 
@@ -87,7 +87,7 @@ Baseado em:
 - PS-01, PS-02, PS-03, PS-04
 - SC-01, SC-02, SC-03, SC-04
 - MA-01, MA-02, MA-03, MA-04, MA-05
-- BE-01, BE-02, BE-03, BE-04, BE-05, BE-06, BE-07, BE-08, BE-11
+- BE-01, BE-02, BE-03, BE-04, BE-05, BE-06, BE-07, BE-08, BE-09, BE-11
 - QA-01, QA-02
 - AN-01, IOS-01
 
