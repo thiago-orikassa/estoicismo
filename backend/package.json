@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=23.0.0"
+  },
   "dependencies": {
     "jsonwebtoken": "^9.0.2"
   },
@@ -16,6 +19,7 @@
     "schedule": "node src/scheduler.mjs",
     "test": "node --test tests/*.mjs",
     "observability:check": "node scripts/observability-check.mjs",
-    "release:gate": "node scripts/release-gate.mjs"
+    "release:gate": "node scripts/release-gate.mjs",
+    "start:railway": "node --experimental-sqlite scripts/start-railway.mjs"
   }
 }
