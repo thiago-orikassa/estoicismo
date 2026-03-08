@@ -6,9 +6,7 @@
   "engines": {
     "node": ">=23.0.0"
   },
-  "dependencies": {
-    "jsonwebtoken": "^9.0.2"
-  },
+  "dependencies": {},
   "scripts": {
     "validate:seed": "node scripts/validate-seed.mjs",
     "start": "node scripts/validate-seed.mjs && node src/server.mjs",
