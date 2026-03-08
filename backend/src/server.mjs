@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
-import { createHash, randomUUID } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { db, dbPath } from './db.mjs';
@@ -16,6 +16,55 @@ const seedPath = process.env.STOIC_SEED_PATH ?? join(dataDir, 'daily_seed.json')
 const observabilityToken = process.env.STOIC_OBSERVABILITY_TOKEN ?? '';
 
 const seed = JSON.parse(readFileSync(seedPath, 'utf-8'));
+
+// ── Security constants ────────────────────────────────────────────────────────
+
+const MAX_BODY_BYTES = 100 * 1024; // 100 KB — protects against payload amplification
+
+// Session TTL: 90 days. Keeps mobile users logged in long-term while bounding
+// the blast radius of a leaked token.
+const SESSION_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+function sessionExpiresAt() {
+  return new Date(Date.now() + SESSION_TTL_MS).toISOString();
+}
+
+// Cryptographically-strong 256-bit session token (URL-safe hex).
+function generateSessionToken() {
+  return randomBytes(32).toString('hex');
+}
+
+// ── In-memory rate limiter ────────────────────────────────────────────────────
+// Uses a fixed-window counter keyed on (route + IP). The Map is pruned every
+// minute to prevent unbounded growth.
+
+const _rateLimitCounters = new Map(); // key -> { count, resetAt }
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of _rateLimitCounters) {
+    if (now > entry.resetAt) _rateLimitCounters.delete(key);
+  }
+}, 60_000).unref();
+
+/**
+ * Returns true if the request is within the allowed rate, false if it should
+ * be rejected.
+ * @param {string} routeKey - Identifies the endpoint (e.g. 'send-otp')
+ * @param {string} ip       - Remote IP address
+ * @param {number} limit    - Max allowed requests per window
+ * @param {number} windowMs - Window duration in milliseconds
+ */
+function allowRequest(routeKey, ip, limit, windowMs) {
+  const key = `${routeKey}:${ip}`;
+  const now = Date.now();
+  const entry = _rateLimitCounters.get(key);
+  if (!entry || now > entry.resetAt) {
+    _rateLimitCounters.set(key, { count: 1, resetAt: now + windowMs });
+    return true;
+  }
+  if (entry.count >= limit) return false;
+  entry.count += 1;
+  return true;
+}
 
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -39,7 +88,7 @@ const selectSessionByDeviceId = db.prepare(`
 `);
 
 const selectSessionByToken = db.prepare(`
-  select user_id
+  select user_id, expires_at_utc
   from sessions
   where token_hash = ?
 `);
@@ -51,13 +100,14 @@ const insertSession = db.prepare(`
     device_id,
     token_hash,
     created_at_utc,
-    updated_at_utc
-  ) values (?, ?, ?, ?, ?, ?)
+    updated_at_utc,
+    expires_at_utc
+  ) values (?, ?, ?, ?, ?, ?, ?)
 `);
 
 const updateSessionToken = db.prepare(`
   update sessions
-  set token_hash = ?, updated_at_utc = ?
+  set token_hash = ?, updated_at_utc = ?, expires_at_utc = ?
   where device_id = ?
 `);
 
@@ -403,7 +453,9 @@ function requireSession(req, requestMeta) {
   if (!token) return null;
   const tokenHash = hashToken(token);
   const session = selectSessionByToken.get(tokenHash);
-  if (session?.user_id && requestMeta) {
+  if (!session) return null;
+  if (session.expires_at_utc && new Date(session.expires_at_utc) < new Date()) return null;
+  if (session.user_id && requestMeta) {
     requestMeta.userId = session.user_id;
   }
   return session;
@@ -536,7 +588,13 @@ function isoDateOffset(baseDate, daysOffset) {
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let raw = '';
+    let size = 0;
     req.on('data', (chunk) => {
+      size += chunk.length;
+      if (size > MAX_BODY_BYTES) {
+        req.destroy();
+        return reject(Object.assign(new Error('payload_too_large'), { statusCode: 413 }));
+      }
       raw += chunk;
     });
     req.on('end', () => {
@@ -651,12 +709,13 @@ const server = createServer(async (req, res) => {
       }
 
       const existing = selectSessionByDeviceId.get(deviceId);
-      const token = randomUUID();
+      const token = generateSessionToken();
       const tokenHash = hashToken(token);
       const now = new Date().toISOString();
+      const expiresAt = sessionExpiresAt();
 
       if (existing) {
-        updateSessionToken.run(tokenHash, now, deviceId);
+        updateSessionToken.run(tokenHash, now, expiresAt, deviceId);
         return sendJson(res, 200, {
           user_id: existing.user_id,
           access_token: token
@@ -664,7 +723,7 @@ const server = createServer(async (req, res) => {
       }
 
       const userId = randomUUID();
-      insertSession.run(randomUUID(), userId, deviceId, tokenHash, now, now);
+      insertSession.run(randomUUID(), userId, deviceId, tokenHash, now, now, expiresAt);
       return sendJson(res, 201, { user_id: userId, access_token: token });
     } catch {
       return sendJson(res, 400, { error: 'invalid_json' });
@@ -1291,6 +1350,12 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/auth/send-otp') {
+    // 5 OTP requests per IP per 15 minutes — prevents email spam abuse.
+    const ip = req.socket.remoteAddress ?? 'unknown';
+    if (!allowRequest('send-otp', ip, 5, 15 * 60_000)) {
+      return sendJson(res, 429, { error: 'too_many_requests', retry_after_seconds: 900 });
+    }
+
     try {
       const body = await parseBody(req);
       const email = typeof body.email === 'string' ? body.email.toLowerCase().trim() : '';
@@ -1340,6 +1405,12 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/auth/verify-otp') {
+    // 10 attempts per IP per 15 minutes — prevents brute-force of 6-digit codes.
+    const ip = req.socket.remoteAddress ?? 'unknown';
+    if (!allowRequest('verify-otp', ip, 10, 15 * 60_000)) {
+      return sendJson(res, 429, { error: 'too_many_requests', retry_after_seconds: 900 });
+    }
+
     try {
       const body = await parseBody(req);
       const email = typeof body.email === 'string' ? body.email.toLowerCase().trim() : '';
@@ -1371,14 +1442,15 @@ const server = createServer(async (req, res) => {
       }
       const userId = identity.user_id;
 
-      const token = randomUUID();
+      const token = generateSessionToken();
       const tokenHash = hashToken(token);
       const now = new Date().toISOString();
+      const expiresAt = sessionExpiresAt();
       const existingSession = selectSessionByUserId.get(userId);
       if (existingSession) {
-        updateSessionToken.run(tokenHash, now, existingSession.device_id);
+        updateSessionToken.run(tokenHash, now, expiresAt, existingSession.device_id);
       } else {
-        insertSession.run(randomUUID(), userId, `email:${userId}`, tokenHash, now, now);
+        insertSession.run(randomUUID(), userId, `email:${userId}`, tokenHash, now, now, expiresAt);
       }
 
       return sendJson(res, 200, { user_id: userId, access_token: token });
@@ -1388,6 +1460,12 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/v1/auth/oauth') {
+    // 20 attempts per IP per 15 minutes — prevents token stuffing.
+    const ip = req.socket.remoteAddress ?? 'unknown';
+    if (!allowRequest('auth-oauth', ip, 20, 15 * 60_000)) {
+      return sendJson(res, 429, { error: 'too_many_requests', retry_after_seconds: 900 });
+    }
+
     try {
       const body = await parseBody(req);
       const provider = typeof body.provider === 'string' ? body.provider : '';
@@ -1437,13 +1515,14 @@ const server = createServer(async (req, res) => {
         insertUserIdentity.run(randomUUID(), userId, provider, providerId, providerEmail, now);
       }
 
-      const token = randomUUID();
+      const token = generateSessionToken();
       const tokenHash = hashToken(token);
+      const expiresAt = sessionExpiresAt();
       const existingSession = selectSessionByUserId.get(userId);
       if (existingSession) {
-        updateSessionToken.run(tokenHash, now, existingSession.device_id);
+        updateSessionToken.run(tokenHash, now, expiresAt, existingSession.device_id);
       } else {
-        insertSession.run(randomUUID(), userId, `${provider}:${userId}`, tokenHash, now, now);
+        insertSession.run(randomUUID(), userId, `${provider}:${userId}`, tokenHash, now, now, expiresAt);
       }
 
       return sendJson(res, 200, { user_id: userId, access_token: token });
