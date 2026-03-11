@@ -1,7 +1,7 @@
 name: aethor_app
 description: App mobile para citações estoicas diárias
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.1.0+4
 
 environment:
   sdk: '>=3.3.0 <4.0.0'

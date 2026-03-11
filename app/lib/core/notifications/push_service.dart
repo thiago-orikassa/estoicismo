@@ -73,9 +73,22 @@ class PushService {
   }
 
   /// Returns the current FCM token, or null if Firebase is unavailable.
+  ///
+  /// On iOS, waits up to 10 seconds for the APNs token to be available
+  /// before requesting the FCM token — the APNs token is not immediately
+  /// ready on app launch.
   Future<String?> getToken() async {
     if (!_firebaseAvailable) return null;
     try {
+      if (Platform.isIOS) {
+        String? apnsToken;
+        for (int i = 0; i < 10; i++) {
+          apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+          if (apnsToken != null) break;
+          await Future.delayed(const Duration(seconds: 1));
+        }
+        if (apnsToken == null) return null;
+      }
       return await FirebaseMessaging.instance.getToken();
     } catch (_) {
       return null;
