@@ -15,6 +15,7 @@ import 'core/design_system/tokens/design_tokens.dart';
 import 'core/auth/session_service.dart';
 import 'core/networking/api_client.dart';
 import 'core/notifications/deep_link_intent.dart';
+import 'core/notifications/in_app_notification.dart';
 import 'core/notifications/push_service.dart';
 import 'core/storage/secure_store.dart';
 import 'core/paywall/purchase_service.dart';
@@ -230,55 +231,24 @@ class _MainShellState extends State<MainShell> {
     final title = properties['notification_title'] as String?;
     final body = properties['notification_body'] as String?;
     final deeplink = properties['deeplink'] as String?;
-    if (title == null && body == null) return;
 
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    if (messenger == null) return;
+    VoidCallback? onTap;
+    if (deeplink != null) {
+      final uri = Uri.tryParse(deeplink);
+      if (uri != null) {
+        final intent = parseAppLinkIntent(uri, source: 'in_app_banner');
+        if (intent != null) {
+          onTap = () => _handleAppLinkIntent(intent);
+        }
+      }
+    }
 
-    messenger.showMaterialBanner(
-      MaterialBanner(
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (title != null)
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-            if (body != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(body, maxLines: 2, overflow: TextOverflow.ellipsis),
-              ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              messenger.hideCurrentMaterialBanner();
-              if (deeplink != null) {
-                final uri = Uri.tryParse(deeplink);
-                if (uri != null) {
-                  _handleAppLinkIntent(
-                    parseAppLinkIntent(uri, source: 'in_app_banner')!,
-                  );
-                }
-              }
-            },
-            child: const Text('Ver'),
-          ),
-          TextButton(
-            onPressed: () => messenger.hideCurrentMaterialBanner(),
-            child: const Text('Fechar'),
-          ),
-        ],
-      ),
+    InAppNotificationBanner.show(
+      context,
+      title: title,
+      body: body,
+      onTap: onTap,
     );
-
-    // Auto-dismiss after 5 seconds.
-    Future.delayed(const Duration(seconds: 5), () {
-      try {
-        messenger.hideCurrentMaterialBanner();
-      } catch (_) {}
-    });
   }
 
   Future<void> _registerFcmToken(String token) async {
@@ -290,8 +260,9 @@ class _MainShellState extends State<MainShell> {
           'platform': _currentPlatform(),
         },
       );
-    } catch (_) {
-      // Best effort — token registration must not break the app.
+      debugPrint('[PushDebug] token registered OK');
+    } catch (e, st) {
+      debugPrint('[PushDebug] token registration FAILED: $e\n$st');
     }
   }
 

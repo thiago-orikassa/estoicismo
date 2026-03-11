@@ -1,4 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../app_state.dart';
 import '../../../core/design_system/components/components.dart';
@@ -44,6 +47,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     };
   }
 
+  /// Detecta automaticamente o fuso horário do dispositivo.
+  /// Mapeia o offset UTC para o timezone IANA mais próximo.
+  String _detectDeviceTimezone() {
+    final offset = DateTime.now().timeZoneOffset;
+    if (offset.inHours == -5) return 'America/Rio_Branco';
+    return 'America/Sao_Paulo';
+  }
+
   String _authorsSummary() {
     if (_selectedAuthors.length == _authors.length) {
       return 'Todos (Modo Misto)';
@@ -60,11 +71,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'America/Rio_Branco',
     ];
 
-    final selected = await _showSingleSelect(
-      title: 'Fuso Horário',
-      options: timezones,
-      labelBuilder: _timezoneLabel,
-      currentValue: widget.state.timezone,
+    // Detecta automaticamente o timezone e oferece como primeiro item se diferente
+    final detected = _detectDeviceTimezone();
+    final detectedLabel =
+        '${_timezoneLabel(detected)} (detectado automaticamente)';
+
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AethorColors.cardBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Fuso Horário',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 12),
+                // Opção de detecção automática
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(detectedLabel),
+                  trailing: detected == widget.state.timezone
+                      ? const Icon(AethorIcons.check, color: AethorColors.copper)
+                      : null,
+                  onTap: () => Navigator.of(context).pop(detected),
+                ),
+                const Divider(height: 1, color: AethorColors.rowDivider),
+                ...timezones.map(
+                  (tz) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(_timezoneLabel(tz)),
+                    trailing: tz == widget.state.timezone
+                        ? const Icon(AethorIcons.check, color: AethorColors.copper)
+                        : null,
+                    onTap: () => Navigator.of(context).pop(tz),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
 
     if (selected != null) {
@@ -199,6 +257,129 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _confirmLogout() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AethorColors.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Text('Sair da conta?'),
+          content: const Text(
+            'Seus check-ins e favoritos estão salvos na nuvem e serão restaurados ao entrar novamente.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: AethorColors.error,
+              ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Sair'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) return;
+    widget.state.markAuthenticated(false);
+  }
+
+  Future<void> _showPushDiagnostic() async {
+    String apnsToken;
+    String fcmToken;
+    try {
+      apnsToken = await FirebaseMessaging.instance.getAPNSToken() ?? '(null)';
+    } catch (e) {
+      apnsToken = '(erro: $e)';
+    }
+    try {
+      fcmToken = await FirebaseMessaging.instance.getToken() ?? '(null)';
+    } catch (e) {
+      fcmToken = '(erro: $e)';
+    }
+    final permission = widget.state.notificationPermission.name;
+    final pushEnabled = widget.state.pushNotificationsEnabled;
+    final fcmTokenCopy = fcmToken;
+
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        String registerResult = '';
+        return StatefulBuilder(
+          builder: (context, setDialogState) => AlertDialog(
+            backgroundColor: AethorColors.cardBackground,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: const Text('Diagnóstico Push'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Permissão: $permission', style: const TextStyle(fontSize: 13)),
+                  const SizedBox(height: 4),
+                  Text('Push habilitado: $pushEnabled', style: const TextStyle(fontSize: 13)),
+                  const SizedBox(height: 12),
+                  const Text('APNs Token:', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  const SizedBox(height: 4),
+                  SelectableText(apnsToken, style: const TextStyle(fontSize: 11, fontFamily: 'monospace')),
+                  const SizedBox(height: 12),
+                  const Text('FCM Token:', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  const SizedBox(height: 4),
+                  SelectableText(fcmTokenCopy, style: const TextStyle(fontSize: 11, fontFamily: 'monospace')),
+                  if (registerResult.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    const Text('Registro backend:', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                    const SizedBox(height: 4),
+                    Text(registerResult, style: const TextStyle(fontSize: 12)),
+                  ],
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  setDialogState(() => registerResult = 'Enviando...');
+                  try {
+                    await widget.state.api.post(
+                      '/v1/push-tokens',
+                      body: {'fcm_token': fcmTokenCopy, 'platform': 'ios'},
+                    );
+                    setDialogState(() => registerResult = '✓ Sucesso');
+                  } catch (e) {
+                    setDialogState(() => registerResult = '✗ Erro: $e');
+                  }
+                },
+                child: const Text('Registrar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: fcmTokenCopy));
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('FCM token copiado!')),
+                  );
+                },
+                child: const Text('Copiar FCM'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Fechar'),
+              ),
+            ],
           ),
         );
       },
@@ -412,52 +593,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 32),
-        _SettingsSection(
-          title: 'QA',
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Fluxo inicial',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: AethorColors.obsidian,
-                      ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Reabra o onboarding para testes.',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AethorColors.textMuted,
-                      ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: _confirmResetOnboarding,
-                    icon: const Icon(AethorIcons.refresh),
-                    label: const Text('Resetar onboarding'),
+        // Seção QA visível apenas em builds de debug
+        if (kDebugMode) ...[
+          const SizedBox(height: 32),
+          _SettingsSection(
+            title: 'QA (debug)',
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Fluxo inicial',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AethorColors.obsidian,
+                        ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 6),
+                  Text(
+                    'Reabra o onboarding para testes.',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AethorColors.textMuted,
+                        ),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _confirmResetOnboarding,
+                      icon: const Icon(AethorIcons.refresh),
+                      label: const Text('Resetar onboarding'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
         const SizedBox(height: 32),
         Column(
           children: [
-            Text(
-              'Aethor • Versão 1.0.0',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontSize: 11,
-                    color: AethorColors.textSubtle,
-                  ),
+            GestureDetector(
+              onLongPress: _showPushDiagnostic,
+              child: Text(
+                'Aethor • Versão 1.0.0',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontSize: 11,
+                      color: AethorColors.textSubtle,
+                    ),
+              ),
             ),
             const SizedBox(height: 12),
             Text(
@@ -469,24 +656,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
             ),
             const SizedBox(height: 8),
-            SizedBox(
-              width: 137,
-              height: 48,
-              child: TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                  backgroundColor: AethorColors.mutedButtonBackground,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+            Semantics(
+              button: true,
+              label: 'Sair da conta',
+              child: SizedBox(
+                width: 137,
+                height: 48,
+                child: TextButton(
+                  onPressed: widget.state.isAuthenticated ? _confirmLogout : null,
+                  style: TextButton.styleFrom(
+                    backgroundColor: AethorColors.mutedButtonBackground,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
-                ),
-                child: Text(
-                  'Sair da conta',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: AethorColors.stone,
-                      ),
+                  child: Text(
+                    'Sair da conta',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: AethorColors.stone,
+                        ),
+                  ),
                 ),
               ),
             ),
@@ -621,7 +812,7 @@ class _SettingsRow extends StatelessWidget {
                       ),
                 ),
                 const SizedBox(width: 8),
-                Icon(
+                const Icon(
                   AethorIcons.chevronRight,
                   color: AethorColors.textSubtle,
                   size: AethorIconSize.sm,
