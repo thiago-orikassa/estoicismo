@@ -178,6 +178,7 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _index = 0;
   final PushService _pushService = PushService();
+  final ValueNotifier<int> _focusCheckinNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -191,6 +192,7 @@ class _MainShellState extends State<MainShell> {
   @override
   void dispose() {
     unawaited(_pushService.dispose());
+    _focusCheckinNotifier.dispose();
     super.dispose();
   }
 
@@ -199,7 +201,17 @@ class _MainShellState extends State<MainShell> {
   PushService get pushService => _pushService;
 
   Future<void> _initializePushAndDeepLinks() async {
-    if (!widget.state.pushNotificationsEnabled) return;
+    if (!widget.state.pushNotificationsEnabled) {
+      // Deeplinks via custom scheme (aethor://) must work even without push.
+      await _pushService.initializeAppLinksOnly(
+        onAppLink: _handleAppLinkIntent,
+        onPushOpened: (properties) => widget.state.trackEvent(
+          'push_opened',
+          properties: properties,
+        ),
+      );
+      return;
+    }
 
     await _pushService.initialize(
       onAppLink: _handleAppLinkIntent,
@@ -252,17 +264,25 @@ class _MainShellState extends State<MainShell> {
   }
 
   Future<void> _registerFcmToken(String token) async {
-    try {
-      await widget.state.api.post(
-        '/v1/push-tokens',
-        body: {
-          'fcm_token': token,
-          'platform': _currentPlatform(),
-        },
-      );
-      debugPrint('[PushDebug] token registered OK');
-    } catch (e, st) {
-      debugPrint('[PushDebug] token registration FAILED: $e\n$st');
+    const maxAttempts = 3;
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        await widget.state.api.post(
+          '/v1/push-tokens',
+          body: {
+            'fcm_token': token,
+            'platform': _currentPlatform(),
+          },
+        );
+        debugPrint('[PushDebug] token registered OK (attempt $attempt)');
+        return;
+      } catch (e, st) {
+        debugPrint(
+            '[PushDebug] token registration FAILED attempt $attempt: $e\n$st');
+        if (attempt < maxAttempts) {
+          await Future.delayed(Duration(seconds: attempt * 2));
+        }
+      }
     }
   }
 
@@ -289,6 +309,10 @@ class _MainShellState extends State<MainShell> {
     if (intent.target == AppLinkTarget.today && intent.dateLocal != null) {
       await widget.state.loadDaily(dateLocal: intent.dateLocal);
     }
+
+    if (intent.focusCheckin && intent.target == AppLinkTarget.today) {
+      _focusCheckinNotifier.value += 1;
+    }
   }
 
   @override
@@ -297,6 +321,7 @@ class _MainShellState extends State<MainShell> {
       HomeScreen(
         state: widget.state,
         onNavigateToSettings: () => setState(() => _index = 3),
+        focusCheckinNotifier: _focusCheckinNotifier,
       ),
       HistoryScreen(state: widget.state),
       FavoritesScreen(
