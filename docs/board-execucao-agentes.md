@@ -38,6 +38,10 @@ Baseado em:
 | BE-06 | Backend and Data Engineer | Telemetria backend e logs estruturados | P1 | S | BE-01 | Logs e métricas de erro disponíveis | DONE |
 | BE-07 | Backend and Data Engineer | Expor entitlement de assinatura + elegibilidade de trial + restauração | P0 | M | BE-01, MA-05 | Contrato de assinatura disponível e validado em staging | DONE |
 | BE-08 | Backend and Data Engineer | Instrumentar eventos de monetização no backend (`paywall_*`, `trial_*`, `subscription_*`) | P0 | S | BE-06, PS-04 | Eventos publicados com propriedades mínimas e versionamento | DONE |
+| BE-09 | Backend and Data Engineer | Deploy Railway com Railway Volume para persistência SQLite | P0 | S | BE-01 | SQLite sobrevive a redeploy; dados não são zerados em produção | DONE |
+| BE-10 | Backend and Data Engineer | Validação de recibos server-side (Apple/Google) | P1 | M | BE-07, IOS-04, AN-04 | Backend verifica recibo com App Store/Play antes de ativar entitlement | TODO |
+| BE-11 | Backend and Data Engineer | Hardening de segurança backend (rate limit, TTL sessão, body limit, token forte) | P0 | S | BE-01 | Rate limiting em auth, sessions expiram, payload > 100KB rejeitado | DONE |
+| BE-12 | Backend and Data Engineer | Log de auditoria de mudanças de assinatura | P2 | S | BE-07 | Tabela `subscription_audit_log` com motivo + timestamp de cada transição | TODO |
 | AN-01 | Android Specialist | Base UI Android (Material 3) | P1 | M | MA-01 | Home, histórico e ajustes com padrões M3 | DONE |
 | AN-02 | Android Specialist | Fluxo push Android (FCM + permissões) | P0 | M | BE-05 | Push entregue e aberto com deeplink correto | IN PROGRESS |
 | AN-03 | Android Specialist | Acessibilidade Android (fonte/contraste/leitura) | P1 | S | AN-01 | Checklist de acessibilidade sem bloqueadores | TODO |
@@ -65,6 +69,9 @@ Baseado em:
 - QA-04
 - QA-05
 - QA-06
+- ~~BE-09~~ ✅ DONE
+- BE-10
+- BE-12
 
 ## IN PROGRESS
 - AN-02
@@ -80,7 +87,7 @@ Baseado em:
 - PS-01, PS-02, PS-03, PS-04
 - SC-01, SC-02, SC-03, SC-04
 - MA-01, MA-02, MA-03, MA-04, MA-05
-- BE-01, BE-02, BE-03, BE-04, BE-05, BE-06, BE-07, BE-08
+- BE-01, BE-02, BE-03, BE-04, BE-05, BE-06, BE-07, BE-08, BE-09, BE-11
 - QA-01, QA-02
 - AN-01, IOS-01
 
@@ -196,6 +203,18 @@ Uma tarefa só vai para `DONE` quando tiver:
 - Critério de aceite atendido.
 - Evidência (print, log, teste, dashboard ou PR).
 - Sem regressão conhecida no fluxo diário.
+
+## 7.1) Evidências recentes (2026-03-08) — Deploy Railway + Hardening
+
+- **Backend em produção:** `https://aethor-production.up.railway.app` (Railway, Node 23, SQLite)
+- **Arquivos de deploy:** `backend/railway.json`, `backend/nixpacks.toml`, `backend/scripts/start-railway.mjs`
+- **Migrations aplicadas:** 001→009 (session expiry adicionada em 009)
+- **Hardening (BE-11):** rate limiting auth (5/10/20 req/15 min), body limit 100 KB, tokens 256-bit, TTL sessão 90 dias
+- **Testes:** 26/26 passando (24 server + 2 monetization/ritual)
+- **Flutter:** `api_client.dart` aponta para Railway em produção; dev via `--dart-define=DEV_SERVER_URL`
+- **Boas práticas documentadas:** `docs/backend-best-practices.md`
+- **Commit:** `a3701e2` — `fix(backend): harden security before public TestFlight`
+- **⚠️ BE-09 pendente:** dados SQLite são ephemeral — Railway Volume não configurado. **Não subir para produção real antes de resolver.**
 
 ## 7) Evidências recentes (2026-02-14)
 - App (feature flags + gatilhos): `app/lib/app_state.dart`, `app/lib/core/paywall/paywall_flow.dart`, `app/lib/features/daily_quote/presentation/home_screen.dart`, `app/lib/features/daily_quote/data/daily_repository.dart`.

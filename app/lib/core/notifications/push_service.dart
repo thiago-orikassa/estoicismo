@@ -45,6 +45,15 @@ class PushService {
     await _bootstrapAppLinks(onAppLink: onAppLink, onPushOpened: onPushOpened);
   }
 
+  /// Initializes only the app links (custom scheme + Universal Links) pipeline.
+  /// Use this when push notifications are disabled but deeplinks must still work.
+  Future<void> initializeAppLinksOnly({
+    required AppLinkCallback onAppLink,
+    required PushEventCallback onPushOpened,
+  }) async {
+    await _bootstrapAppLinks(onAppLink: onAppLink, onPushOpened: onPushOpened);
+  }
+
   Future<void> dispose() async {
     await _appLinksSub?.cancel();
     await _messageSub?.cancel();
@@ -55,9 +64,9 @@ class PushService {
   /// Request notification permission from the user.
   /// On Android 13+, uses permission_handler; on iOS, uses Firebase Messaging.
   /// Returns true if permission was granted.
+  /// Note: Firebase.initializeApp() is called in main() before the widget tree,
+  /// so FirebaseMessaging.instance is always available here.
   Future<bool> requestPermission() async {
-    if (!_firebaseAvailable) return false;
-
     if (Platform.isAndroid) {
       final status = await Permission.notification.request();
       return status.isGranted;
@@ -73,9 +82,22 @@ class PushService {
   }
 
   /// Returns the current FCM token, or null if Firebase is unavailable.
+  ///
+  /// On iOS, waits up to 10 seconds for the APNs token to be available
+  /// before requesting the FCM token — the APNs token is not immediately
+  /// ready on app launch.
   Future<String?> getToken() async {
     if (!_firebaseAvailable) return null;
     try {
+      if (Platform.isIOS) {
+        String? apnsToken;
+        for (int i = 0; i < 10; i++) {
+          apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+          if (apnsToken != null) break;
+          await Future.delayed(const Duration(seconds: 1));
+        }
+        if (apnsToken == null) return null;
+      }
       return await FirebaseMessaging.instance.getToken();
     } catch (_) {
       return null;
@@ -89,9 +111,9 @@ class PushService {
     TokenRefreshCallback? onTokenRefresh,
   }) async {
     try {
-      // Firebase may already be initialized from main.dart.
-      // initializeApp is idempotent when called with the same options.
-      await Firebase.initializeApp();
+      // Firebase is initialized in main() with DefaultFirebaseOptions.
+      // Accessing Firebase.app() verifies it is available without re-initializing.
+      Firebase.app();
       _firebaseAvailable = true;
     } catch (_) {
       _firebaseAvailable = false;
@@ -102,6 +124,16 @@ class PushService {
 
     final messaging = FirebaseMessaging.instance;
     await messaging.setAutoInitEnabled(true);
+
+    // On iOS, suppress system banners while the app is in the foreground —
+    // we handle foreground display ourselves via InAppNotificationBanner.
+    if (Platform.isIOS) {
+      await messaging.setForegroundNotificationPresentationOptions(
+        alert: false,
+        badge: true,
+        sound: false,
+      );
+    }
 
     FirebaseMessaging.onBackgroundMessage(
       _firebaseMessagingBackgroundHandler,

@@ -7,13 +7,15 @@ class ApiClient {
   final String _baseUrl;
   String? _accessToken;
 
+  static const _productionUrl = 'https://aethor-production.up.railway.app';
+
   static String _defaultBaseUrl() {
-    // Android emulator uses 10.0.2.2 to reach host machine.
-    if (Platform.isAndroid) return 'http://10.0.2.2:8787';
-    // Use DEV_SERVER_URL env var or local IP for physical device testing.
+    // Use DEV_SERVER_URL dart-define to point at a local server during development.
     const devUrl = String.fromEnvironment('DEV_SERVER_URL');
     if (devUrl.isNotEmpty) return devUrl;
-    return 'http://127.0.0.1:8787';
+    // Android emulator uses 10.0.2.2 to reach host machine.
+    if (Platform.isAndroid) return 'http://10.0.2.2:8787';
+    return _productionUrl;
   }
 
   Uri _uri(String path, [Map<String, String>? query]) {

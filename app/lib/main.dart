@@ -15,6 +15,7 @@ import 'core/design_system/tokens/design_tokens.dart';
 import 'core/auth/session_service.dart';
 import 'core/networking/api_client.dart';
 import 'core/notifications/deep_link_intent.dart';
+import 'core/notifications/in_app_notification.dart';
 import 'core/notifications/push_service.dart';
 import 'core/storage/secure_store.dart';
 import 'core/paywall/purchase_service.dart';
@@ -177,6 +178,7 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _index = 0;
   final PushService _pushService = PushService();
+  final ValueNotifier<int> _focusCheckinNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -190,6 +192,7 @@ class _MainShellState extends State<MainShell> {
   @override
   void dispose() {
     unawaited(_pushService.dispose());
+    _focusCheckinNotifier.dispose();
     super.dispose();
   }
 
@@ -198,7 +201,17 @@ class _MainShellState extends State<MainShell> {
   PushService get pushService => _pushService;
 
   Future<void> _initializePushAndDeepLinks() async {
-    if (!widget.state.pushNotificationsEnabled) return;
+    if (!widget.state.pushNotificationsEnabled) {
+      // Deeplinks via custom scheme (aethor://) must work even without push.
+      await _pushService.initializeAppLinksOnly(
+        onAppLink: _handleAppLinkIntent,
+        onPushOpened: (properties) => widget.state.trackEvent(
+          'push_opened',
+          properties: properties,
+        ),
+      );
+      return;
+    }
 
     await _pushService.initialize(
       onAppLink: _handleAppLinkIntent,
@@ -230,68 +243,46 @@ class _MainShellState extends State<MainShell> {
     final title = properties['notification_title'] as String?;
     final body = properties['notification_body'] as String?;
     final deeplink = properties['deeplink'] as String?;
-    if (title == null && body == null) return;
 
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    if (messenger == null) return;
+    VoidCallback? onTap;
+    if (deeplink != null) {
+      final uri = Uri.tryParse(deeplink);
+      if (uri != null) {
+        final intent = parseAppLinkIntent(uri, source: 'in_app_banner');
+        if (intent != null) {
+          onTap = () => _handleAppLinkIntent(intent);
+        }
+      }
+    }
 
-    messenger.showMaterialBanner(
-      MaterialBanner(
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (title != null)
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-            if (body != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(body, maxLines: 2, overflow: TextOverflow.ellipsis),
-              ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              messenger.hideCurrentMaterialBanner();
-              if (deeplink != null) {
-                final uri = Uri.tryParse(deeplink);
-                if (uri != null) {
-                  _handleAppLinkIntent(
-                    parseAppLinkIntent(uri, source: 'in_app_banner')!,
-                  );
-                }
-              }
-            },
-            child: const Text('Ver'),
-          ),
-          TextButton(
-            onPressed: () => messenger.hideCurrentMaterialBanner(),
-            child: const Text('Fechar'),
-          ),
-        ],
-      ),
+    InAppNotificationBanner.show(
+      context,
+      title: title,
+      body: body,
+      onTap: onTap,
     );
-
-    // Auto-dismiss after 5 seconds.
-    Future.delayed(const Duration(seconds: 5), () {
-      try {
-        messenger.hideCurrentMaterialBanner();
-      } catch (_) {}
-    });
   }
 
   Future<void> _registerFcmToken(String token) async {
-    try {
-      await widget.state.api.post(
-        '/v1/push-tokens',
-        body: {
-          'fcm_token': token,
-          'platform': _currentPlatform(),
-        },
-      );
-    } catch (_) {
-      // Best effort — token registration must not break the app.
+    const maxAttempts = 3;
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        await widget.state.api.post(
+          '/v1/push-tokens',
+          body: {
+            'fcm_token': token,
+            'platform': _currentPlatform(),
+          },
+        );
+        debugPrint('[PushDebug] token registered OK (attempt $attempt)');
+        return;
+      } catch (e, st) {
+        debugPrint(
+            '[PushDebug] token registration FAILED attempt $attempt: $e\n$st');
+        if (attempt < maxAttempts) {
+          await Future.delayed(Duration(seconds: attempt * 2));
+        }
+      }
     }
   }
 
@@ -318,6 +309,10 @@ class _MainShellState extends State<MainShell> {
     if (intent.target == AppLinkTarget.today && intent.dateLocal != null) {
       await widget.state.loadDaily(dateLocal: intent.dateLocal);
     }
+
+    if (intent.focusCheckin && intent.target == AppLinkTarget.today) {
+      _focusCheckinNotifier.value += 1;
+    }
   }
 
   @override
@@ -326,6 +321,7 @@ class _MainShellState extends State<MainShell> {
       HomeScreen(
         state: widget.state,
         onNavigateToSettings: () => setState(() => _index = 3),
+        focusCheckinNotifier: _focusCheckinNotifier,
       ),
       HistoryScreen(state: widget.state),
       FavoritesScreen(
