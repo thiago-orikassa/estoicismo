@@ -679,6 +679,28 @@ const server = createServer(async (req, res) => {
     return sendJson(res, 200, { ok: true, service: 'aethor-backend' });
   }
 
+  // Apple App Site Association — required for Universal Links (iOS deeplinks via https://)
+  // Apple fetches this file from https://aethor.app/.well-known/apple-app-site-association
+  if (
+    req.method === 'GET' &&
+    (url.pathname === '/.well-known/apple-app-site-association' ||
+      url.pathname === '/apple-app-site-association')
+  ) {
+    const aasa = {
+      applinks: {
+        apps: [],
+        details: [
+          {
+            appID: 'CK8Q479NZG.com.thiago.aethorApp',
+            paths: ['/today', '/history', '/favorites', '/settings', '/today/*'],
+          },
+        ],
+      },
+    };
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify(aasa));
+  }
+
   if (req.method === 'GET' && url.pathname === '/v1/observability/metrics') {
     if (!isObservabilityAuthorized(req)) {
       logger.warn('observability_metrics_unauthorized', {

@@ -15,10 +15,12 @@ class HomeScreen extends StatefulWidget {
     super.key,
     required this.state,
     required this.onNavigateToSettings,
+    this.focusCheckinNotifier,
   });
 
   final AppState state;
   final VoidCallback onNavigateToSettings;
+  final ValueNotifier<int>? focusCheckinNotifier;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -27,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   final TextEditingController _noteController = TextEditingController();
+  final GlobalKey _checkinCardKey = GlobalKey();
   bool _isTogglingFavorite = false;
   bool _isSubmittingCheckin = false;
   AethorCheckinStatus _checkinStatus = AethorCheckinStatus.pending;
@@ -185,6 +188,21 @@ class _HomeScreenState extends State<HomeScreen>
     WidgetsBinding.instance.addObserver(this);
     _setupPhase1();
     _setupPhase3();
+    widget.focusCheckinNotifier?.addListener(_onFocusCheckin);
+  }
+
+  void _onFocusCheckin() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _checkinCardKey.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(
+          ctx,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOut,
+          alignment: 0.1,
+        );
+      }
+    });
   }
 
   String _errorMessage(Object error) {
@@ -432,6 +450,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
+    widget.focusCheckinNotifier?.removeListener(_onFocusCheckin);
     WidgetsBinding.instance.removeObserver(this);
     _phase1Controller.dispose();
     _phase3Controller.dispose();
@@ -629,6 +648,7 @@ class _HomeScreenState extends State<HomeScreen>
                 child: Transform.translate(
                   offset: Offset(0, _checkinSlide.value),
                   child: AethorCheckinCard(
+                    key: _checkinCardKey,
                     noteController: _noteController,
                     reflectionPrompt: daily.recommendation.journalPrompt,
                     status: _checkinStatus,
