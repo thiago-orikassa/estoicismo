@@ -535,12 +535,61 @@ function pickRecommendationForQuote({ quote, userContext, hash }) {
 
 const SUPPORTED_LANGS = ['pt', 'en', 'es'];
 
+const BEHAVIOR_INTENT_TRANSLATIONS = {
+  en: {
+    'agir com foco no dever essencial de hoje': 'act with focus on today\'s essential duty',
+    'reduzir reatividade e escolher resposta racional': 'reduce reactivity and choose a rational response',
+    'proteger atenção em uma tarefa de cada vez': 'protect attention on one task at a time',
+    'responder com respeito e autocontrole': 'respond with respect and self-control',
+    'decidir por virtude, não por impulso': 'decide by virtue, not impulse',
+  },
+  es: {
+    'agir com foco no dever essencial de hoje': 'actuar con enfoque en el deber esencial de hoy',
+    'reduzir reatividade e escolher resposta racional': 'reducir la reactividad y elegir una respuesta racional',
+    'proteger atenção em uma tarefa de cada vez': 'proteger la atención en una tarea a la vez',
+    'responder com respeito e autocontrole': 'responder con respeto y autocontrol',
+    'decidir por virtude, não por impulso': 'decidir por virtud, no por impulso',
+  },
+};
+
+const CONTEXT_TAG_TRANSLATIONS = {
+  en: {
+    'ansiedade': 'anxiety',
+    'decisao_dificil': 'tough decision',
+    'disciplina': 'discipline',
+    'emoção': 'emotion',
+    'foco': 'focus',
+    'justiça': 'justice',
+    'propósito': 'purpose',
+    'relacionamentos': 'relationships',
+    'trabalho': 'work',
+  },
+  es: {
+    'ansiedade': 'ansiedad',
+    'decisao_dificil': 'decisión difícil',
+    'disciplina': 'disciplina',
+    'emoção': 'emoción',
+    'foco': 'enfoque',
+    'justiça': 'justicia',
+    'propósito': 'propósito',
+    'relacionamentos': 'relaciones',
+    'trabalho': 'trabajo',
+  },
+};
+
 function localizeQuote(quote, lang) {
   if (!lang || lang === 'pt') return quote;
   const textKey = `text_${lang}`;
   if (!quote[textKey]) return quote;
   const { text_en, text_es, ...rest } = quote; // eslint-disable-line no-unused-vars
-  return { ...rest, text: quote[textKey] };
+  const intentMap = BEHAVIOR_INTENT_TRANSLATIONS[lang];
+  const tagMap = CONTEXT_TAG_TRANSLATIONS[lang];
+  return {
+    ...rest,
+    text: quote[textKey],
+    behavior_intent: intentMap?.[rest.behavior_intent] ?? rest.behavior_intent,
+    context_tags: rest.context_tags.map(t => tagMap?.[t] ?? t),
+  };
 }
 
 function localizeRecommendation(rec, lang) {
@@ -549,14 +598,16 @@ function localizeRecommendation(rec, lang) {
   const titleKey = `action_title${suffix}`;
   const stepsKey = `action_steps${suffix}`;
   const promptKey = `journal_prompt${suffix}`;
+  const explanationKey = `quote_link_explanation${suffix}`;
   if (!rec[titleKey]) return rec;
-  const { action_title_en, action_steps_en, journal_prompt_en,
-          action_title_es, action_steps_es, journal_prompt_es, ...rest } = rec; // eslint-disable-line no-unused-vars
+  const { action_title_en, action_steps_en, journal_prompt_en, quote_link_explanation_en,
+          action_title_es, action_steps_es, journal_prompt_es, quote_link_explanation_es, ...rest } = rec; // eslint-disable-line no-unused-vars
   return {
     ...rest,
     action_title: rec[titleKey],
     action_steps: rec[stepsKey] ?? rec.action_steps,
-    journal_prompt: rec[promptKey] ?? rec.journal_prompt
+    journal_prompt: rec[promptKey] ?? rec.journal_prompt,
+    quote_link_explanation: rec[explanationKey] ?? rec.quote_link_explanation,
   };
 }
 

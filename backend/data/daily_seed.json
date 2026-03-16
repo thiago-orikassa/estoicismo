@@ -710,7 +710,9 @@
         "Define 1 primera acción de 10 minutos",
         "Ejecútala ahora"
       ],
-      "journal_prompt_es": "¿Qué cambió cuando me enfoqué en lo controlable?"
+      "journal_prompt_es": "¿Qué cambió cuando me enfoqué en lo controlable?",
+      "quote_link_explanation_en": "If time is all we possess, investing in controllable actions is the wisest way to use it.",
+      "quote_link_explanation_es": "Si el tiempo es todo lo que poseemos, invertir en acciones controlables es la forma más sabia de usarlo."
     },
     {
       "id": "r-002",
@@ -740,7 +742,9 @@
         "Separa hecho de interpretación",
         "Elige una respuesta objetiva"
       ],
-      "journal_prompt_es": "¿Qué parte era hecho y qué parte era imaginación?"
+      "journal_prompt_es": "¿Qué parte era hecho y qué parte era imaginación?",
+      "quote_link_explanation_en": "When the mind wanders among fears, it faces none of them. Naming them is the first step toward being present.",
+      "quote_link_explanation_es": "Cuando la mente divaga entre temores, no enfrenta ninguno. Nombrarlos es el primer paso para estar presente."
     },
     {
       "id": "r-003",
@@ -770,7 +774,9 @@
         "Elige una única tarea",
         "Finaliza un entregable pequeño"
       ],
-      "journal_prompt_es": "¿Qué me permitió mantener una atención única?"
+      "journal_prompt_es": "¿Qué me permitió mantener una atención única?",
+      "quote_link_explanation_en": "True trust demands full attention. As in friendship, presence at work is non-negotiable.",
+      "quote_link_explanation_es": "La confianza verdadera exige plena atención. Como en la amistad, la presencia en el trabajo es innegociable."
     },
     {
       "id": "r-004",
@@ -800,7 +806,9 @@
         "Reescribe el mensaje con respeto",
         "Envía solo lo esencial"
       ],
-      "journal_prompt_es": "¿Cómo cambió la pausa mi tono?"
+      "journal_prompt_es": "¿Cómo cambió la pausa mi tono?",
+      "quote_link_explanation_en": "Persevering on the path requires patience. Responding without impulse is proof of inner constancy.",
+      "quote_link_explanation_es": "Perseverar en el camino exige paciencia. Responder sin impulso es prueba de constancia interior."
     },
     {
       "id": "r-005",
@@ -830,7 +838,9 @@
         "Evalúa por justicia y valentía",
         "Elige la opción más íntegra"
       ],
-      "journal_prompt_es": "¿Elegí lo fácil o lo correcto?"
+      "journal_prompt_es": "¿Elegí lo fácil o lo correcto?",
+      "quote_link_explanation_en": "Dedication to study only has value when guided by virtue. The ethical criterion is the filter of every decision.",
+      "quote_link_explanation_es": "El empeño en el estudio solo tiene valor cuando está guiado por la virtud. El criterio ético es el filtro de toda decisión."
     },
     {
       "id": "r-006",
@@ -860,7 +870,9 @@
         "Protege 1 bloque de trabajo profundo",
         "Comunica el nuevo límite"
       ],
-      "journal_prompt_es": "¿Qué costo evité al decir no?"
+      "journal_prompt_es": "¿Qué costo evité al decir no?",
+      "quote_link_explanation_en": "To be transformed requires space. Eliminating the superfluous from your schedule is protecting what is essential.",
+      "quote_link_explanation_es": "Ser transformado exige espacio. Eliminar lo superfluo de la agenda es proteger lo esencial."
     },
     {
       "id": "r-007",
@@ -890,7 +902,9 @@
         "Planifica tu respuesta racional",
         "Vuelve al presente"
       ],
-      "journal_prompt_es": "¿Estoy preparado o simplemente preocupado?"
+      "journal_prompt_es": "¿Estoy preparado o simplemente preocupado?",
+      "quote_link_explanation_en": "Just as character is revealed in the first words, mental preparation reveals the Stoic. Anticipate so you do not merely react.",
+      "quote_link_explanation_es": "Así como el carácter se revela en las primeras palabras, la preparación mental revela al estoico. Anticipa para no reaccionar."
     },
     {
       "id": "r-008",
@@ -920,7 +934,9 @@
         "Define la meta de 1 entrega",
         "Concluye antes de abrir una nueva tarea"
       ],
-      "journal_prompt_es": "¿Qué gané al reducir el cambio de contexto?"
+      "journal_prompt_es": "¿Qué gané al reducir el cambio de contexto?",
+      "quote_link_explanation_en": "Old age advances without asking permission and every scattered moment is unrecoverable. Doing one thing at a time honors time.",
+      "quote_link_explanation_es": "La vejez avanza sin pedir permiso y cada momento disperso es irrecuperable. Hacer una cosa a la vez honra el tiempo."
     },
     {
       "id": "r-009",
@@ -950,7 +966,9 @@
         "Repite el punto de la otra persona",
         "Responde al punto real"
       ],
-      "journal_prompt_es": "¿Escuché para entender o para ganar?"
+      "journal_prompt_es": "¿Escuché para entender o para ganar?",
+      "quote_link_explanation_en": "The wise person desires friends not out of need, but for their worth. Listening with fairness is the first act of true friendship.",
+      "quote_link_explanation_es": "El sabio desea amigos no por necesidad, sino por su valor. Escuchar con justicia es el primer acto de verdadera amistad."
     },
     {
       "id": "r-010",
@@ -980,7 +998,9 @@
         "Anota el riesgo moral",
         "Decide"
       ],
-      "journal_prompt_es": "¿Esta decisión honraría mis valores en el futuro?"
+      "journal_prompt_es": "¿Esta decisión honraría mis valores en el futuro?",
+      "quote_link_explanation_en": "Avoiding the crowd is protecting your judgment. Testing a decision through the eyes of the future is protecting your character.",
+      "quote_link_explanation_es": "Evitar la multitud es proteger el juicio. Poner a prueba la decisión con la mirada del futuro es proteger el carácter."
     },
     {
       "id": "r-011",
@@ -1010,7 +1030,9 @@
         "Tacha la segunda",
         "Actúa en la primera"
       ],
-      "journal_prompt_es": "¿Cuánta de mi energía fue hacia lo inútil?"
+      "journal_prompt_es": "¿Cuánta de mi energía fue hacia lo inútil?",
+      "quote_link_explanation_en": "Separating what depends on us from what does not is the foundation of all Stoic action. Begin each day with that clarity.",
+      "quote_link_explanation_es": "Separar lo que depende de nosotros de lo que no depende es el fundamento de toda acción estoica. Comienza el día con esa claridad."
     },
     {
       "id": "r-012",
@@ -1040,7 +1062,9 @@
         "Cámbialo por una descripción neutral",
         "Elige una actitud útil"
       ],
-      "journal_prompt_es": "¿Qué juicio me debilitaba?"
+      "journal_prompt_es": "¿Qué juicio me debilitaba?",
+      "quote_link_explanation_en": "Unhappiness is born from desiring what we cannot control. Reframing our judgment returns power to reason.",
+      "quote_link_explanation_es": "La infelicidad nace de desear lo que no controlamos. Reencuadrar el juicio devuelve el poder a la razón."
     },
     {
       "id": "r-013",
@@ -1070,7 +1094,9 @@
         "Comienza sin esperar motivación",
         "Cronometra 10 minutos"
       ],
-      "journal_prompt_es": "¿Qué ocurre cuando comienzo sin negociar?"
+      "journal_prompt_es": "¿Qué ocurre cuando comienzo sin negociar?",
+      "quote_link_explanation_en": "Asking the nature of each thing prevents illusions. Applying discipline from the start prevents procrastination.",
+      "quote_link_explanation_es": "Preguntar por la naturaleza de cada cosa evita ilusiones. Aplicar disciplina desde el inicio evita la procrastinación."
     },
     {
       "id": "r-014",
@@ -1100,7 +1126,9 @@
         "Respira 4 ciclos lentos",
         "Retoma con lenguaje factual"
       ],
-      "journal_prompt_es": "¿Qué conflicto evité al regular mi reacción?"
+      "journal_prompt_es": "¿Qué conflicto evité al regular mi reacción?",
+      "quote_link_explanation_en": "Recalling the nature of each action before acting prevents impulse. Controlling reactivity is exercising reason over emotion.",
+      "quote_link_explanation_es": "Recordar el tipo de acción antes de actuar previene el impulso. Controlar la reactividad es ejercer la razón sobre la emoción."
     },
     {
       "id": "r-015",
@@ -1130,7 +1158,9 @@
         "Actúa conforme a ese papel virtuoso",
         "Regístralo"
       ],
-      "journal_prompt_es": "¿Actué conforme a mi papel o a mi ego?"
+      "journal_prompt_es": "¿Actué conforme a mi papel o a mi ego?",
+      "quote_link_explanation_en": "If it is not events that disturb us but our opinions of them, choosing the virtuous role is choosing reason.",
+      "quote_link_explanation_es": "Si no son los eventos los que perturban sino nuestras opiniones, elegir el papel virtuoso es elegir por la razón."
     },
     {
       "id": "r-016",
@@ -1160,7 +1190,9 @@
         "Ejecuta el paso de hoy",
         "Revisa sin autocondenación"
       ],
-      "journal_prompt_es": "¿Ejecuté el proceso independientemente del reconocimiento?"
+      "journal_prompt_es": "¿Ejecuté el proceso independientemente del reconocimiento?",
+      "quote_link_explanation_en": "Exulting over another's advantage is weakness. Committing to one's own process is true strength.",
+      "quote_link_explanation_es": "Exaltarse por la ventaja ajena es fragilidad. Comprometerse con el propio proceso es la verdadera fortaleza."
     },
     {
       "id": "r-017",
@@ -1190,7 +1222,9 @@
         "Busca 2 evidencias en contra",
         "Adopta una acción proporcional"
       ],
-      "journal_prompt_es": "¿Mi miedo era evidencia o suposición?"
+      "journal_prompt_es": "¿Mi miedo era evidencia o suposición?",
+      "quote_link_explanation_en": "Keeping attention on the ship is caring for what is real. Testing the reality of fears grounds the mind in what actually exists.",
+      "quote_link_explanation_es": "Mantener la atención en el barco es cuidar lo real. Probar la realidad de los temores ancla la mente en lo que existe."
     },
     {
       "id": "r-018",
@@ -1220,7 +1254,9 @@
         "Aleja los disparadores de comparación",
         "Vuelve al trabajo elegido"
       ],
-      "journal_prompt_es": "¿Qué disparadores roban mi atención?"
+      "journal_prompt_es": "¿Qué disparadores roban mi atención?",
+      "quote_link_explanation_en": "Accepting events as they are frees up energy. Mental hygiene removes what competes with your attention.",
+      "quote_link_explanation_es": "Aceptar los acontecimientos como son libera energía. La higiene mental elimina lo que compite con tu atención."
     },
     {
       "id": "r-019",
@@ -1250,7 +1286,9 @@
         "Acepta lo que depende del otro",
         "Conduce con claridad"
       ],
-      "journal_prompt_es": "¿Intenté controlar al otro o mi propia conducta?"
+      "journal_prompt_es": "¿Intenté controlar al otro o mi propia conducta?",
+      "quote_link_explanation_en": "Illness hinders the body, but not the will. Realistic expectations protect the will in our relationships.",
+      "quote_link_explanation_es": "La enfermedad impide el cuerpo, pero no la voluntad. Las expectativas realistas protegen la voluntad en las relaciones."
     },
     {
       "id": "r-020",
@@ -1280,7 +1318,9 @@
         "Define el límite de riesgo",
         "Decide dentro del límite"
       ],
-      "journal_prompt_es": "¿Qué límite protegió mi integridad?"
+      "journal_prompt_es": "¿Qué límite protegió mi integridad?",
+      "quote_link_explanation_en": "Turning to one's own resources is Epictetus's counsel. Knowing the acceptable loss is using that resource wisely.",
+      "quote_link_explanation_es": "Volverse hacia los propios recursos es el consejo de Epicteto. Conocer la pérdida aceptable es usar ese recurso con sabiduría."
     },
     {
       "id": "r-021",
@@ -1310,7 +1350,9 @@
         "Entrega una versión imperfecta",
         "Recoge retroalimentación rápida"
       ],
-      "journal_prompt_es": "¿El progreso de hoy fue mejor que el perfeccionismo?"
+      "journal_prompt_es": "¿El progreso de hoy fue mejor que el perfeccionismo?",
+      "quote_link_explanation_en": "Nothing is lost; everything is returned. Closing short cycles practices detachment from the perfect outcome.",
+      "quote_link_explanation_es": "Nada se pierde, todo es devuelto. Cerrar ciclos cortos practica el desapego del resultado perfecto."
     },
     {
       "id": "r-022",
@@ -1340,7 +1382,9 @@
         "Define una respuesta digna",
         "Ejecuta el primer paso"
       ],
-      "journal_prompt_es": "¿Resistí lo inevitable o respondí con dignidad?"
+      "journal_prompt_es": "¿Resistí lo inevitable o respondí con dignidad?",
+      "quote_link_explanation_en": "Keeping death and exile before one's eyes eliminates base thoughts. Accepting the inevitable frees courage to act.",
+      "quote_link_explanation_es": "Mantener la muerte y el exilio ante los ojos elimina pensamientos bajos. Aceptar lo inevitable libera coraje para actuar."
     },
     {
       "id": "r-023",
@@ -1370,7 +1414,9 @@
         "Compártela con 1 persona",
         "Rinde cuentas al final"
       ],
-      "journal_prompt_es": "¿El compromiso público mejoró mi constancia?"
+      "journal_prompt_es": "¿El compromiso público mejoró mi constancia?",
+      "quote_link_explanation_en": "Accepting the appearance of foolishness is freedom. A priority contract demands that courage to simplify.",
+      "quote_link_explanation_es": "Aceptar parecer necio es libertad. Un contrato de prioridad exige ese coraje de simplificar."
     },
     {
       "id": "r-024",
@@ -1400,7 +1446,9 @@
         "Explica el impacto",
         "Pide un ajuste específico"
       ],
-      "journal_prompt_es": "¿Logré firmeza sin agresión?"
+      "journal_prompt_es": "¿Logré firmeza sin agresión?",
+      "quote_link_explanation_en": "Wishing others to live forever is denying reality. Correcting without humiliating accepts human imperfection with firmness.",
+      "quote_link_explanation_es": "Desear que otros vivan para siempre es negar la realidad. Corregir sin humillar acepta la imperfección humana con firmeza."
     },
     {
       "id": "r-025",
@@ -1430,7 +1478,9 @@
         "Ejecútala",
         "Acepta el resultado externo"
       ],
-      "journal_prompt_es": "¿El resultado externo alteró mi compromiso interno?"
+      "journal_prompt_es": "¿El resultado externo alteró mi compromiso interno?",
+      "quote_link_explanation_en": "At a banquet, take what is served with decency. Separating value from outcome means accepting what life offers without demanding more.",
+      "quote_link_explanation_es": "En un banquete, toma lo que se sirve con decencia. Separar valor de resultado es aceptar lo que la vida ofrece sin exigir más."
     },
     {
       "id": "r-026",
@@ -1460,7 +1510,9 @@
         "Haz solo la parte 1 ahora",
         "Marca su conclusión"
       ],
-      "journal_prompt_es": "¿Qué excusa cayó cuando comencé en pequeño?"
+      "journal_prompt_es": "¿Qué excusa cayó cuando comencé en pequeño?",
+      "quote_link_explanation_en": "Not being swept away by the appearance of pain is acting with reason. Dividing a task into parts overcomes procrastination without drama.",
+      "quote_link_explanation_es": "No dejarse arrastrar por la apariencia del dolor es actuar con razón. Dividir la tarea en partes vence la procrastinación sin drama."
     },
     {
       "id": "r-027",
@@ -1490,7 +1542,9 @@
         "Deja de simular escenarios",
         "Vuelve al presente"
       ],
-      "journal_prompt_es": "¿Planeé para actuar o para distraerme?"
+      "journal_prompt_es": "¿Planeé para actuar o para distraerme?",
+      "quote_link_explanation_en": "We are actors in the role we have been given. Reducing anticipation is accepting that the script does not belong to us.",
+      "quote_link_explanation_es": "Somos actores en el papel que nos fue asignado. Reducir la anticipación es aceptar que el guión no nos pertenece."
     },
     {
       "id": "r-028",
@@ -1520,7 +1574,9 @@
         "Define la próxima acción física",
         "Ejecútala inmediatamente"
       ],
-      "journal_prompt_es": "¿Qué acción concreta me trajo al presente?"
+      "journal_prompt_es": "¿Qué acción concreta me trajo al presente?",
+      "quote_link_explanation_en": "Turning to externals to please others is losing one's way. Attention to the present reconnects us with what is internal and real.",
+      "quote_link_explanation_es": "Volverse a lo externo para agradar es perder el rumbo. La atención al presente reconecta con lo que es interno y real."
     },
     {
       "id": "r-029",
@@ -1550,7 +1606,9 @@
         "Extrae 1 punto útil",
         "Descarta el resto sin rencor"
       ],
-      "journal_prompt_es": "¿Qué parte de la crítica me hizo crecer?"
+      "journal_prompt_es": "¿Qué parte de la crítica me hizo crecer?",
+      "quote_link_explanation_en": "To be invincible is to avoid contests you cannot win. Extracting what is useful from criticism without resentment is inner victory.",
+      "quote_link_explanation_es": "Ser invencible es no entrar en disputas que no se pueden ganar. Extraer lo útil de la crítica sin rencor es victoria interior."
     },
     {
       "id": "r-030",
@@ -1580,7 +1638,9 @@
         "Responde cada una con hechos",
         "Reevalúa"
       ],
-      "journal_prompt_es": "¿Mi decisión resistió objeciones fuertes?"
+      "journal_prompt_es": "¿Mi decisión resistió objeciones fuertes?",
+      "quote_link_explanation_en": "It is not the one who insults who offends, but our opinion of the insult. Rehearsing objections strengthens a decision against external opinions.",
+      "quote_link_explanation_es": "No es quien insulta el que ofende, sino la opinión sobre el insulto. Ensayar objeciones fortalece la decisión frente a opiniones externas."
     },
     {
       "id": "r-031",
@@ -1610,7 +1670,9 @@
         "Comienza antes de abrir mensajes",
         "Concluye el bloque inicial"
       ],
-      "journal_prompt_es": "¿Honré mi deber antes del ruido?"
+      "journal_prompt_es": "¿Honré mi deber antes del ruido?",
+      "quote_link_explanation_en": "If we will encounter the meddlesome and the ungrateful every morning, the best defense is fulfilling our duty before the noise begins.",
+      "quote_link_explanation_es": "Si encontraremos al entrometido y al ingrato cada mañana, la mejor defensa es cumplir nuestro deber antes del ruido."
     },
     {
       "id": "r-032",
@@ -1640,7 +1702,9 @@
         "Nombra 1 acción correcta ahora",
         "Ejecútala"
       ],
-      "journal_prompt_es": "¿Cómo la impermanencia redujo mi miedo?"
+      "journal_prompt_es": "¿Cómo la impermanencia redujo mi miedo?",
+      "quote_link_explanation_en": "Tranquility lives within us. Remembering impermanence dissolves fear by revealing that everything passes.",
+      "quote_link_explanation_es": "La tranquilidad vive dentro de nosotros. Recordar la impermanencia disuelve el miedo al revelar que todo pasa."
     },
     {
       "id": "r-033",
@@ -1670,7 +1734,9 @@
         "Mantén solo lo esencial",
         "Finaliza lo esencial"
       ],
-      "journal_prompt_es": "¿Qué mejoró al simplificar?"
+      "journal_prompt_es": "¿Qué mejoró al simplificar?",
+      "quote_link_explanation_en": "If something is difficult but not impossible, deliberate simplicity removes the superfluous to make the essential viable.",
+      "quote_link_explanation_es": "Si algo es difícil pero no imposible, la simplicidad deliberada elimina lo superfluo para hacer viable lo esencial."
     },
     {
       "id": "r-034",
@@ -1700,7 +1766,9 @@
         "Corrige con claridad",
         "Mantén el respeto"
       ],
-      "journal_prompt_es": "¿Logré ser firme y benevolente al mismo tiempo?"
+      "journal_prompt_es": "¿Logré ser firme y benevolente al mismo tiempo?",
+      "quote_link_explanation_en": "The mind takes on the character of its thoughts. Coloring thoughts with benevolence transforms our relationships.",
+      "quote_link_explanation_es": "La mente asume el carácter de sus pensamientos. Colorear los pensamientos con benevolencia transforma las relaciones."
     },
     {
       "id": "r-035",
@@ -1730,7 +1798,9 @@
         "Evita la vanidad",
         "Actúa"
       ],
-      "journal_prompt_es": "¿Mi elección sirvió al bien común?"
+      "journal_prompt_es": "¿Mi elección sirvió al bien común?",
+      "quote_link_explanation_en": "Thinking and acting as a rational human being requires care in every act. Reason is the criterion of every virtuous decision.",
+      "quote_link_explanation_es": "Pensar y actuar como ser humano racional exige cuidado en cada acto. La razón es el criterio de toda decisión virtuosa."
     },
     {
       "id": "r-036",
@@ -1760,7 +1830,9 @@
         "Registra un resultado objetivo",
         "Repite"
       ],
-      "journal_prompt_es": "¿Cuánto produje cuando dejé de actuar para la galería?"
+      "journal_prompt_es": "¿Cuánto produje cuando dejé de actuar para la galería?",
+      "quote_link_explanation_en": "If life can end at any moment, every act must be regulated. Silent discipline is working without performing.",
+      "quote_link_explanation_es": "Si la vida puede acabar en cualquier instante, cada acto debe ser regulado. La disciplina silenciosa es trabajar sin performar."
     },
     {
       "id": "r-037",
@@ -1790,7 +1862,9 @@
         "Respira profundo 1 minuto",
         "Retoma con calma"
       ],
-      "journal_prompt_es": "¿Mi cuerpo estaba alimentando la ansiedad?"
+      "journal_prompt_es": "¿Mi cuerpo estaba alimentando la ansiedad?",
+      "quote_link_explanation_en": "If external things distract, reserving time for the body is returning to what is internal. The body is the anchor of the present.",
+      "quote_link_explanation_es": "Si las cosas externas distraen, reservar tiempo para el cuerpo es volver a lo interno. El cuerpo es el ancla del presente."
     },
     {
       "id": "r-038",
@@ -1820,7 +1894,9 @@
         "Evita la multitarea",
         "Concluye 1 ciclo completo"
       ],
-      "journal_prompt_es": "¿Qué calidad surgió con un ritmo constante?"
+      "journal_prompt_es": "¿Qué calidad surgió con un ritmo constante?",
+      "quote_link_explanation_en": "Unhappiness comes from not observing one's own mind. Presence without haste is the antidote to inner dispersion.",
+      "quote_link_explanation_es": "La infelicidad viene de no observar la propia mente. La presencia sin prisa es el antídoto contra la dispersión interior."
     },
     {
       "id": "r-039",
@@ -1850,7 +1926,9 @@
         "Ofrece 1 apoyo real hoy",
         "Cumple"
       ],
-      "journal_prompt_es": "¿Mi acción fortaleció la cooperación?"
+      "journal_prompt_es": "¿Mi acción fortaleció la cooperación?",
+      "quote_link_explanation_en": "Remembering the nature of the whole and how we relate to it transforms duty into cooperation. To help is to act in accordance with nature.",
+      "quote_link_explanation_es": "Recordar la naturaleza del todo y cómo nos relacionamos con ella transforma el deber en cooperación. Ayudar es actuar conforme a la naturaleza."
     },
     {
       "id": "r-040",
@@ -1880,7 +1958,9 @@
         "Marca 1 ajuste para mañana",
         "Comprométete"
       ],
-      "journal_prompt_es": "¿Qué ajuste de carácter me llevo para mañana?"
+      "journal_prompt_es": "¿Qué ajuste de carácter me llevo para mañana?",
+      "quote_link_explanation_en": "Everything disappears quickly. Reviewing the day's choices is the final act of one who treats each day as if it were complete.",
+      "quote_link_explanation_es": "Todo desaparece rápidamente. Revisar las elecciones del día es el último acto de quien trata cada día como si fuera entero."
     }
   ]
 }
