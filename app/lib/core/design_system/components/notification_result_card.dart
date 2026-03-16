@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
@@ -22,6 +23,7 @@ class NotificationResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (type == NotificationResultType.granted) {
       return Container(
         padding: const EdgeInsets.all(24),
@@ -55,7 +57,7 @@ class NotificationResultCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Lembrete diário ativado',
+                        l10n.notificationResultGrantedTitle,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -64,7 +66,7 @@ class NotificationResultCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Você receberá um lembrete todos os dias.',
+                        l10n.notificationResultGrantedMessage,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 13,
                               color: AethorColors.textMuted,
@@ -92,7 +94,7 @@ class NotificationResultCard extends StatelessWidget {
                     ),
                   ),
                   onPressed: onAdjustTime,
-                  child: const Text('Ajustar horário'),
+                  child: Text(l10n.notificationResultAdjustTime),
                 ),
               ),
             ],
@@ -132,7 +134,7 @@ class NotificationResultCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Sem problema',
+                      l10n.notificationResultDeniedTitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -141,7 +143,7 @@ class NotificationResultCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Você pode ativar lembretes depois em Ajustes.',
+                      l10n.notificationResultDeniedMessage,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontSize: 13,
                             color: AethorColors.textMuted,
@@ -167,7 +169,7 @@ class NotificationResultCard extends StatelessWidget {
                   ),
                 ),
                 onPressed: onGoToSettings,
-                child: const Text('Ir para Ajustes'),
+                child: Text(l10n.notificationResultGoToSettings),
               ),
             ),
           ],

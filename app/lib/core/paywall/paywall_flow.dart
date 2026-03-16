@@ -261,12 +261,33 @@ class PaywallFlow {
     required PaywallTrigger trigger,
   }) async {
     final purchaseService = state.purchaseService;
-    final product = purchaseService?.productForPlan(plan);
 
-    if (purchaseService == null || !purchaseService.available || product == null) {
+    if (purchaseService == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Loja indisponível. Tente novamente mais tarde.')),
+        );
+      }
+      return;
+    }
+
+    // If products weren't loaded on startup (network blip, first launch),
+    // do a silent reload before giving up.
+    if (!purchaseService.available || !purchaseService.productsLoaded) {
+      final loaded = await purchaseService.reload();
+      if (!loaded && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Loja indisponível. Verifique sua conexão e tente novamente.')),
+        );
+        return;
+      }
+    }
+
+    final product = purchaseService.productForPlan(plan);
+    if (product == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Produto não encontrado na loja. Aguarde alguns instantes e tente novamente.')),
         );
       }
       return;
@@ -418,17 +439,23 @@ class PaywallFlow {
             final completer = Completer<bool>();
             StreamSubscription<PurchaseUpdate>? sub;
             sub = purchaseService.updates.listen((update) {
-              if (!completer.isCompleted) {
-                if (update == PurchaseUpdate.restored) {
+              if (completer.isCompleted) return;
+              switch (update) {
+                case PurchaseUpdate.restored:
                   completer.complete(true);
-                } else {
+                  sub?.cancel();
+                case PurchaseUpdate.error:
+                case PurchaseUpdate.cancelled:
                   completer.complete(false);
-                }
-                sub?.cancel();
+                  sub?.cancel();
+                case PurchaseUpdate.purchased:
+                case PurchaseUpdate.pending:
+                  // Ignore — not terminal for a restore flow.
+                  break;
               }
             });
 
-            // Timeout after 15 seconds in case no events arrive.
+            // Timeout after 15 seconds (e.g. no prior purchases → silent).
             final timer = Timer(const Duration(seconds: 15), () {
               if (!completer.isCompleted) {
                 completer.complete(false);

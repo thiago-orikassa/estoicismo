@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../domain/subscription.dart';
@@ -21,6 +22,14 @@ class PurchaseService {
   bool _available = false;
   bool get available => _available;
 
+  List<String> _notFoundIds = [];
+  List<String> get notFoundIds => List.unmodifiable(_notFoundIds);
+
+  IAPError? _queryError;
+  IAPError? get queryError => _queryError;
+
+  bool get productsLoaded => _products.isNotEmpty;
+
   final Map<String, ProductDetails> _products = {};
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
@@ -38,17 +47,43 @@ class PurchaseService {
 
   Future<void> initialize() async {
     _available = await _iap.isAvailable();
+    debugPrint('[PurchaseService] isAvailable=$_available');
     if (!_available) return;
 
-    _subscription = _iap.purchaseStream.listen(
+    _subscription ??= _iap.purchaseStream.listen(
       _onPurchaseUpdate,
       onDone: () => _subscription = null,
       onError: (_) => _updateController.add(PurchaseUpdate.error),
     );
 
-    final response = await _iap.queryProductDetails(
-      SubscriptionProducts.allIds,
-    );
+    await _queryProducts();
+  }
+
+  /// Re-queries products from the store without reinitialising the listener.
+  /// Safe to call multiple times (idempotent). Returns true if at least one
+  /// product loaded successfully.
+  Future<bool> reload() async {
+    if (!_available) {
+      _available = await _iap.isAvailable();
+      debugPrint('[PurchaseService] reload isAvailable=$_available');
+      if (!_available) return false;
+      _subscription ??= _iap.purchaseStream.listen(
+        _onPurchaseUpdate,
+        onDone: () => _subscription = null,
+        onError: (_) => _updateController.add(PurchaseUpdate.error),
+      );
+    }
+    await _queryProducts();
+    return productsLoaded;
+  }
+
+  Future<void> _queryProducts() async {
+    final response = await _iap.queryProductDetails(SubscriptionProducts.allIds);
+    _notFoundIds = response.notFoundIDs;
+    _queryError = response.error;
+    debugPrint('[PurchaseService] found=${response.productDetails.map((p) => p.id).toList()} '
+        'notFound=$_notFoundIds '
+        'error=${response.error?.message}');
     for (final product in response.productDetails) {
       _products[product.id] = product;
     }

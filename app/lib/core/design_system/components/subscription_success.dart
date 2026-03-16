@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
@@ -17,6 +18,7 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Material(
       color: AethorColors.obsidian.withValues(alpha: 0.96),
       child: SafeArea(
@@ -41,7 +43,7 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                isTrial ? 'Teste iniciado com sucesso' : 'Pro ativado com sucesso',
+                isTrial ? l10n.subscriptionSuccessTrialTitle : l10n.subscriptionSuccessProTitle,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: AethorColors.ivory,
                       fontWeight: FontWeight.w600,
@@ -50,9 +52,7 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                isTrial
-                    ? '7 dias para praticar com todos os recursos.'
-                    : 'Sua assinatura está ativa. Aproveite os recursos Pro.',
+                isTrial ? l10n.subscriptionSuccessTrialMessage : l10n.subscriptionSuccessProMessage,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AethorColors.sand,
                       height: 1.5,
@@ -74,7 +74,7 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
                     ),
                   ),
                   onPressed: onPrimary,
-                  child: const Text('Continuar'),
+                  child: Text(l10n.subscriptionSuccessContinue),
                 ),
               ),
               const SizedBox(height: 8),
@@ -83,7 +83,7 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: AethorColors.sand,
                 ),
-                child: const Text('Voltar ao início'),
+                child: Text(l10n.subscriptionSuccessBack),
               ),
             ],
           ),
@@ -96,11 +96,12 @@ class SubscriptionSuccessOverlay extends StatelessWidget {
 class _FeatureList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final features = [
-      'Histórico completo',
-      'Favoritos ilimitados',
-      'Trilhas guiadas',
-      'Áudios práticos',
+      l10n.subscriptionSuccessFeature1,
+      l10n.subscriptionSuccessFeature2,
+      l10n.subscriptionSuccessFeature3,
+      l10n.subscriptionSuccessFeature4,
     ];
     return Column(
       children: features

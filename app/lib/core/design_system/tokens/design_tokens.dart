@@ -8,6 +8,8 @@ class AethorColors {
   static const ivory = Color(0xFFF6F2EA);
   static const parchment = Color(0xFFE8E1D5);
   static const copper = Color(0xFFB87444);
+  // copper escurecido para uso em texto — WCAG AA: ~5.8:1 sobre ivory, ~5.1:1 sobre parchment
+  static const copperText = Color(0xFF7B4A27);
   static const deepBlue = Color(0xFF2F4B66);
   static const mist = Color(0xFFF3F4F6);
 
@@ -31,8 +33,11 @@ class AethorColors {
   static const border = sand;
   static const textPrimary = obsidian;
   static const textSecondary = stone;
-  static const textMuted = Color(0x992C3136);
-  static const textSubtle = Color(0x662C3136);
+  // Contrast ratio on parchment (#E8E1D5):
+  //   textMuted  @ 80% → ~5.9:1  ✓ WCAG AA
+  //   textSubtle @ 75% → ~4.9:1  ✓ WCAG AA
+  static const textMuted = Color(0xCC2C3136);
+  static const textSubtle = Color(0xBF2C3136);
   static const textSecondarySoft = Color(0xB32C3136);
   static const success = Color(0xFF2E7D32);
   static const warning = Color(0xFFB26A00);

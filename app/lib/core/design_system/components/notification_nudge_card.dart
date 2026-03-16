@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../motion/motion.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
@@ -16,6 +17,7 @@ class NotificationNudgeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -54,7 +56,7 @@ class NotificationNudgeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Um lembrete diário para sua prática.',
+                      l10n.notificationNudgeTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontFamily: 'Inter',
                             fontSize: 18,
@@ -64,7 +66,7 @@ class NotificationNudgeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Escolha o horário. O lembrete será breve.',
+                      l10n.notificationNudgeDescription,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 14,
                             color: AethorColors.ivory.withValues(alpha: 0.8),
@@ -93,7 +95,7 @@ class NotificationNudgeCard extends StatelessWidget {
                     ),
               ),
               onPressed: onEnable,
-              child: const Text('Ativar lembretes'),
+              child: Text(l10n.notificationNudgeEnable),
             ),
           ),
           const SizedBox(height: 12),
@@ -109,7 +111,7 @@ class NotificationNudgeCard extends StatelessWidget {
                         fontSize: 14,
                       ),
                 ),
-                child: const Text('Agora não'),
+                child: Text(l10n.notificationNudgeLater),
               ),
             ),
           ),

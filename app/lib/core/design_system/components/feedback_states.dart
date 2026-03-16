@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../motion/motion.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
@@ -8,15 +9,18 @@ import 'aethor_buttons.dart';
 class AethorLoadingState extends StatelessWidget {
   const AethorLoadingState({
     super.key,
-    this.message = 'Preparando sua prática...',
-    this.subtitle = 'O conteúdo de hoje está a caminho.',
+    this.message,
+    this.subtitle,
   });
 
-  final String message;
-  final String subtitle;
+  final String? message;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final resolvedMessage = message ?? l10n.loadingStateDefaultMessage;
+    final resolvedSubtitle = subtitle ?? l10n.loadingStateDefaultSubtitle;
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 600),
       child: Center(
@@ -34,7 +38,7 @@ class AethorLoadingState extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              message,
+              resolvedMessage,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -44,7 +48,7 @@ class AethorLoadingState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              subtitle,
+              resolvedSubtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 13,
                     color: AethorColors.textMuted,
@@ -138,19 +142,23 @@ class AethorEmptyState extends StatelessWidget {
 class AethorErrorState extends StatelessWidget {
   const AethorErrorState({
     super.key,
-    this.title = 'Falha na conexão.',
-    this.message = 'Verifique sua rede e tente novamente.',
+    this.title,
+    this.message,
     required this.onRetry,
-    this.retryLabel = 'Tentar novamente',
+    this.retryLabel,
   });
 
-  final String title;
-  final String message;
+  final String? title;
+  final String? message;
   final VoidCallback onRetry;
-  final String retryLabel;
+  final String? retryLabel;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final resolvedTitle = title ?? l10n.errorStateDefaultTitle;
+    final resolvedMessage = message ?? l10n.errorStateDefaultMessage;
+    final resolvedRetryLabel = retryLabel ?? l10n.errorStateRetryButton;
     return AethorFadeIn(
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 600),
@@ -175,7 +183,7 @@ class AethorErrorState extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  title,
+                  resolvedTitle,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
@@ -185,7 +193,7 @@ class AethorErrorState extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  message,
+                  resolvedMessage,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 14,
                         height: 1.6,
@@ -199,7 +207,7 @@ class AethorErrorState extends StatelessWidget {
                     onPressed: onRetry,
                     size: AethorButtonSize.medium,
                     fullWidth: true,
-                    child: Text(retryLabel),
+                    child: Text(resolvedRetryLabel),
                   ),
                 ),
               ],
@@ -221,6 +229,7 @@ class AethorOfflineBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -241,7 +250,7 @@ class AethorOfflineBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Modo offline',
+                  l10n.offlineBannerTitle,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AethorColors.deepBlue,
                         fontSize: 13,
@@ -249,7 +258,7 @@ class AethorOfflineBanner extends StatelessWidget {
                       ),
                 ),
                 Text(
-                  'Mostrando conteúdo em cache',
+                  l10n.offlineBannerSubtitle,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 12,
                         color: AethorColors.textMuted,
@@ -274,7 +283,7 @@ class AethorOfflineBanner extends StatelessWidget {
                     letterSpacing: 0.8,
                   ),
             ),
-            child: const Text('SINCRONIZAR'),
+            child: Text(l10n.offlineBannerSync),
           ),
         ],
       ),

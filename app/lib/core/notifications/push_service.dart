@@ -45,15 +45,6 @@ class PushService {
     await _bootstrapAppLinks(onAppLink: onAppLink, onPushOpened: onPushOpened);
   }
 
-  /// Initializes only the app links (custom scheme + Universal Links) pipeline.
-  /// Use this when push notifications are disabled but deeplinks must still work.
-  Future<void> initializeAppLinksOnly({
-    required AppLinkCallback onAppLink,
-    required PushEventCallback onPushOpened,
-  }) async {
-    await _bootstrapAppLinks(onAppLink: onAppLink, onPushOpened: onPushOpened);
-  }
-
   Future<void> dispose() async {
     await _appLinksSub?.cancel();
     await _messageSub?.cancel();

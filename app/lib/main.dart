@@ -5,7 +5,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+
+import 'l10n/app_localizations.dart';
 
 import 'app_state.dart';
 import 'core/analytics/analytics_service.dart';
@@ -71,6 +74,18 @@ class AethorApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightMaterial(),
           scrollBehavior: const _NoOverscrollIndicatorBehavior(),
+          locale: state.locale != null ? Locale(state.locale!) : null,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('pt'),
+            Locale('en'),
+            Locale('es'),
+          ],
           home: SplashGate(state: state),
         );
       },
@@ -178,7 +193,6 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _index = 0;
   final PushService _pushService = PushService();
-  final ValueNotifier<int> _focusCheckinNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -192,7 +206,6 @@ class _MainShellState extends State<MainShell> {
   @override
   void dispose() {
     unawaited(_pushService.dispose());
-    _focusCheckinNotifier.dispose();
     super.dispose();
   }
 
@@ -201,17 +214,7 @@ class _MainShellState extends State<MainShell> {
   PushService get pushService => _pushService;
 
   Future<void> _initializePushAndDeepLinks() async {
-    if (!widget.state.pushNotificationsEnabled) {
-      // Deeplinks via custom scheme (aethor://) must work even without push.
-      await _pushService.initializeAppLinksOnly(
-        onAppLink: _handleAppLinkIntent,
-        onPushOpened: (properties) => widget.state.trackEvent(
-          'push_opened',
-          properties: properties,
-        ),
-      );
-      return;
-    }
+    if (!widget.state.pushNotificationsEnabled) return;
 
     await _pushService.initialize(
       onAppLink: _handleAppLinkIntent,
@@ -264,25 +267,17 @@ class _MainShellState extends State<MainShell> {
   }
 
   Future<void> _registerFcmToken(String token) async {
-    const maxAttempts = 3;
-    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
-      try {
-        await widget.state.api.post(
-          '/v1/push-tokens',
-          body: {
-            'fcm_token': token,
-            'platform': _currentPlatform(),
-          },
-        );
-        debugPrint('[PushDebug] token registered OK (attempt $attempt)');
-        return;
-      } catch (e, st) {
-        debugPrint(
-            '[PushDebug] token registration FAILED attempt $attempt: $e\n$st');
-        if (attempt < maxAttempts) {
-          await Future.delayed(Duration(seconds: attempt * 2));
-        }
-      }
+    try {
+      await widget.state.api.post(
+        '/v1/push-tokens',
+        body: {
+          'fcm_token': token,
+          'platform': _currentPlatform(),
+        },
+      );
+      debugPrint('[PushDebug] token registered OK');
+    } catch (e, st) {
+      debugPrint('[PushDebug] token registration FAILED: $e\n$st');
     }
   }
 
@@ -309,10 +304,6 @@ class _MainShellState extends State<MainShell> {
     if (intent.target == AppLinkTarget.today && intent.dateLocal != null) {
       await widget.state.loadDaily(dateLocal: intent.dateLocal);
     }
-
-    if (intent.focusCheckin && intent.target == AppLinkTarget.today) {
-      _focusCheckinNotifier.value += 1;
-    }
   }
 
   @override
@@ -321,7 +312,6 @@ class _MainShellState extends State<MainShell> {
       HomeScreen(
         state: widget.state,
         onNavigateToSettings: () => setState(() => _index = 3),
-        focusCheckinNotifier: _focusCheckinNotifier,
       ),
       HistoryScreen(state: widget.state),
       FavoritesScreen(
@@ -331,14 +321,15 @@ class _MainShellState extends State<MainShell> {
       SettingsScreen(state: widget.state),
     ];
 
+    final l10n = AppLocalizations.of(context);
     final tabs = <({
       IconData icon,
       String label,
     })>[
-      (icon: AethorIcons.home, label: 'Hoje'),
-      (icon: AethorIcons.history, label: 'Histórico'),
-      (icon: AethorIcons.favorites, label: 'Favoritos'),
-      (icon: AethorIcons.settings, label: 'Ajustes'),
+      (icon: AethorIcons.home, label: l10n.navToday),
+      (icon: AethorIcons.history, label: l10n.navHistory),
+      (icon: AethorIcons.favorites, label: l10n.navFavorites),
+      (icon: AethorIcons.settings, label: l10n.navSettings),
     ];
 
     final reduceMotion = MotionTokens.reduceMotionOf(context);
@@ -389,7 +380,7 @@ class _MainShellState extends State<MainShell> {
                           ),
                           TextButton(
                             onPressed: widget.state.bootstrap,
-                            child: const Text('Repetir'),
+                            child: Text(l10n.actionRepeat),
                           ),
                         ],
                       ),

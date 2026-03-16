@@ -65,6 +65,11 @@ class AethorIcons {
   static const verified = PhosphorIconsLight.sealCheck;
   static const bell = PhosphorIconsLight.bell;
   static const bellFill = PhosphorIconsFill.bell;
+
+  // ---------------------------------------------------------------------------
+  // Search
+  // ---------------------------------------------------------------------------
+  static const search = PhosphorIconsLight.magnifyingGlass;
 }
 
 /// Icon size tokens aligned with the Aethor typographic scale.

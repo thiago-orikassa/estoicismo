@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
@@ -64,7 +65,7 @@ class _RestorePurchaseDialogState extends State<RestorePurchaseDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Restaurar compra',
+                  AppLocalizations.of(context).restorePurchaseTitle,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AethorColors.obsidian,
@@ -109,7 +110,7 @@ class _LoadingState extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          'Restaurando compra...',
+          AppLocalizations.of(context).restorePurchaseLoading,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AethorColors.textMuted,
               ),
@@ -136,7 +137,7 @@ class _SuccessState extends StatelessWidget {
             const Icon(AethorIcons.checkCircleFill, color: AethorColors.deepBlue),
             const SizedBox(width: 8),
             Text(
-              'Compra restaurada',
+              AppLocalizations.of(context).restorePurchaseSuccessTitle,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -145,7 +146,7 @@ class _SuccessState extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Seu acesso Pro está ativo novamente.',
+          AppLocalizations.of(context).restorePurchaseSuccessMessage,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AethorColors.textMuted,
               ),
@@ -159,7 +160,7 @@ class _SuccessState extends StatelessWidget {
               foregroundColor: AethorColors.ivory,
             ),
             onPressed: onContinue,
-            child: const Text('Continuar'),
+            child: Text(AppLocalizations.of(context).restorePurchaseContinueBtn),
           ),
         ),
       ],
@@ -184,7 +185,7 @@ class _ErrorState extends StatelessWidget {
             const Icon(AethorIcons.error, color: AethorColors.copper),
             const SizedBox(width: 8),
             Text(
-              'Não foi possível restaurar',
+              AppLocalizations.of(context).restorePurchaseErrorTitle,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -193,7 +194,7 @@ class _ErrorState extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Tente novamente ou fale com o suporte.',
+          AppLocalizations.of(context).restorePurchaseErrorMessage,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AethorColors.textMuted,
               ),
@@ -207,7 +208,7 @@ class _ErrorState extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AethorColors.deepBlue,
                 ),
-                child: const Text('Tentar novamente'),
+                child: Text(AppLocalizations.of(context).restorePurchaseRetryBtn),
               ),
             ),
             const SizedBox(width: 12),
@@ -218,7 +219,7 @@ class _ErrorState extends StatelessWidget {
                   backgroundColor: AethorColors.deepBlue,
                   foregroundColor: AethorColors.ivory,
                 ),
-                child: const Text('Falar com suporte'),
+                child: Text(AppLocalizations.of(context).restorePurchaseSupportBtn),
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/design_tokens.dart';
 
 class ProcessingPurchaseOverlay extends StatelessWidget {
@@ -23,7 +24,7 @@ class ProcessingPurchaseOverlay extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Confirmando sua assinatura...',
+              AppLocalizations.of(context).processingPurchaseMessage,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AethorColors.ivory,
                   ),

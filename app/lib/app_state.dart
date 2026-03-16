@@ -57,6 +57,10 @@ class AppState extends ChangeNotifier {
   static const _paywallTriggerManualKey = 'paywall_trigger_manual';
   static const _activeDaysKey = 'active_days';
   static const _pushNotificationsEnabledKey = 'push_notifications_enabled';
+  static const _localeKey = 'locale';
+
+  /// Locale code override ('pt', 'en', 'es'). Null = follow device locale.
+  String? locale;
 
   String userId = '';
   String timezone = 'America/Sao_Paulo';
@@ -165,6 +169,7 @@ class AppState extends ChangeNotifier {
       ..addAll(_prefs?.getStringList(_activeDaysKey) ?? const <String>[]);
     pushNotificationsEnabled =
         _prefs?.getBool(_pushNotificationsEnabledKey) ?? true;
+    locale = _prefs?.getString(_localeKey);
     await _initializeSession();
     _loadCheckins();
   }
@@ -182,6 +187,19 @@ class AppState extends ChangeNotifier {
       }
       sessionReady = false;
     }
+  }
+
+  void setLocale(String? value) {
+    locale = value;
+    if (value == null) {
+      _prefs?.remove(_localeKey);
+    } else {
+      _prefs?.setString(_localeKey, value);
+    }
+    notifyListeners();
+    // Refresh content in the new language
+    loadDaily();
+    loadHistory();
   }
 
   void setTimezone(String value) {
@@ -270,6 +288,15 @@ class AppState extends ChangeNotifier {
   void markAuthenticated(bool value) {
     isAuthenticated = value;
     _prefs?.setBool(_authLoggedInKey, value);
+    notifyListeners();
+  }
+
+  Future<void> signOut() async {
+    await _sessionService.clearSession();
+    userId = '';
+    isAuthenticated = false;
+    _prefs?.setBool(_authLoggedInKey, false);
+    favorites = const [];
     notifyListeners();
   }
 
@@ -556,6 +583,7 @@ class AppState extends ChangeNotifier {
     await _prefs?.remove(_paywallTriggerManualKey);
     await _prefs?.remove(_activeDaysKey);
     await _prefs?.remove(_pushNotificationsEnabledKey);
+    await _prefs?.remove(_localeKey);
 
     notifyListeners();
   }
@@ -625,7 +653,12 @@ class AppState extends ChangeNotifier {
     if (!sessionReady || userId.isEmpty) {
       await _initializeSession();
     }
-    await Future.wait([loadDaily(), loadHistory(), loadFavorites()]);
+    await Future.wait([
+      loadDaily(),
+      loadHistory(),
+      loadFavorites(),
+      syncEntitlementFromBackend(),
+    ]);
   }
 
   Future<void> loadDaily({String? dateLocal}) async {
@@ -636,6 +669,7 @@ class AppState extends ChangeNotifier {
         timezone: timezone,
         dateLocal: dateLocal,
         userContext: preferredContext,
+        lang: locale,
       );
       if (daily != null) {
         _markActiveDay(daily!.dateLocal);
@@ -660,6 +694,7 @@ class AppState extends ChangeNotifier {
         timezone: timezone,
         days: 30,
         userContext: preferredContext,
+        lang: locale,
       );
       offline = false;
     } catch (e) {
