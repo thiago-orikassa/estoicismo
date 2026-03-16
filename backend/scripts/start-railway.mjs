@@ -30,10 +30,10 @@ const seedPath = process.env.STOIC_SEED_PATH ?? join(dataDir, 'daily_seed.json')
 // Ensure data directory exists
 mkdirSync(dataDir, { recursive: true });
 
-// Copy seed if not present
-if (!existsSync(seedPath) && existsSync(seedSourcePath)) {
+// Always copy seed from deployment — ensures the volume has the latest translations/content
+if (existsSync(seedSourcePath)) {
   copyFileSync(seedSourcePath, seedPath);
-  console.log(`[startup] seed copied to ${seedPath}`);
+  console.log(`[startup] seed updated at ${seedPath}`);
 }
 
 // Initialize empty JSON files if missing
