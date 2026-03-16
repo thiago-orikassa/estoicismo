@@ -189,6 +189,17 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  /// Locale efetivo para chamadas de API.
+  /// Se o usuário não definiu um idioma explícito, usa o locale do device.
+  /// Isso garante que o conteúdo do backend esteja no mesmo idioma que a UI.
+  String get _effectiveApiLang {
+    if (locale != null) return locale!;
+    const supported = ['pt', 'en', 'es'];
+    final deviceLang =
+        PlatformDispatcher.instance.locale.languageCode.toLowerCase();
+    return supported.contains(deviceLang) ? deviceLang : 'pt';
+  }
+
   void setLocale(String? value) {
     locale = value;
     if (value == null) {
@@ -669,7 +680,7 @@ class AppState extends ChangeNotifier {
         timezone: timezone,
         dateLocal: dateLocal,
         userContext: preferredContext,
-        lang: locale,
+        lang: _effectiveApiLang,
       );
       if (daily != null) {
         _markActiveDay(daily!.dateLocal);
@@ -694,7 +705,7 @@ class AppState extends ChangeNotifier {
         timezone: timezone,
         days: 30,
         userContext: preferredContext,
-        lang: locale,
+        lang: _effectiveApiLang,
       );
       offline = false;
     } catch (e) {
