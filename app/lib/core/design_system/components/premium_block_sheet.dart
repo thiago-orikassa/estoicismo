@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 import 'paywall_types.dart';
@@ -14,34 +15,35 @@ class PremiumBlockSheet extends StatelessWidget {
   final PremiumFeature feature;
   final ValueChanged<PremiumBlockAction> onAction;
 
-  String get _title {
+  String _title(AppLocalizations l10n) {
     switch (feature) {
       case PremiumFeature.fullHistory:
-        return 'Histórico completo é um recurso Pro';
+        return l10n.premiumFullhistoryTitle;
       case PremiumFeature.favoritesLimit:
-        return 'Favoritos ilimitados são Pro';
+        return l10n.premiumFavoriteslimitTitle;
       case PremiumFeature.audio:
-        return 'Áudios guiados são Pro';
+        return l10n.premiumAudioTitle;
       case PremiumFeature.trail:
-        return 'Trilhas guiadas são Pro';
+        return l10n.premiumTrailTitle;
     }
   }
 
-  String get _description {
+  String _description(AppLocalizations l10n) {
     switch (feature) {
       case PremiumFeature.fullHistory:
-        return 'Revise cada prática registrada, sem limite de tempo.';
+        return l10n.premiumFullhistoryDescription;
       case PremiumFeature.favoritesLimit:
-        return 'Salve quantas citações quiser para revisitar depois.';
+        return l10n.premiumFavoriteslimitDescription;
       case PremiumFeature.audio:
-        return 'Ouça práticas guiadas com foco e clareza.';
+        return l10n.premiumAudioDescription;
       case PremiumFeature.trail:
-        return 'Siga trilhas estruturadas para aprofundar sua prática.';
+        return l10n.premiumTrailDescription;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -81,7 +83,7 @@ class PremiumBlockSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _title,
+                        _title(l10n),
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: AethorColors.obsidian,
@@ -89,7 +91,7 @@ class PremiumBlockSheet extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        _description,
+                        _description(l10n),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: AethorColors.textMuted,
                               height: 1.5,
@@ -113,7 +115,7 @@ class PremiumBlockSheet extends StatelessWidget {
                   ),
                 ),
                 onPressed: () => onAction(PremiumBlockAction.viewPlans),
-                child: const Text('Ver planos'),
+                child: Text(l10n.premiumViewPlans),
               ),
             ),
             const SizedBox(height: 10),
@@ -129,7 +131,7 @@ class PremiumBlockSheet extends StatelessWidget {
                   ),
                 ),
                 onPressed: () => onAction(PremiumBlockAction.continueFree),
-                child: const Text('Continuar no gratuito'),
+                child: Text(l10n.premiumContinueFree),
               ),
             ),
             const SizedBox(height: 8),
@@ -139,7 +141,7 @@ class PremiumBlockSheet extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: AethorColors.textMuted,
                 ),
-                child: const Text('Restaurar compra'),
+                child: Text(l10n.premiumRestorePurchase),
               ),
             ),
           ],

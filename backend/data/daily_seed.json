@@ -13,7 +13,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Nothing, Lucilius, is ours, except time.",
+      "text_es": "Nada, Lucilio, es nuestro, excepto el tiempo."
     },
     {
       "id": "q-sen-2",
@@ -28,7 +30,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "To be everywhere is to be nowhere.",
+      "text_es": "Estar en todas partes es no estar en ninguna."
     },
     {
       "id": "q-sen-3",
@@ -43,7 +47,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "You sent me a letter through the hands of a 'friend' of yours, as you call him.",
+      "text_es": "Me enviaste una carta por manos de un 'amigo' tuyo, como lo llamas."
     },
     {
       "id": "q-sen-4",
@@ -58,7 +64,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Continue as you have begun, and make all possible haste, so that you may enjoy for a longer time a mind that has been brought to peace with itself.",
+      "text_es": "Persiste como comenzaste y apresúrate, para disfrutar por más tiempo de una mente en paz consigo misma."
     },
     {
       "id": "q-sen-5",
@@ -73,7 +81,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "I am glad that you are persisting in your studies and that you are devoted, every day, to making yourself better.",
+      "text_es": "Me alegra que persistas en tus estudios y que te dediques, cada día, a hacerte mejor."
     },
     {
       "id": "q-sen-6",
@@ -88,7 +98,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "I feel, Lucilius, that I am being not only reformed but transformed.",
+      "text_es": "Siento, Lucilio, que no solo estoy siendo corregido, sino transformado."
     },
     {
       "id": "q-sen-11",
@@ -103,7 +115,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "From the first words of your friend, one can discern his spirit, his understanding, and his progress.",
+      "text_es": "Por las primeras palabras de tu amigo se percibe su espíritu, su entendimiento y su progreso."
     },
     {
       "id": "q-sen-12",
@@ -118,7 +132,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Wherever I turn, I see signs of my advancing years.",
+      "text_es": "Por donde miro, veo señales de que la vejez avanza."
     },
     {
       "id": "q-sen-9",
@@ -133,7 +149,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "The wise man is self-sufficient; he still desires friends.",
+      "text_es": "El sabio es autosuficiente; aun así, desea amigos."
     },
     {
       "id": "q-sen-10",
@@ -148,7 +166,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "I do not change my opinion: avoid the many, avoid the few, avoid even the unproductive solitary.",
+      "text_es": "No cambio de opinión: evita la multitud, evita el pequeño grupo y evita incluso el aislamiento improductivo."
     },
     {
       "id": "q-epi-1",
@@ -163,7 +183,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Some things are in our control and others not.",
+      "text_es": "Algunas cosas dependen de nosotros; otras no."
     },
     {
       "id": "q-epi-2",
@@ -178,7 +200,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Remember that he who fails to get what he desires is unhappy; and so is he who gets what he wishes to avoid.",
+      "text_es": "Recuerda: quien no obtiene lo que desea es desdichado; y quien cae en lo que intenta evitar, también."
     },
     {
       "id": "q-epi-3",
@@ -193,7 +217,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "With everything that delights you, is useful, or to which you are attached, remember to tell yourself what kind of thing it is.",
+      "text_es": "En todo lo que agrada al alma, recuerda preguntarte: ¿cuál es la naturaleza de esta cosa?"
     },
     {
       "id": "q-epi-4",
@@ -208,7 +234,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Before you act, recall what kind of action you are about to undertake.",
+      "text_es": "Antes de actuar, recuerda qué tipo de acción estás a punto de realizar."
     },
     {
       "id": "q-epi-5",
@@ -223,7 +251,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Men are disturbed not by the things which happen, but by the opinions about the things.",
+      "text_es": "Los hombres no se perturban por las cosas que ocurren, sino por las opiniones que tienen sobre ellas."
     },
     {
       "id": "q-epi-6",
@@ -238,7 +268,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Never exult in any excellence that is not your own.",
+      "text_es": "No te enorgullezcas de ninguna ventaja que pertenezca a otro."
     },
     {
       "id": "q-epi-7",
@@ -253,7 +285,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "As on a voyage, keep your attention on the ship; in life, do not let yourself be distracted from what is essential.",
+      "text_es": "Como en un viaje, mantén la atención en el barco; en la vida, no te distraigas de lo esencial."
     },
     {
       "id": "q-epi-8",
@@ -268,7 +302,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Seek not that the things which happen should happen as you wish; but wish the things which happen to be as they are, and you will have a tranquil flow of life.",
+      "text_es": "No busques que los acontecimientos ocurran como quieres; desea que ocurran como son, y tendrás una vida tranquila."
     },
     {
       "id": "q-epi-9",
@@ -283,7 +319,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Sickness is a hindrance to the body, but not to the will, unless the will itself chooses.",
+      "text_es": "La enfermedad es un obstáculo para el cuerpo, pero no para la voluntad, a menos que la propia voluntad lo permita."
     },
     {
       "id": "q-epi-10",
@@ -298,7 +336,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "On the occasion of every event, turn inward and ask what faculty you have for dealing with it.",
+      "text_es": "En cada acontecimiento, vuélvete hacia ti mismo y pregunta qué recurso tienes para hacer buen uso de él."
     },
     {
       "id": "q-epi-11",
@@ -313,7 +353,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Never say about anything that you have lost it; but say that you have restored it.",
+      "text_es": "Nunca digas que perdiste algo; di más bien que lo devolviste."
     },
     {
       "id": "q-epi-21",
@@ -328,7 +370,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Let death and exile be daily before your eyes; thus you will avoid petty desires.",
+      "text_es": "Ten ante los ojos, cada día, la muerte y el exilio; así evitarás deseos mezquinos."
     },
     {
       "id": "q-epi-13",
@@ -343,7 +387,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "If you wish to improve, be content to appear foolish and stupid in external matters.",
+      "text_es": "Si quieres progresar, acepta parecer tonto y sin prestigio en las cosas externas."
     },
     {
       "id": "q-epi-14",
@@ -358,7 +404,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "If you wish your children and your wife and your friends to live forever, you are foolish; for you wish to have things in your power which are not in your power.",
+      "text_es": "Si deseas que tus hijos, cónyuge y amigos vivan para siempre, deseas controlar lo que no depende de ti."
     },
     {
       "id": "q-epi-15",
@@ -373,7 +421,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "In your life, behave as at a banquet: if something is brought around to you, put out your hand and take a moderate share.",
+      "text_es": "En la vida, compórtate como en un banquete: toma con decencia lo que llegue hasta ti."
     },
     {
       "id": "q-epi-16",
@@ -388,7 +438,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "When you see a person weeping in sorrow, be careful not to be carried away by the appearance that the external events are bad.",
+      "text_es": "Al ver a alguien en dolor, no te dejes arrastrar por la apariencia de que el mal está en las cosas externas."
     },
     {
       "id": "q-epi-17",
@@ -403,7 +455,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Remember that you are an actor in a play, in the role that was given to you.",
+      "text_es": "Recuerda que eres actor de una obra, en el papel que te fue asignado."
     },
     {
       "id": "q-epi-23",
@@ -418,7 +472,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "If you turn to externals to please someone, you have lost your purpose.",
+      "text_es": "Si te vuelves a lo externo para complacer a alguien, has perdido tu propósito."
     },
     {
       "id": "q-epi-19",
@@ -433,7 +489,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "You will be invincible if you enter into no contest in which victory is not in your power.",
+      "text_es": "Serás invencible si no entras en disputa alguna en la que no puedas vencer."
     },
     {
       "id": "q-epi-20",
@@ -448,7 +506,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Remember that it is not he who reviles you or strikes you that insults you, but it is your opinion about these things as being insulting.",
+      "text_es": "Recuerda: no es quien te insulta o te hiere quien te ofende, sino tu opinión de que eso es un insulto."
     },
     {
       "id": "q-mar-1",
@@ -463,7 +523,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "When you wake up in the morning, tell yourself: the people I deal with today will be meddling, ungrateful, arrogant, dishonest, jealous, and surly.",
+      "text_es": "Al comenzar la mañana, dite a ti mismo: encontraré al entrometido, al ingrato, al arrogante, al engañador, al envidioso y al insociable."
     },
     {
       "id": "q-mar-2",
@@ -478,7 +540,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Nowhere can man find a quieter or more untroubled retreat than in his own soul.",
+      "text_es": "En ningún lugar el hombre se recoge con más tranquilidad y libertad de perturbación que en su propia alma."
     },
     {
       "id": "q-mar-3",
@@ -493,7 +557,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "If something is difficult for you, do not assume that it is humanly impossible; but if something is humanly possible and appropriate, assume that you too can do it.",
+      "text_es": "Si algo es difícil para ti, no pienses que es imposible para el ser humano; si es posible para el ser humano y conforme a su naturaleza, considera que también está a tu alcance."
     },
     {
       "id": "q-mar-4",
@@ -508,7 +574,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "The soul becomes dyed with the color of its thoughts.",
+      "text_es": "La mente adopta el carácter de sus pensamientos habituales; el alma queda teñida por ellos."
     },
     {
       "id": "q-mar-5",
@@ -523,7 +591,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "At every moment keep a sturdy mind on the task at hand, as a Roman and human being, doing it with strict and simple dignity.",
+      "text_es": "En cada momento, piensa y actúa como romano y como ser humano: con dignidad sencilla, justicia y libertad interior."
     },
     {
       "id": "q-mar-11",
@@ -538,7 +608,9 @@
         "trabalho",
         "foco"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Since you might leave life at any moment, govern every act and thought accordingly.",
+      "text_es": "Como puedes dejar la vida en cualquier instante, regula cada acto y pensamiento de acuerdo con ello."
     },
     {
       "id": "q-mar-7",
@@ -553,7 +625,9 @@
         "ansiedade",
         "emoção"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Are you distracted by external things? Then make time to learn something good, and stop letting yourself be pulled in all directions.",
+      "text_es": "¿Las cosas externas te distraen? Reserva tiempo para aprender algo bueno y deja de dejarte arrastrar."
     },
     {
       "id": "q-mar-8",
@@ -568,7 +642,9 @@
         "foco",
         "disciplina"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Rarely is anyone made unhappy by failing to notice what another person mind is doing; but those who fail to keep track of their own minds are necessarily unhappy.",
+      "text_es": "Raramente alguien es desdichado por no entender la mente ajena; quien ignora la propia mente, en cambio, sufre necesariamente."
     },
     {
       "id": "q-mar-9",
@@ -583,7 +659,9 @@
         "relacionamentos",
         "justiça"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "Always keep in mind the nature of the whole and your own nature, and how your part relates to the whole.",
+      "text_es": "Recuerda siempre la naturaleza del todo, tu propia naturaleza y cómo tu parte se relaciona con ese todo."
     },
     {
       "id": "q-mar-12",
@@ -598,7 +676,9 @@
         "decisao_dificil",
         "propósito"
       ],
-      "authenticity_level": "verified"
+      "authenticity_level": "verified",
+      "text_en": "How quickly everything vanishes: bodies in the universe, and the memory of them in eternity.",
+      "text_es": "Cuán pronto todo desaparece: los cuerpos en el universo y su recuerdo en el tiempo."
     }
   ],
   "recommendations": [
@@ -616,7 +696,21 @@
       "journal_prompt": "O que mudou quando foquei no controlável?",
       "quote_link_explanation": "Se o tempo é tudo que possuímos, investir em ações controláveis é a forma mais sábia de usá-lo.",
       "expected_outcome": "Clareza sobre o que depende de você e ação imediata no que importa.",
-      "completion_criteria": "Você executou a primeira ação de 10 minutos da sua lista."
+      "completion_criteria": "Você executou a primeira ação de 10 minutos da sua lista.",
+      "action_title_en": "Planning what is controllable",
+      "action_steps_en": [
+        "List 3 actions within your control",
+        "Define 1 first action of 10 minutes",
+        "Execute now"
+      ],
+      "journal_prompt_en": "What changed when I focused on what I could control?",
+      "action_title_es": "Planificar lo controlable",
+      "action_steps_es": [
+        "Enumera 3 acciones bajo tu control",
+        "Define 1 primera acción de 10 minutos",
+        "Ejecútala ahora"
+      ],
+      "journal_prompt_es": "¿Qué cambió cuando me enfoqué en lo controlable?"
     },
     {
       "id": "r-002",
@@ -632,7 +726,21 @@
       "journal_prompt": "Qual parte era fato e qual era imaginação?",
       "quote_link_explanation": "Quando a mente dispersa entre medos, não enfrenta nenhum. Nomeá-los é o primeiro passo para estar presente.",
       "expected_outcome": "Redução da ansiedade difusa ao transformar medo vago em fato específico.",
-      "completion_criteria": "Você separou fato de interpretação e definiu uma resposta objetiva."
+      "completion_criteria": "Você separou fato de interpretação e definiu uma resposta objetiva.",
+      "action_title_en": "Naming the fear",
+      "action_steps_en": [
+        "Write what you fear in 1 sentence",
+        "Separate fact from interpretation",
+        "Choose an objective response"
+      ],
+      "journal_prompt_en": "Which part was fact and which part was imagination?",
+      "action_title_es": "Nombrar el miedo",
+      "action_steps_es": [
+        "Escribe lo que temes en 1 frase",
+        "Separa hecho de interpretación",
+        "Elige una respuesta objetiva"
+      ],
+      "journal_prompt_es": "¿Qué parte era hecho y qué parte era imaginación?"
     },
     {
       "id": "r-003",
@@ -648,7 +756,21 @@
       "journal_prompt": "O que permitiu manter atenção única?",
       "quote_link_explanation": "A confiança verdadeira exige atenção plena. Assim como na amizade, no trabalho a presença é inegociável.",
       "expected_outcome": "Um entregável concreto finalizado com foco sustentado.",
-      "completion_criteria": "Você completou 25 minutos ininterruptos e finalizou um entregável."
+      "completion_criteria": "Você completou 25 minutos ininterruptos e finalizou um entregável.",
+      "action_title_en": "Distraction-free block",
+      "action_steps_en": [
+        "Activate 25 minutes without notifications",
+        "Choose a single task",
+        "Complete one small deliverable"
+      ],
+      "journal_prompt_en": "What allowed me to maintain single-pointed attention?",
+      "action_title_es": "Bloque sin distracciones",
+      "action_steps_es": [
+        "Activa 25 minutos sin notificaciones",
+        "Elige una única tarea",
+        "Finaliza un entregable pequeño"
+      ],
+      "journal_prompt_es": "¿Qué me permitió mantener una atención única?"
     },
     {
       "id": "r-004",
@@ -664,7 +786,21 @@
       "journal_prompt": "Como a pausa mudou meu tom?",
       "quote_link_explanation": "Perseverar no caminho exige paciência. Responder sem impulso é prova de constância interior.",
       "expected_outcome": "Comunicação mais clara e relações preservadas pela moderação.",
-      "completion_criteria": "Você pausou, reescreveu e enviou apenas o essencial."
+      "completion_criteria": "Você pausou, reescreveu e enviou apenas o essencial.",
+      "action_title_en": "Response without impulse",
+      "action_steps_en": [
+        "Pause 60 seconds before responding",
+        "Rewrite the message with respect",
+        "Send only the essential"
+      ],
+      "journal_prompt_en": "How did the pause change my tone?",
+      "action_title_es": "Respuesta sin impulso",
+      "action_steps_es": [
+        "Pausa 60 segundos antes de responder",
+        "Reescribe el mensaje con respeto",
+        "Envía solo lo esencial"
+      ],
+      "journal_prompt_es": "¿Cómo cambió la pausa mi tono?"
     },
     {
       "id": "r-005",
@@ -680,7 +816,21 @@
       "journal_prompt": "Escolhi o fácil ou o correto?",
       "quote_link_explanation": "O empenho nos estudos só tem valor quando guiado pela virtude. O critério ético é o filtro de toda decisão.",
       "expected_outcome": "Uma decisão tomada com integridade, independente da conveniência.",
-      "completion_criteria": "Você avaliou as opções por justiça e coragem e escolheu a mais íntegra."
+      "completion_criteria": "Você avaliou as opções por justiça e coragem e escolheu a mais íntegra.",
+      "action_title_en": "Virtue criterion",
+      "action_steps_en": [
+        "List 2 options",
+        "Evaluate by justice and courage",
+        "Choose the most upright option"
+      ],
+      "journal_prompt_en": "Did I choose the easy path or the right one?",
+      "action_title_es": "Criterio de virtud",
+      "action_steps_es": [
+        "Enumera 2 opciones",
+        "Evalúa por justicia y valentía",
+        "Elige la opción más íntegra"
+      ],
+      "journal_prompt_es": "¿Elegí lo fácil o lo correcto?"
     },
     {
       "id": "r-006",
@@ -696,7 +846,21 @@
       "journal_prompt": "Que custo evitei ao dizer não?",
       "quote_link_explanation": "Ser transformado exige espaço. Eliminar o supérfluo da agenda é proteger o essencial.",
       "expected_outcome": "Mais tempo para trabalho profundo e menos esgotamento por excesso.",
-      "completion_criteria": "Você removeu um compromisso e comunicou o novo limite."
+      "completion_criteria": "Você removeu um compromisso e comunicou o novo limite.",
+      "action_title_en": "Schedule boundary",
+      "action_steps_en": [
+        "Remove 1 non-essential commitment",
+        "Protect 1 deep work block",
+        "Communicate the new boundary"
+      ],
+      "journal_prompt_en": "What cost did I avoid by saying no?",
+      "action_title_es": "Límite de agenda",
+      "action_steps_es": [
+        "Elimina 1 compromiso no esencial",
+        "Protege 1 bloque de trabajo profundo",
+        "Comunica el nuevo límite"
+      ],
+      "journal_prompt_es": "¿Qué costo evité al decir no?"
     },
     {
       "id": "r-007",
@@ -712,7 +876,21 @@
       "journal_prompt": "Estou preparado ou apenas preocupado?",
       "quote_link_explanation": "Assim como o caráter se revela nas primeiras palavras, a preparação mental revela o estoico. Antecipe para não reagir.",
       "expected_outcome": "Redução da surpresa emocional diante de adversidades.",
-      "completion_criteria": "Você imaginou o pior plausível, planejou a resposta e voltou ao presente."
+      "completion_criteria": "Você imaginou o pior plausível, planejou a resposta e voltou ao presente.",
+      "action_title_en": "Brief premeditatio",
+      "action_steps_en": [
+        "Imagine the plausible worst case",
+        "Plan your rational response",
+        "Return to the present"
+      ],
+      "journal_prompt_en": "Am I prepared, or just worried?",
+      "action_title_es": "Premeditatio breve",
+      "action_steps_es": [
+        "Imagina el peor caso plausible",
+        "Planifica tu respuesta racional",
+        "Vuelve al presente"
+      ],
+      "journal_prompt_es": "¿Estoy preparado o simplemente preocupado?"
     },
     {
       "id": "r-008",
@@ -728,7 +906,21 @@
       "journal_prompt": "Qual ganho tive ao reduzir contexto?",
       "quote_link_explanation": "A velhice avança sem pedir permissão e cada momento disperso é irrecuperável. Fazer uma coisa de cada vez honra o tempo.",
       "expected_outcome": "Progresso tangível sem o desgaste da alternância de contexto.",
-      "completion_criteria": "Você concluiu uma entrega antes de iniciar outra tarefa."
+      "completion_criteria": "Você concluiu uma entrega antes de iniciar outra tarefa.",
+      "action_title_en": "One thing at a time",
+      "action_steps_en": [
+        "Close excess tabs",
+        "Set a goal of 1 deliverable",
+        "Finish before opening a new task"
+      ],
+      "journal_prompt_en": "What did I gain by reducing context switching?",
+      "action_title_es": "Una cosa a la vez",
+      "action_steps_es": [
+        "Cierra las pestañas sobrantes",
+        "Define la meta de 1 entrega",
+        "Concluye antes de abrir una nueva tarea"
+      ],
+      "journal_prompt_es": "¿Qué gané al reducir el cambio de contexto?"
     },
     {
       "id": "r-009",
@@ -744,7 +936,21 @@
       "journal_prompt": "Eu ouvi para entender ou para vencer?",
       "quote_link_explanation": "O sábio deseja amigos não por necessidade, mas por valor. Escutar com justiça é o primeiro ato de amizade verdadeira.",
       "expected_outcome": "Conexão mais profunda ao demonstrar interesse genuíno.",
-      "completion_criteria": "Você escutou sem interromper, repetiu o ponto e respondeu ao que foi dito."
+      "completion_criteria": "Você escutou sem interromper, repetiu o ponto e respondeu ao que foi dito.",
+      "action_title_en": "Fair listening",
+      "action_steps_en": [
+        "Listen for 3 minutes without interrupting",
+        "Repeat the other person's point",
+        "Respond to the actual point"
+      ],
+      "journal_prompt_en": "Did I listen to understand or to win?",
+      "action_title_es": "Escucha justa",
+      "action_steps_es": [
+        "Escucha 3 minutos sin interrumpir",
+        "Repite el punto de la otra persona",
+        "Responde al punto real"
+      ],
+      "journal_prompt_es": "¿Escuché para entender o para ganar?"
     },
     {
       "id": "r-010",
@@ -760,7 +966,21 @@
       "journal_prompt": "Essa decisão honraria meus valores no futuro?",
       "quote_link_explanation": "Evitar a multidão é proteger o juízo. Testar a decisão pelo olhar do futuro é proteger o caráter.",
       "expected_outcome": "Decisão mais robusta, validada contra o risco moral.",
-      "completion_criteria": "Você avaliou a decisão pela perspectiva de 1 ano e anotou o risco."
+      "completion_criteria": "Você avaliou a decisão pela perspectiva de 1 ano e anotou o risco.",
+      "action_title_en": "Posterity test",
+      "action_steps_en": [
+        "Ask whether you would approve of this decision in 1 year",
+        "Note any moral risk",
+        "Decide"
+      ],
+      "journal_prompt_en": "Would this decision honor my values in the future?",
+      "action_title_es": "Prueba de la posteridad",
+      "action_steps_es": [
+        "Pregúntate si aprobarías esta decisión en 1 año",
+        "Anota el riesgo moral",
+        "Decide"
+      ],
+      "journal_prompt_es": "¿Esta decisión honraría mis valores en el futuro?"
     },
     {
       "id": "r-011",
@@ -776,7 +996,21 @@
       "journal_prompt": "Quanto da minha energia foi para o inútil?",
       "quote_link_explanation": "Separar o que depende de nós do que não depende é o fundamento de toda ação estoica. Comece o dia com essa clareza.",
       "expected_outcome": "Energia direcionada apenas ao que você pode influenciar.",
-      "completion_criteria": "Você escreveu as duas colunas, riscou a segunda e agiu na primeira."
+      "completion_criteria": "Você escreveu as duas colunas, riscou a segunda e agiu na primeira.",
+      "action_title_en": "Dichotomy at the start of the day",
+      "action_steps_en": [
+        "Write 2 columns: controllable and not controllable",
+        "Cross out the second",
+        "Act on the first"
+      ],
+      "journal_prompt_en": "How much of my energy went toward what is useless?",
+      "action_title_es": "Dicotomía al inicio del día",
+      "action_steps_es": [
+        "Escribe 2 columnas: controlable y no controlable",
+        "Tacha la segunda",
+        "Actúa en la primera"
+      ],
+      "journal_prompt_es": "¿Cuánta de mi energía fue hacia lo inútil?"
     },
     {
       "id": "r-012",
@@ -792,7 +1026,21 @@
       "journal_prompt": "Qual julgamento me enfraquecia?",
       "quote_link_explanation": "A infelicidade nasce de desejar o que não controlamos. Reenquadrar o julgamento devolve o poder à razão.",
       "expected_outcome": "Pensamento mais equilibrado ao substituir reação automática por análise.",
-      "completion_criteria": "Você detectou o pensamento automático e o substituiu por descrição neutra."
+      "completion_criteria": "Você detectou o pensamento automático e o substituiu por descrição neutra.",
+      "action_title_en": "Reframing judgment",
+      "action_steps_en": [
+        "Detect the automatic thought",
+        "Replace it with a neutral description",
+        "Choose a useful attitude"
+      ],
+      "journal_prompt_en": "Which judgment was weakening me?",
+      "action_title_es": "Reencuadrar el juicio",
+      "action_steps_es": [
+        "Detecta el pensamiento automático",
+        "Cámbialo por una descripción neutral",
+        "Elige una actitud útil"
+      ],
+      "journal_prompt_es": "¿Qué juicio me debilitaba?"
     },
     {
       "id": "r-013",
@@ -808,7 +1056,21 @@
       "journal_prompt": "O que acontece quando início sem negociar?",
       "quote_link_explanation": "Perguntar a natureza de cada coisa evita ilusões. Aplicar disciplina de início evita a procrastinação.",
       "expected_outcome": "Ação iniciada sem depender de motivação externa.",
-      "completion_criteria": "Você definiu critério, começou sem negociar e cronometrou 10 minutos."
+      "completion_criteria": "Você definiu critério, começou sem negociar e cronometrou 10 minutos.",
+      "action_title_en": "Entry discipline",
+      "action_steps_en": [
+        "Define a clear starting criterion",
+        "Begin without waiting for motivation",
+        "Time 10 minutes"
+      ],
+      "journal_prompt_en": "What happens when I start without negotiating?",
+      "action_title_es": "Disciplina de entrada",
+      "action_steps_es": [
+        "Define un criterio de inicio claro",
+        "Comienza sin esperar motivación",
+        "Cronometra 10 minutos"
+      ],
+      "journal_prompt_es": "¿Qué ocurre cuando comienzo sin negociar?"
     },
     {
       "id": "r-014",
@@ -824,7 +1086,21 @@
       "journal_prompt": "Que conflito evitei ao regular a reação?",
       "quote_link_explanation": "Recordar o tipo de ação antes de agir previne o impulso. Controlar a reatividade é exercer razão sobre emoção.",
       "expected_outcome": "Conflitos evitados ou resolvidos com linguagem factual.",
-      "completion_criteria": "Você respirou, esperou o pico emocional passar e retomou com clareza."
+      "completion_criteria": "Você respirou, esperou o pico emocional passar e retomou com clareza.",
+      "action_title_en": "Controlling reactivity",
+      "action_steps_en": [
+        "Do not argue at the emotional peak",
+        "Breathe 4 slow cycles",
+        "Resume with factual language"
+      ],
+      "journal_prompt_en": "What conflict did I avoid by regulating my reaction?",
+      "action_title_es": "Control de la reactividad",
+      "action_steps_es": [
+        "No discutas en el pico emocional",
+        "Respira 4 ciclos lentos",
+        "Retoma con lenguaje factual"
+      ],
+      "journal_prompt_es": "¿Qué conflicto evité al regular mi reacción?"
     },
     {
       "id": "r-015",
@@ -840,7 +1116,21 @@
       "journal_prompt": "Atuei conforme meu papel ou meu ego?",
       "quote_link_explanation": "Se não são os eventos que perturbam mas nossas opiniões, escolher pelo papel virtuoso é escolher pela razão.",
       "expected_outcome": "Ação alinhada ao papel que você quer desempenhar, não ao impulso.",
-      "completion_criteria": "Você definiu seu papel, agiu conforme ele e registrou a experiência."
+      "completion_criteria": "Você definiu seu papel, agiu conforme ele e registrou a experiência.",
+      "action_title_en": "Choosing by role",
+      "action_steps_en": [
+        "Define your role (leader, parent, friend)",
+        "Act according to that virtuous role",
+        "Record it"
+      ],
+      "journal_prompt_en": "Did I act according to my role or my ego?",
+      "action_title_es": "Elección según el papel",
+      "action_steps_es": [
+        "Define tu papel (líder, padre, amigo)",
+        "Actúa conforme a ese papel virtuoso",
+        "Regístralo"
+      ],
+      "journal_prompt_es": "¿Actué conforme a mi papel o a mi ego?"
     },
     {
       "id": "r-016",
@@ -856,7 +1146,21 @@
       "journal_prompt": "Executei o processo independentemente de reconhecimento?",
       "quote_link_explanation": "Exaltar-se por vantagem alheia é fragilidade. Comprometer-se com o próprio processo é a verdadeira fortaleza.",
       "expected_outcome": "Progresso consistente sem dependência de validação externa.",
-      "completion_criteria": "Você executou a etapa do dia e revisou sem autocondenação."
+      "completion_criteria": "Você executou a etapa do dia e revisou sem autocondenação.",
+      "action_title_en": "Commitment to the process",
+      "action_steps_en": [
+        "Choose a process goal, not an approval goal",
+        "Execute today's step",
+        "Review without self-condemnation"
+      ],
+      "journal_prompt_en": "Did I execute the process regardless of recognition?",
+      "action_title_es": "Compromiso con el proceso",
+      "action_steps_es": [
+        "Elige una meta de proceso, no de aplauso",
+        "Ejecuta el paso de hoy",
+        "Revisa sin autocondenación"
+      ],
+      "journal_prompt_es": "¿Ejecuté el proceso independientemente del reconocimiento?"
     },
     {
       "id": "r-017",
@@ -872,7 +1176,21 @@
       "journal_prompt": "Meu medo era evidencia ou suposição?",
       "quote_link_explanation": "Manter atenção no navio é cuidar do real. Provar a realidade dos medos é aterrar a mente no que existe.",
       "expected_outcome": "Ação proporcional ao risco real, sem magnificação catastrófica.",
-      "completion_criteria": "Você escreveu a previsão, encontrou evidências contrárias e agiu."
+      "completion_criteria": "Você escreveu a previsão, encontrou evidências contrárias e agiu.",
+      "action_title_en": "Reality test",
+      "action_steps_en": [
+        "Write a catastrophic prediction",
+        "Find 2 pieces of evidence against it",
+        "Take proportionate action"
+      ],
+      "journal_prompt_en": "Was my fear evidence or assumption?",
+      "action_title_es": "Prueba de realidad",
+      "action_steps_es": [
+        "Escribe una predicción catastrófica",
+        "Busca 2 evidencias en contra",
+        "Adopta una acción proporcional"
+      ],
+      "journal_prompt_es": "¿Mi miedo era evidencia o suposición?"
     },
     {
       "id": "r-018",
@@ -888,7 +1206,21 @@
       "journal_prompt": "Quais gatilhos roubam minha atenção?",
       "quote_link_explanation": "Aceitar os acontecimentos como são liberta energia. A higiene mental remove o que compete com sua atenção.",
       "expected_outcome": "Foco restaurado após eliminar distrações e gatilhos de comparação.",
-      "completion_criteria": "Você bloqueou notificações, afastou gatilhos e voltou ao trabalho."
+      "completion_criteria": "Você bloqueou notificações, afastou gatilhos e voltou ao trabalho.",
+      "action_title_en": "Mental hygiene",
+      "action_steps_en": [
+        "Block notifications for 30 minutes",
+        "Remove comparison triggers",
+        "Return to chosen work"
+      ],
+      "journal_prompt_en": "Which triggers steal my attention?",
+      "action_title_es": "Higiene mental",
+      "action_steps_es": [
+        "Bloquea notificaciones por 30 minutos",
+        "Aleja los disparadores de comparación",
+        "Vuelve al trabajo elegido"
+      ],
+      "journal_prompt_es": "¿Qué disparadores roban mi atención?"
     },
     {
       "id": "r-019",
@@ -904,7 +1236,21 @@
       "journal_prompt": "Tentei controlar o outro ou minha conduta?",
       "quote_link_explanation": "A doença impede o corpo, mas não a vontade. Expectativas realistas protegem a vontade nas relações.",
       "expected_outcome": "Conversas mais produtivas ao focar no que depende de você.",
-      "completion_criteria": "Você definiu sua parte, aceitou a do outro e conduziu com clareza."
+      "completion_criteria": "Você definiu sua parte, aceitou a do outro e conduziu com clareza.",
+      "action_title_en": "Realistic expectations",
+      "action_steps_en": [
+        "Define what depends on you in the conversation",
+        "Accept what depends on the other person",
+        "Lead with clarity"
+      ],
+      "journal_prompt_en": "Did I try to control the other person or my own conduct?",
+      "action_title_es": "Expectativas realistas",
+      "action_steps_es": [
+        "Define qué depende de ti en la conversación",
+        "Acepta lo que depende del otro",
+        "Conduce con claridad"
+      ],
+      "journal_prompt_es": "¿Intenté controlar al otro o mi propia conducta?"
     },
     {
       "id": "r-020",
@@ -920,7 +1266,21 @@
       "journal_prompt": "Qual limite protegeu minha integridade?",
       "quote_link_explanation": "Voltar-se para os próprios recursos é o conselho de Epicteto. Conhecer a perda aceitável é usar esse recurso com sabedoria.",
       "expected_outcome": "Decisão tomada dentro de limites claros, sem risco desmedido.",
-      "completion_criteria": "Você listou a pior perda aceitável, definiu limite e decidiu."
+      "completion_criteria": "Você listou a pior perda aceitável, definiu limite e decidiu.",
+      "action_title_en": "Clarity on acceptable loss",
+      "action_steps_en": [
+        "List the worst acceptable loss",
+        "Define your risk limit",
+        "Decide within the limit"
+      ],
+      "journal_prompt_en": "What limit protected my integrity?",
+      "action_title_es": "Claridad sobre la pérdida aceptable",
+      "action_steps_es": [
+        "Enumera la peor pérdida aceptable",
+        "Define el límite de riesgo",
+        "Decide dentro del límite"
+      ],
+      "journal_prompt_es": "¿Qué límite protegió mi integridad?"
     },
     {
       "id": "r-021",
@@ -936,7 +1296,21 @@
       "journal_prompt": "Progresso hoje foi melhor que perfeccionismo?",
       "quote_link_explanation": "Nada se perde, tudo é devolvido. Fechar ciclos curtos pratica o desapego do resultado perfeito.",
       "expected_outcome": "Progresso concreto em vez de paralisia por perfeccionismo.",
-      "completion_criteria": "Você entregou uma versão imperfeita e coletou feedback."
+      "completion_criteria": "Você entregou uma versão imperfeita e coletou feedback.",
+      "action_title_en": "Close a short cycle",
+      "action_steps_en": [
+        "Choose a 20-minute task",
+        "Deliver an imperfect version",
+        "Collect quick feedback"
+      ],
+      "journal_prompt_en": "Was progress today better than perfectionism?",
+      "action_title_es": "Cerrar un ciclo corto",
+      "action_steps_es": [
+        "Elige una tarea de 20 minutos",
+        "Entrega una versión imperfecta",
+        "Recoge retroalimentación rápida"
+      ],
+      "journal_prompt_es": "¿El progreso de hoy fue mejor que el perfeccionismo?"
     },
     {
       "id": "r-022",
@@ -952,7 +1326,21 @@
       "journal_prompt": "Resisti ao inevitável ou respondi com dignidade?",
       "quote_link_explanation": "Manter morte e exílio diante dos olhos elimina pensamentos baixos. Aceitar o inevitável libera coragem para agir.",
       "expected_outcome": "Resposta digna ao inevitável em vez de resistência improdutiva.",
-      "completion_criteria": "Você nomeou o evento, definiu resposta digna e executou o primeiro passo."
+      "completion_criteria": "Você nomeou o evento, definiu resposta digna e executou o primeiro passo.",
+      "action_title_en": "Active acceptance",
+      "action_steps_en": [
+        "Name the inevitable event",
+        "Define a dignified response",
+        "Take the first step"
+      ],
+      "journal_prompt_en": "Did I resist the inevitable or respond with dignity?",
+      "action_title_es": "Aceptación activa",
+      "action_steps_es": [
+        "Nombra el evento inevitable",
+        "Define una respuesta digna",
+        "Ejecuta el primer paso"
+      ],
+      "journal_prompt_es": "¿Resistí lo inevitable o respondí con dignidad?"
     },
     {
       "id": "r-023",
@@ -968,7 +1356,21 @@
       "journal_prompt": "O compromisso público melhorou minha constância?",
       "quote_link_explanation": "Aceitar parecer tolo é liberdade. Um contrato de prioridade exige essa coragem de simplificar.",
       "expected_outcome": "Constância aumentada pela prestação de contas externa.",
-      "completion_criteria": "Você definiu prioridade única, compartilhou e prestou contas."
+      "completion_criteria": "Você definiu prioridade única, compartilhou e prestou contas.",
+      "action_title_en": "Priority contract",
+      "action_steps_en": [
+        "Write the day's single priority",
+        "Share it with 1 person",
+        "Give account at the end"
+      ],
+      "journal_prompt_en": "Did public commitment improve my consistency?",
+      "action_title_es": "Contrato de prioridad",
+      "action_steps_es": [
+        "Escribe la prioridad única del día",
+        "Compártela con 1 persona",
+        "Rinde cuentas al final"
+      ],
+      "journal_prompt_es": "¿El compromiso público mejoró mi constancia?"
     },
     {
       "id": "r-024",
@@ -984,7 +1386,21 @@
       "journal_prompt": "Consegui firmeza sem agressão?",
       "quote_link_explanation": "Desejar que outros vivam para sempre é negar a realidade. Corrigir sem humilhar aceita a imperfeição humana com firmeza.",
       "expected_outcome": "Feedback entregue com clareza e respeito, sem ressentimento.",
-      "completion_criteria": "Você descreveu o fato, explicou o impacto e pediu ajuste específico."
+      "completion_criteria": "Você descreveu o fato, explicou o impacto e pediu ajuste específico.",
+      "action_title_en": "Correction without humiliation",
+      "action_steps_en": [
+        "Describe an observable fact",
+        "Explain the impact",
+        "Request a specific adjustment"
+      ],
+      "journal_prompt_en": "Did I achieve firmness without aggression?",
+      "action_title_es": "Corrección sin humillar",
+      "action_steps_es": [
+        "Describe un hecho observable",
+        "Explica el impacto",
+        "Pide un ajuste específico"
+      ],
+      "journal_prompt_es": "¿Logré firmeza sin agresión?"
     },
     {
       "id": "r-025",
@@ -1000,7 +1416,21 @@
       "journal_prompt": "O resultado externo alterou meu compromisso interno?",
       "quote_link_explanation": "Num banquete, toma o que é servido com decência. Separar valor de resultado é aceitar o que a vida oferece sem exigir mais.",
       "expected_outcome": "Paz interior ao desacoplar a decisão correta do resultado externo.",
-      "completion_criteria": "Você definiu a decisão correta, executou e aceitou o resultado."
+      "completion_criteria": "Você definiu a decisão correta, executou e aceitou o resultado.",
+      "action_title_en": "Separating value from outcome",
+      "action_steps_en": [
+        "Define the correct decision",
+        "Execute it",
+        "Accept the external result"
+      ],
+      "journal_prompt_en": "Did the external result alter my internal commitment?",
+      "action_title_es": "Separar el valor del resultado",
+      "action_steps_es": [
+        "Define la decisión correcta",
+        "Ejecútala",
+        "Acepta el resultado externo"
+      ],
+      "journal_prompt_es": "¿El resultado externo alteró mi compromiso interno?"
     },
     {
       "id": "r-026",
@@ -1016,7 +1446,21 @@
       "journal_prompt": "Que desculpa caiu quando comecei pequeno?",
       "quote_link_explanation": "Não se deixar arrastar pela aparência da dor é agir com razão. Dividir a tarefa em partes vence a procrastinação sem drama.",
       "expected_outcome": "Tarefa iniciada e primeira parte concluída, quebrando a inércia.",
-      "completion_criteria": "Você dividiu em 3 partes, fez a primeira e marcou conclusão."
+      "completion_criteria": "Você dividiu em 3 partes, fez a primeira e marcou conclusão.",
+      "action_title_en": "Anti-procrastination routine",
+      "action_steps_en": [
+        "Break the task into 3 parts",
+        "Do only part 1 now",
+        "Mark it as complete"
+      ],
+      "journal_prompt_en": "What excuse fell away when I started small?",
+      "action_title_es": "Rutina anti-procrastinación",
+      "action_steps_es": [
+        "Divide la tarea en 3 partes",
+        "Haz solo la parte 1 ahora",
+        "Marca su conclusión"
+      ],
+      "journal_prompt_es": "¿Qué excusa cayó cuando comencé en pequeño?"
     },
     {
       "id": "r-027",
@@ -1032,7 +1476,21 @@
       "journal_prompt": "Planejei para agir ou para me distrair?",
       "quote_link_explanation": "Somos atores no papel que nos foi dado. Reduzir a antecipação é aceitar que o roteiro não nos pertence.",
       "expected_outcome": "Menos energia gasta em cenários imaginários, mais presença.",
-      "completion_criteria": "Você limitou o planejamento, parou de simular e voltou ao presente."
+      "completion_criteria": "Você limitou o planejamento, parou de simular e voltou ao presente.",
+      "action_title_en": "Reducing anticipation",
+      "action_steps_en": [
+        "Limit planning to 15 minutes",
+        "Stop simulating scenarios",
+        "Return to the present"
+      ],
+      "journal_prompt_en": "Did I plan in order to act, or in order to distract myself?",
+      "action_title_es": "Reducir la anticipación",
+      "action_steps_es": [
+        "Limita la planificación a 15 minutos",
+        "Deja de simular escenarios",
+        "Vuelve al presente"
+      ],
+      "journal_prompt_es": "¿Planeé para actuar o para distraerme?"
     },
     {
       "id": "r-028",
@@ -1048,7 +1506,21 @@
       "journal_prompt": "Qual ação concreta me trouxe ao presente?",
       "quote_link_explanation": "Voltar-se aos externos para agradar é perder o rumo. A atenção ao presente reconecta com o que é interno e real.",
       "expected_outcome": "Retorno imediato ao presente através de ação física concreta.",
-      "completion_criteria": "Você respirou, definiu próxima ação e a executou imediatamente."
+      "completion_criteria": "Você respirou, definiu próxima ação e a executou imediatamente.",
+      "action_title_en": "Attention to the present",
+      "action_steps_en": [
+        "Take 5 conscious breaths",
+        "Define the next physical action",
+        "Execute immediately"
+      ],
+      "journal_prompt_en": "What concrete action brought me back to the present?",
+      "action_title_es": "Atención al presente",
+      "action_steps_es": [
+        "Haz 5 respiraciones conscientes",
+        "Define la próxima acción física",
+        "Ejecútala inmediatamente"
+      ],
+      "journal_prompt_es": "¿Qué acción concreta me trajo al presente?"
     },
     {
       "id": "r-029",
@@ -1064,7 +1536,21 @@
       "journal_prompt": "Que parte da crítica me fez crescer?",
       "quote_link_explanation": "Ser invencível é não entrar em disputas que não se pode vencer. Extrair o útil da crítica sem rancor é vitória interior.",
       "expected_outcome": "Crescimento a partir de crítica, sem desgaste emocional.",
-      "completion_criteria": "Você ouviu a crítica, extraiu 1 ponto útil e descartou o resto."
+      "completion_criteria": "Você ouviu a crítica, extraiu 1 ponto útil e descartou o resto.",
+      "action_title_en": "Self-mastery under criticism",
+      "action_steps_en": [
+        "Listen to the criticism in full",
+        "Extract 1 useful point",
+        "Discard the rest without resentment"
+      ],
+      "journal_prompt_en": "What part of the criticism helped me grow?",
+      "action_title_es": "Autodominio ante la crítica",
+      "action_steps_es": [
+        "Escucha la crítica completa",
+        "Extrae 1 punto útil",
+        "Descarta el resto sin rencor"
+      ],
+      "journal_prompt_es": "¿Qué parte de la crítica me hizo crecer?"
     },
     {
       "id": "r-030",
@@ -1080,7 +1566,21 @@
       "journal_prompt": "Minha decisão suportou objeções fortes?",
       "quote_link_explanation": "Não é quem insulta que ofende, mas a opinião sobre o insulto. Ensaiar objeções fortalece a decisão contra opiniões externas.",
       "expected_outcome": "Decisão mais sólida, testada contra os melhores argumentos contrários.",
-      "completion_criteria": "Você listou 3 objeções, respondeu com fatos e reavaliou."
+      "completion_criteria": "Você listou 3 objeções, respondeu com fatos e reavaliou.",
+      "action_title_en": "Rehearsing objections",
+      "action_steps_en": [
+        "List 3 objections to your decision",
+        "Answer each one with facts",
+        "Reassess"
+      ],
+      "journal_prompt_en": "Did my decision withstand strong objections?",
+      "action_title_es": "Ensayar objeciones",
+      "action_steps_es": [
+        "Enumera 3 objeciones a tu decisión",
+        "Responde cada una con hechos",
+        "Reevalúa"
+      ],
+      "journal_prompt_es": "¿Mi decisión resistió objeciones fuertes?"
     },
     {
       "id": "r-031",
@@ -1096,7 +1596,21 @@
       "journal_prompt": "Honrei meu dever antes do ruído?",
       "quote_link_explanation": "Se encontraremos o intrometido e o ingrato a cada manhã, a melhor defesa é cumprir nosso dever antes do ruído.",
       "expected_outcome": "Dever principal concluído antes que distrações externas interfiram.",
-      "completion_criteria": "Você definiu o dever, começou antes das mensagens e concluiu o bloco."
+      "completion_criteria": "Você definiu o dever, começou antes das mensagens e concluiu o bloco.",
+      "action_title_en": "Morning duty",
+      "action_steps_en": [
+        "Define today's primary duty",
+        "Begin before opening messages",
+        "Complete the initial block"
+      ],
+      "journal_prompt_en": "Did I honor my duty before the noise began?",
+      "action_title_es": "Deber de la mañana",
+      "action_steps_es": [
+        "Define el deber principal de hoy",
+        "Comienza antes de abrir mensajes",
+        "Concluye el bloque inicial"
+      ],
+      "journal_prompt_es": "¿Honré mi deber antes del ruido?"
     },
     {
       "id": "r-032",
@@ -1112,7 +1626,21 @@
       "journal_prompt": "Como a impermanência reduziu meu medo?",
       "quote_link_explanation": "A tranquilidade mora dentro de nós. Lembrar a impermanência dissolve o medo ao revelar que tudo passa.",
       "expected_outcome": "Ansiedade reduzida pela perspectiva de que a dificuldade é temporária.",
-      "completion_criteria": "Você escreveu a lembrança, nomeou uma ação correta e a executou."
+      "completion_criteria": "Você escreveu a lembrança, nomeou uma ação correta e a executou.",
+      "action_title_en": "Remembering impermanence",
+      "action_steps_en": [
+        "Write: this too shall pass",
+        "Name 1 correct action right now",
+        "Execute it"
+      ],
+      "journal_prompt_en": "How did impermanence reduce my fear?",
+      "action_title_es": "Recordar la impermanencia",
+      "action_steps_es": [
+        "Escribe: esto también pasará",
+        "Nombra 1 acción correcta ahora",
+        "Ejecútala"
+      ],
+      "journal_prompt_es": "¿Cómo la impermanencia redujo mi miedo?"
     },
     {
       "id": "r-033",
@@ -1128,7 +1656,21 @@
       "journal_prompt": "O que ficou melhor ao simplificar?",
       "quote_link_explanation": "Se algo é difícil mas não impossível, a simplicidade deliberada remove o supérfluo para tornar o essencial viável.",
       "expected_outcome": "Essencial finalizado com qualidade ao eliminar o desnecessário.",
-      "completion_criteria": "Você removeu uma tarefa secundária e finalizou o essencial."
+      "completion_criteria": "Você removeu uma tarefa secundária e finalizou o essencial.",
+      "action_title_en": "Deliberate simplicity",
+      "action_steps_en": [
+        "Remove 1 secondary task",
+        "Keep only the essential",
+        "Finish the essential"
+      ],
+      "journal_prompt_en": "What improved when I simplified?",
+      "action_title_es": "Simplicidad deliberada",
+      "action_steps_es": [
+        "Elimina 1 tarea secundaria",
+        "Mantén solo lo esencial",
+        "Finaliza lo esencial"
+      ],
+      "journal_prompt_es": "¿Qué mejoró al simplificar?"
     },
     {
       "id": "r-034",
@@ -1144,7 +1686,21 @@
       "journal_prompt": "Consegui ser firme e benevolente ao mesmo tempo?",
       "quote_link_explanation": "A mente assume o caráter dos seus pensamentos. Colorir os pensamentos com benevolência transforma as relações.",
       "expected_outcome": "Relação fortalecida por firmeza respeitosa, sem passividade nem agressão.",
-      "completion_criteria": "Você assumiu boa intenção, corrigiu com clareza e manteve respeito."
+      "completion_criteria": "Você assumiu boa intenção, corrigiu com clareza e manteve respeito.",
+      "action_title_en": "Firm benevolence",
+      "action_steps_en": [
+        "Assume good intention first",
+        "Correct with clarity",
+        "Maintain respect"
+      ],
+      "journal_prompt_en": "Was I able to be firm and benevolent at the same time?",
+      "action_title_es": "Benevolencia firme",
+      "action_steps_es": [
+        "Asume buena intención inicial",
+        "Corrige con claridad",
+        "Mantén el respeto"
+      ],
+      "journal_prompt_es": "¿Logré ser firme y benevolente al mismo tiempo?"
     },
     {
       "id": "r-035",
@@ -1160,7 +1716,21 @@
       "journal_prompt": "Minha escolha serviu ao bem comum?",
       "quote_link_explanation": "Pensar e agir como ser humano racional exige cuidado em cada ato. A razão é o critério de toda decisão virtuosa.",
       "expected_outcome": "Decisão alinhada à razão e ao bem comum, livre de vaidade.",
-      "completion_criteria": "Você escolheu a opção mais racional e justa e agiu."
+      "completion_criteria": "Você escolheu a opção mais racional e justa e agiu.",
+      "action_title_en": "Acting according to rational nature",
+      "action_steps_en": [
+        "Choose the most rational and just option",
+        "Avoid vanity",
+        "Act"
+      ],
+      "journal_prompt_en": "Did my choice serve the common good?",
+      "action_title_es": "Actuar según la naturaleza racional",
+      "action_steps_es": [
+        "Elige la opción más racional y justa",
+        "Evita la vanidad",
+        "Actúa"
+      ],
+      "journal_prompt_es": "¿Mi elección sirvió al bien común?"
     },
     {
       "id": "r-036",
@@ -1176,7 +1746,21 @@
       "journal_prompt": "Quanto produzi quando parei de performar?",
       "quote_link_explanation": "Se a vida pode acabar a qualquer instante, cada ato deve ser regulado. Disciplina silenciosa é trabalhar sem performar.",
       "expected_outcome": "Produção real sem o ruído da autoexibição.",
-      "completion_criteria": "Você trabalhou 30 minutos, registrou resultado e repetiu."
+      "completion_criteria": "Você trabalhou 30 minutos, registrou resultado e repetiu.",
+      "action_title_en": "Silent discipline",
+      "action_steps_en": [
+        "Work 30 minutes without announcing it",
+        "Record an objective result",
+        "Repeat"
+      ],
+      "journal_prompt_en": "How much did I produce when I stopped performing?",
+      "action_title_es": "Disciplina silenciosa",
+      "action_steps_es": [
+        "Trabaja 30 minutos sin anunciarlo",
+        "Registra un resultado objetivo",
+        "Repite"
+      ],
+      "journal_prompt_es": "¿Cuánto produje cuando dejé de actuar para la galería?"
     },
     {
       "id": "r-037",
@@ -1192,7 +1776,21 @@
       "journal_prompt": "Meu corpo estava alimentando a ansiedade?",
       "quote_link_explanation": "Se coisas externas distraem, reservar tempo para o corpo é voltar ao que é interno. O corpo é a âncora do presente.",
       "expected_outcome": "Tensão física reduzida e retorno da calma para decisões melhores.",
-      "completion_criteria": "Você relaxou ombros e mandíbula, respirou por 1 minuto e retomou."
+      "completion_criteria": "Você relaxou ombros e mandíbula, respirou por 1 minuto e retomou.",
+      "action_title_en": "Return to the body",
+      "action_steps_en": [
+        "Unclench your shoulders and jaw",
+        "Breathe deeply for 1 minute",
+        "Resume calmly"
+      ],
+      "journal_prompt_en": "Was my body feeding my anxiety?",
+      "action_title_es": "Retorno al cuerpo",
+      "action_steps_es": [
+        "Relaja hombros y mandíbula",
+        "Respira profundo 1 minuto",
+        "Retoma con calma"
+      ],
+      "journal_prompt_es": "¿Mi cuerpo estaba alimentando la ansiedad?"
     },
     {
       "id": "r-038",
@@ -1208,7 +1806,21 @@
       "journal_prompt": "Que qualidade surgiu com ritmo constante?",
       "quote_link_explanation": "A infelicidade vem de não observar a própria mente. Presença sem pressa é o antídoto contra a dispersão interior.",
       "expected_outcome": "Trabalho com mais qualidade ao manter ritmo sustentável.",
-      "completion_criteria": "Você definiu ritmo, evitou multitarefa e concluiu 1 ciclo completo."
+      "completion_criteria": "Você definiu ritmo, evitou multitarefa e concluiu 1 ciclo completo.",
+      "action_title_en": "Presence without hurry",
+      "action_steps_en": [
+        "Set a sustainable pace",
+        "Avoid multitasking",
+        "Complete 1 full cycle"
+      ],
+      "journal_prompt_en": "What quality emerged with a steady rhythm?",
+      "action_title_es": "Presencia sin prisa",
+      "action_steps_es": [
+        "Define un ritmo sostenible",
+        "Evita la multitarea",
+        "Concluye 1 ciclo completo"
+      ],
+      "journal_prompt_es": "¿Qué calidad surgió con un ritmo constante?"
     },
     {
       "id": "r-039",
@@ -1224,7 +1836,21 @@
       "journal_prompt": "Minha ação fortaleceu cooperação?",
       "quote_link_explanation": "Lembrar a natureza do todo e como nos relacionamos com ela transforma dever em cooperação. Ajudar é agir conforme a natureza.",
       "expected_outcome": "Fortalecimento de vínculos por meio de ação concreta.",
-      "completion_criteria": "Você perguntou como ajudar, ofereceu apoio real e cumpriu."
+      "completion_criteria": "Você perguntou como ajudar, ofereceu apoio real e cumpriu.",
+      "action_title_en": "Human cooperation",
+      "action_steps_en": [
+        "Ask how you can concretely help",
+        "Offer 1 real support today",
+        "Follow through"
+      ],
+      "journal_prompt_en": "Did my action strengthen cooperation?",
+      "action_title_es": "Cooperación humana",
+      "action_steps_es": [
+        "Pregunta cómo puedes ayudar concretamente",
+        "Ofrece 1 apoyo real hoy",
+        "Cumple"
+      ],
+      "journal_prompt_es": "¿Mi acción fortaleció la cooperación?"
     },
     {
       "id": "r-040",
@@ -1240,7 +1866,21 @@
       "journal_prompt": "Qual ajuste de caráter levo para amanhã?",
       "quote_link_explanation": "Tudo desaparece depressa. Revisar as escolhas do dia é o último ato de quem trata cada dia como se fosse inteiro.",
       "expected_outcome": "Ajuste consciente de caráter para o dia seguinte.",
-      "completion_criteria": "Você revisou 3 escolhas, marcou 1 ajuste e se comprometeu."
+      "completion_criteria": "Você revisou 3 escolhas, marcou 1 ajuste e se comprometeu.",
+      "action_title_en": "Evening review",
+      "action_steps_en": [
+        "Review 3 choices from the day",
+        "Mark 1 adjustment for tomorrow",
+        "Commit to it"
+      ],
+      "journal_prompt_en": "What character adjustment do I carry into tomorrow?",
+      "action_title_es": "Revisión nocturna",
+      "action_steps_es": [
+        "Revisa 3 elecciones del día",
+        "Marca 1 ajuste para mañana",
+        "Comprométete"
+      ],
+      "journal_prompt_es": "¿Qué ajuste de carácter me llevo para mañana?"
     }
   ]
 }

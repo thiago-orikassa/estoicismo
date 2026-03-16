@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
+
 enum NotificationPromptPlatform {
   ios,
   android,
@@ -33,6 +35,7 @@ class _IosPrompt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: 270,
       decoration: BoxDecoration(
@@ -54,7 +57,7 @@ class _IosPrompt extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '"Aethor" quer enviar notificações',
+                  l10n.notificationPromptIosTitle,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
@@ -64,7 +67,7 @@ class _IosPrompt extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Notificações podem incluir alertas, sons e emblemas de ícone. Isso pode ser configurado em Ajustes.',
+                  l10n.notificationPromptIosDescription,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 13,
@@ -84,7 +87,7 @@ class _IosPrompt extends StatelessWidget {
                 foregroundColor: const Color(0xFF007AFF),
                 shape: const RoundedRectangleBorder(),
               ),
-              child: const Text('Não Permitir'),
+              child: Text(l10n.notificationPromptIosDeny),
             ),
           ),
           const Divider(height: 1, color: Color(0x1A000000)),
@@ -99,7 +102,7 @@ class _IosPrompt extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
               ),
-              child: const Text('Permitir'),
+              child: Text(l10n.notificationPromptIosAllow),
             ),
           ),
         ],
@@ -116,6 +119,7 @@ class _AndroidPrompt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: 312,
       decoration: BoxDecoration(
@@ -136,7 +140,7 @@ class _AndroidPrompt extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Permitir que Aethor envie notificações?',
+              l10n.notificationPromptAndroidTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF1F1F1F),
@@ -144,7 +148,7 @@ class _AndroidPrompt extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'As notificações podem incluir alertas, sons e emblemas de ícone.',
+              l10n.notificationPromptAndroidDescription,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: const Color(0xFF5F6368),
                     height: 1.5,
@@ -162,7 +166,7 @@ class _AndroidPrompt extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                   ),
-                  child: const Text('NÃO PERMITIR'),
+                  child: Text(l10n.notificationPromptAndroidDeny),
                 ),
                 const SizedBox(width: 4),
                 TextButton(
@@ -173,7 +177,7 @@ class _AndroidPrompt extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                   ),
-                  child: const Text('PERMITIR'),
+                  child: Text(l10n.notificationPromptAndroidAllow),
                 ),
               ],
             ),

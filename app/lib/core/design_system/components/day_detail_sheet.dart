@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 import 'history_types.dart';
@@ -30,29 +31,29 @@ class DayDetailSheet extends StatelessWidget {
   final String? checkInNote;
   final VoidCallback onClose;
 
-  String _formatLongDate(DateTime value) {
-    const weekdays = <String>[
-      'segunda-feira',
-      'terça-feira',
-      'quarta-feira',
-      'quinta-feira',
-      'sexta-feira',
-      'sábado',
-      'domingo',
+  String _formatLongDate(DateTime value, AppLocalizations l10n) {
+    final weekdays = <String>[
+      l10n.weekdayMonday,
+      l10n.weekdayTuesday,
+      l10n.weekdayWednesday,
+      l10n.weekdayThursday,
+      l10n.weekdayFriday,
+      l10n.weekdaySaturday,
+      l10n.weekdaySunday,
     ];
-    const months = <String>[
-      'janeiro',
-      'fevereiro',
-      'março',
-      'abril',
-      'maio',
-      'junho',
-      'julho',
-      'agosto',
-      'setembro',
-      'outubro',
-      'novembro',
-      'dezembro',
+    final months = <String>[
+      l10n.monthJanuary,
+      l10n.monthFebruary,
+      l10n.monthMarch,
+      l10n.monthApril,
+      l10n.monthMay,
+      l10n.monthJune,
+      l10n.monthJuly,
+      l10n.monthAugust,
+      l10n.monthSeptember,
+      l10n.monthOctober,
+      l10n.monthNovember,
+      l10n.monthDecember,
     ];
 
     final weekday = weekdays[value.weekday - 1];
@@ -62,6 +63,7 @@ class DayDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final note = checkInNote?.trim() ?? '';
 
     return Container(
@@ -88,7 +90,7 @@ class DayDetailSheet extends StatelessWidget {
                 ),
               ),
               Text(
-                _formatLongDate(date).toUpperCase(),
+                _formatLongDate(date, l10n).toUpperCase(),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 11,
                       letterSpacing: 0.6,
@@ -97,7 +99,7 @@ class DayDetailSheet extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Prática do dia',
+                l10n.dayDetailPracticeLabel,
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       fontFamily: 'Cormorant Garamond',
                       fontSize: 32,
@@ -112,7 +114,7 @@ class DayDetailSheet extends StatelessWidget {
               ],
               const SizedBox(height: 20),
               Text(
-                'CITAÇÃO',
+                l10n.dayDetailQuoteLabel,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       letterSpacing: 1,
                       fontSize: 10,
@@ -140,7 +142,7 @@ class DayDetailSheet extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'PRÁTICA APLICADA',
+                l10n.dayDetailPracticeAppliedLabel,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       letterSpacing: 1,
                       fontSize: 10,
@@ -180,7 +182,7 @@ class DayDetailSheet extends StatelessWidget {
               if (note.isNotEmpty) ...[
                 const SizedBox(height: 20),
                 Text(
-                  'SUA REFLEXÃO',
+                  l10n.dayDetailReflectionLabel,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         letterSpacing: 1,
                         fontSize: 10,
@@ -218,7 +220,7 @@ class DayDetailSheet extends StatelessWidget {
                     ),
                   ),
                   onPressed: onClose,
-                  child: const Text('Fechar'),
+                  child: Text(l10n.actionClose),
                 ),
               ),
             ],
@@ -261,7 +263,7 @@ class _StatusBadge extends StatelessWidget {
             ),
           if (isCompleted) const SizedBox(width: 6),
           Text(
-            isCompleted ? 'Prática concluída' : 'Não aplicada',
+            isCompleted ? AppLocalizations.of(context).dayDetailStatusCompleted : AppLocalizations.of(context).dayDetailStatusNotApplied,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,

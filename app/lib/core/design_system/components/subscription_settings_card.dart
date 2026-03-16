@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/subscription.dart';
+import '../../../l10n/app_localizations.dart';
 import '../tokens/design_tokens.dart';
 
 class SubscriptionSettingsCard extends StatelessWidget {
@@ -31,6 +32,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (status == SubscriptionStatus.free) {
       return Container(
         padding: const EdgeInsets.all(16),
@@ -43,7 +45,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Aethor Pro',
+              l10n.subscriptionProTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AethorColors.obsidian,
@@ -51,7 +53,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Histórico completo, favoritos ilimitados e trilhas guiadas.',
+              l10n.subscriptionProDescription,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AethorColors.textMuted,
                   ),
@@ -66,7 +68,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
                       backgroundColor: AethorColors.deepBlue,
                       foregroundColor: AethorColors.ivory,
                     ),
-                    child: const Text('Ver planos Pro'),
+                    child: Text(l10n.subscriptionViewPlansBtn),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -75,7 +77,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
                   style: TextButton.styleFrom(
                     foregroundColor: AethorColors.textMuted,
                   ),
-                  child: const Text('Restaurar compra'),
+                  child: Text(l10n.subscriptionRestoreBtn),
                 ),
               ],
             ),
@@ -85,11 +87,11 @@ class SubscriptionSettingsCard extends StatelessWidget {
     }
 
     final isTrial = status == SubscriptionStatus.trial;
-    final badge = isTrial ? 'Teste ativo' : 'Assinatura ativa';
-    final planLabel = plan == SubscriptionPlan.annual ? 'Plano anual' : 'Plano mensal';
+    final badge = isTrial ? l10n.subscriptionBadgeTrialActive : l10n.subscriptionBadgeSubscriptionActive;
+    final planLabel = plan == SubscriptionPlan.annual ? l10n.subscriptionPlanAnnual : l10n.subscriptionPlanMonthly;
     final billingLabel = isTrial
-        ? 'Renova em ${trialEndsAt != null ? _formatDate(trialEndsAt!) : '--'}'
-        : 'Próxima cobrança: ${nextBillingDate != null ? _formatDate(nextBillingDate!) : '--'}';
+        ? '${l10n.subscriptionTrialRenewal} ${trialEndsAt != null ? _formatDate(trialEndsAt!) : '--'}'
+        : '${l10n.subscriptionNextBilling} ${nextBillingDate != null ? _formatDate(nextBillingDate!) : '--'}';
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -150,7 +152,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
                       color: AethorColors.ivory.withValues(alpha: 0.4),
                     ),
                   ),
-                  child: const Text('Gerenciar assinatura'),
+                  child: Text(l10n.subscriptionManageBtn),
                 ),
               ),
               const SizedBox(width: 12),
@@ -159,7 +161,7 @@ class SubscriptionSettingsCard extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: AethorColors.ivory.withValues(alpha: 0.8),
                 ),
-                child: const Text('Restaurar'),
+                child: Text(l10n.subscriptionRestoreTextBtn),
               ),
             ],
           ),

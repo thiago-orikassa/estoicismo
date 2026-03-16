@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../app_state.dart';
 import '../../../core/auth/auth_flow.dart';
@@ -9,18 +10,17 @@ import '../../../core/design_system/components/components.dart';
 import '../../../core/paywall/paywall_flow.dart';
 import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.state,
     required this.onNavigateToSettings,
-    this.focusCheckinNotifier,
   });
 
   final AppState state;
   final VoidCallback onNavigateToSettings;
-  final ValueNotifier<int>? focusCheckinNotifier;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -29,7 +29,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   final TextEditingController _noteController = TextEditingController();
-  final GlobalKey _checkinCardKey = GlobalKey();
   bool _isTogglingFavorite = false;
   bool _isSubmittingCheckin = false;
   AethorCheckinStatus _checkinStatus = AethorCheckinStatus.pending;
@@ -161,12 +160,20 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   // ---------------------------------------------------------------------------
-  // Lifecycle — replay animações ao retornar do background
+  // Lifecycle — replay animações apenas quando o dia muda
   // ---------------------------------------------------------------------------
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && widget.state.daily != null) {
+    if (state != AppLifecycleState.resumed) return;
+    if (widget.state.daily == null) return;
+
+    // Só re-anima se o dia mudou desde a última abertura.
+    // Evita re-executar o typewriter a cada retorno do background.
+    final today = DateTime.now();
+    final todayStr =
+        '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+    if (_currentDateLocal != null && _currentDateLocal != todayStr) {
       _resetAndReplayAnimations();
     }
   }
@@ -188,21 +195,6 @@ class _HomeScreenState extends State<HomeScreen>
     WidgetsBinding.instance.addObserver(this);
     _setupPhase1();
     _setupPhase3();
-    widget.focusCheckinNotifier?.addListener(_onFocusCheckin);
-  }
-
-  void _onFocusCheckin() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctx = _checkinCardKey.currentContext;
-      if (ctx != null) {
-        Scrollable.ensureVisible(
-          ctx,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeOut,
-          alignment: 0.1,
-        );
-      }
-    });
   }
 
   String _errorMessage(Object error) {
@@ -210,40 +202,41 @@ class _HomeScreenState extends State<HomeScreen>
     if (message.startsWith('Exception: ')) {
       return message.replaceFirst('Exception: ', '');
     }
-    return 'Não foi possível concluir a ação. Tente novamente.';
+    return AppLocalizations.of(context).errorActionFailed;
   }
 
-  String _formatLongDate(String dateLocal) {
+  String _formatLongDate(String dateLocal, BuildContext context) {
     final parsed = DateTime.tryParse(dateLocal);
     if (parsed == null) return dateLocal;
 
-    const weekdays = <String>[
-      'Segunda-feira',
-      'Terça-feira',
-      'Quarta-feira',
-      'Quinta-feira',
-      'Sexta-feira',
-      'Sábado',
-      'Domingo',
+    final l10n = AppLocalizations.of(context);
+    final weekdays = <String>[
+      l10n.weekdayMonday,
+      l10n.weekdayTuesday,
+      l10n.weekdayWednesday,
+      l10n.weekdayThursday,
+      l10n.weekdayFriday,
+      l10n.weekdaySaturday,
+      l10n.weekdaySunday,
     ];
-    const months = <String>[
-      'janeiro',
-      'fevereiro',
-      'março',
-      'abril',
-      'maio',
-      'junho',
-      'julho',
-      'agosto',
-      'setembro',
-      'outubro',
-      'novembro',
-      'dezembro',
+    final months = <String>[
+      l10n.monthJanuary,
+      l10n.monthFebruary,
+      l10n.monthMarch,
+      l10n.monthApril,
+      l10n.monthMay,
+      l10n.monthJune,
+      l10n.monthJuly,
+      l10n.monthAugust,
+      l10n.monthSeptember,
+      l10n.monthOctober,
+      l10n.monthNovember,
+      l10n.monthDecember,
     ];
 
     final weekday = weekdays[parsed.weekday - 1];
     final month = months[parsed.month - 1];
-    return '$weekday, ${parsed.day} de $month';
+    return l10n.dateFullLabel(weekday, parsed.day, month);
   }
 
   NotificationPromptPlatform _resolvePromptPlatform(BuildContext context) {
@@ -261,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen>
     return showGeneralDialog<NotificationPermissionStatus>(
       context: context,
       barrierDismissible: false,
-      barrierLabel: 'Notificações',
+      barrierLabel: AppLocalizations.of(context).notificationSettingDailyReminder,
       barrierColor: platform == NotificationPromptPlatform.ios
           ? Colors.black38
           : Colors.black54,
@@ -375,12 +368,14 @@ class _HomeScreenState extends State<HomeScreen>
     try {
       await state.toggleFavorite(quoteId);
       if (!mounted) return;
+      HapticFeedback.lightImpact();
+      final l10n = AppLocalizations.of(context);
       messenger.showSnackBar(
         SnackBar(
           content: Text(
             isFavorite
-                ? 'Removido dos favoritos.'
-                : 'Adicionado aos favoritos.',
+                ? l10n.favoriteRemoved
+                : l10n.favoriteAdded,
           ),
         ),
       );
@@ -414,6 +409,7 @@ class _HomeScreenState extends State<HomeScreen>
       await state.loadHistory();
 
       if (!mounted) return;
+      HapticFeedback.mediumImpact();
       setState(() {
         _checkinStatus = applied
             ? AethorCheckinStatus.applied
@@ -427,10 +423,11 @@ class _HomeScreenState extends State<HomeScreen>
           _showNotificationNudge = false;
         }
       });
+      final l10n = AppLocalizations.of(context);
       messenger.showSnackBar(
         SnackBar(
           content: Text(
-            applied ? 'Prática registrada com sucesso.' : 'Check-in concluído.',
+            applied ? l10n.checkinAppliedSuccess : l10n.checkinNotAppliedSuccess,
           ),
         ),
       );
@@ -450,7 +447,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
-    widget.focusCheckinNotifier?.removeListener(_onFocusCheckin);
     WidgetsBinding.instance.removeObserver(this);
     _phase1Controller.dispose();
     _phase3Controller.dispose();
@@ -471,19 +467,21 @@ class _HomeScreenState extends State<HomeScreen>
       );
     }
 
+    final l10n = AppLocalizations.of(context);
+
     if (state.offline && state.daily == null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: AethorEmptyState(
-            title: 'Você está offline.',
-            description: 'Conecte-se para sincronizar o conteúdo diário.',
+            title: l10n.offlineTitle,
+            description: l10n.offlineDescription,
             icon: const Icon(
               AethorIcons.wifiOff,
               size: AethorIconSize.xl,
               color: AethorColors.deepBlue,
             ),
-            actionLabel: 'Sincronizar',
+            actionLabel: l10n.actionSync,
             onAction: state.bootstrap,
           ),
         ),
@@ -495,7 +493,7 @@ class _HomeScreenState extends State<HomeScreen>
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: AethorErrorState(
-            message: 'O conteúdo de hoje não carregou. Tente novamente.',
+            message: l10n.errorContentFailed,
             onRetry: state.bootstrap,
           ),
         ),
@@ -504,13 +502,13 @@ class _HomeScreenState extends State<HomeScreen>
 
     final daily = state.daily;
     if (daily == null) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: AethorEmptyState(
-            title: 'Sem conteúdo diário disponível.',
-            description: 'Tente sincronizar novamente em instantes.',
-            icon: Icon(
+            title: l10n.emptyNoContent,
+            description: l10n.emptySyncLater,
+            icon: const Icon(
               AethorIcons.book,
               size: AethorIconSize.xl,
               color: AethorColors.textSubtle,
@@ -569,7 +567,7 @@ class _HomeScreenState extends State<HomeScreen>
               Opacity(
                 opacity: _headerFade.value,
                 child: Text(
-                  'Hoje',
+                  l10n.homeTitle,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         fontSize: 48,
                         height: 1.1,
@@ -585,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen>
               Opacity(
                 opacity: _dateFade.value,
                 child: Text(
-                  _formatLongDate(daily.dateLocal).toUpperCase(),
+                  _formatLongDate(daily.dateLocal, context).toUpperCase(),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontSize: 12,
                         color: AethorColors.textMuted,
@@ -648,7 +646,6 @@ class _HomeScreenState extends State<HomeScreen>
                 child: Transform.translate(
                   offset: Offset(0, _checkinSlide.value),
                   child: AethorCheckinCard(
-                    key: _checkinCardKey,
                     noteController: _noteController,
                     reflectionPrompt: daily.recommendation.journalPrompt,
                     status: _checkinStatus,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../domain/context_labels.dart';
 import '../motion/motion.dart';
 import '../tokens/aethor_icons.dart';
@@ -52,7 +54,7 @@ class TagGroup extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AethorRadius.pill),
               ),
               child: Text(
-                contextLabel(tag).toLowerCase(),
+                localizedContextLabel(context, tag).toLowerCase(),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AethorColors.deepBlue,
                       fontSize: 12,
@@ -137,6 +139,8 @@ class _QuoteCardState extends State<QuoteCard>
   late AnimationController _controller;
   bool _started = false;
   bool _completed = false;
+  // Usuário tocou para pular a animação (A-04)
+  bool _skipped = false;
 
   // Timeline milestones (ms)
   late int _typewriterEndMs;
@@ -182,6 +186,14 @@ class _QuoteCardState extends State<QuoteCard>
     if (_started) return;
     _started = true;
     _controller.forward(from: 0.0);
+  }
+
+  // A-04: pula a animação e exibe conteúdo estático imediatamente
+  void _skipAnimation() {
+    if (_skipped || _completed) return;
+    _controller.stop();
+    setState(() => _skipped = true);
+    widget.onAnimationsComplete?.call();
   }
 
   @override
@@ -244,18 +256,26 @@ class _QuoteCardState extends State<QuoteCard>
   @override
   Widget build(BuildContext context) {
     final reduceMotion = MotionTokens.reduceMotionOf(context);
+    final isStatic =
+        !widget.animate || widget.completed || _skipped || reduceMotion;
 
-    if (!widget.animate || widget.completed || reduceMotion) {
+    if (isStatic) {
       return _buildCard(context, isStatic: true);
     }
 
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) => _buildCard(context, isStatic: false),
+    // GestureDetector permite ao usuário pular a animação com um tap (A-04)
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: _skipAnimation,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) => _buildCard(context, isStatic: false),
+      ),
     );
   }
 
   Widget _buildCard(BuildContext context, {required bool isStatic}) {
+    final l10n = AppLocalizations.of(context);
     final double labelOpacity;
     final int visibleChars;
     final double authorT;
@@ -298,7 +318,7 @@ class _QuoteCardState extends State<QuoteCard>
                 Container(width: 2, height: 16.5, color: AethorColors.copper),
                 const SizedBox(width: 12),
                 Text(
-                  'CITAÇÃO DO DIA',
+                  l10n.quoteCardLabel,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontSize: 11,
                         letterSpacing: 0.55,
@@ -306,17 +326,26 @@ class _QuoteCardState extends State<QuoteCard>
                       ),
                 ),
                 const Spacer(),
-                SizedBox(
-                  width: 44,
-                  height: 44,
-                  child: IconButton(
-                    onPressed:
-                        widget.favoriteLoading ? null : widget.onToggleFavorite,
-                    tooltip: widget.favorite
-                        ? 'Remover dos favoritos'
-                        : 'Salvar nos favoritos',
-                    iconSize: 24,
-                    icon: AnimatedScale(
+                Semantics(
+                  button: true,
+                  label: widget.favorite
+                      ? l10n.quoteCardFavoriteRemove
+                      : l10n.quoteCardFavoriteSave,
+                  child: SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: IconButton(
+                      onPressed: widget.favoriteLoading
+                          ? null
+                          : () {
+                              HapticFeedback.lightImpact();
+                              widget.onToggleFavorite();
+                            },
+                      tooltip: widget.favorite
+                          ? l10n.quoteCardFavoriteRemove
+                          : l10n.quoteCardFavoriteSave,
+                      iconSize: 24,
+                      icon: AnimatedScale(
                       scale:
                           widget.favorite ? 1.0 : MotionTokens.emphasisScale,
                       duration: MotionTokens.micro,
@@ -337,35 +366,43 @@ class _QuoteCardState extends State<QuoteCard>
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
           const SizedBox(height: 24),
 
           // --- Typewriter: texto revelado caractere por caractere ---
-          // Layout estável: texto oculto renderizado em transparente reserva espaço
-          Text.rich(
-            TextSpan(
-              style: quoteStyle,
-              children: [
-                // Aspas de abertura + caracteres visíveis
-                if (visibleChars > 0)
-                  TextSpan(text: '"${text.substring(0, visibleChars)}'),
-                // Quando nenhum caractere visível, aspas transparentes reservam layout
-                if (visibleChars == 0)
-                  TextSpan(
-                    text: '"',
-                    style: quoteStyle?.copyWith(color: Colors.transparent),
-                  ),
-                // Caracteres ocultos + aspas de fechamento (transparentes)
-                if (!allVisible)
-                  TextSpan(
-                    text: '${text.substring(visibleChars)}"',
-                    style: quoteStyle?.copyWith(color: Colors.transparent),
-                  ),
-                // Aspas de fechamento visíveis quando tudo revelado
-                if (allVisible) const TextSpan(text: '"'),
-              ],
+          // M-02: ExcludeSemantics evita que leitores de tela anunciem caractere
+          // por caractere. O Semantics irmão anuncia a citação completa de imediato.
+          Semantics(
+            label: '"${widget.quoteText}"',
+            child: ExcludeSemantics(
+              // Layout estável: texto oculto renderizado em transparente reserva espaço
+              child: Text.rich(
+                TextSpan(
+                  style: quoteStyle,
+                  children: [
+                    // Aspas de abertura + caracteres visíveis
+                    if (visibleChars > 0)
+                      TextSpan(text: '"${text.substring(0, visibleChars)}'),
+                    // Quando nenhum caractere visível, aspas transparentes reservam layout
+                    if (visibleChars == 0)
+                      TextSpan(
+                        text: '"',
+                        style: quoteStyle?.copyWith(color: Colors.transparent),
+                      ),
+                    // Caracteres ocultos + aspas de fechamento (transparentes)
+                    if (!allVisible)
+                      TextSpan(
+                        text: '${text.substring(visibleChars)}"',
+                        style: quoteStyle?.copyWith(color: Colors.transparent),
+                      ),
+                    // Aspas de fechamento visíveis quando tudo revelado
+                    if (allVisible) const TextSpan(text: '"'),
+                  ],
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 24),
@@ -441,7 +478,7 @@ class _QuoteCardState extends State<QuoteCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'INTENÇÃO:',
+                    l10n.quoteCardIntentionLabel,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           letterSpacing: 0.55,
                           fontSize: 11,
@@ -501,7 +538,7 @@ class _QuoteCardState extends State<QuoteCard>
                 borderRadius: BorderRadius.circular(AethorRadius.pill),
               ),
               child: Text(
-                contextLabel(tags[i]).toLowerCase(),
+                localizedContextLabel(context, tags[i]).toLowerCase(),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AethorColors.deepBlue,
                       fontSize: 12,

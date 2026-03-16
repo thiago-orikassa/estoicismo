@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/design_system/components/components.dart';
 import '../../../core/design_system/motion/motion.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AuthSplashScreen extends StatelessWidget {
   const AuthSplashScreen({
@@ -15,6 +16,7 @@ class AuthSplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AethorColors.obsidian,
       body: SafeArea(
@@ -31,7 +33,7 @@ class AuthSplashScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Clareza para agir.',
+                  l10n.splashTagline,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AethorColors.sand,
                         fontSize: 16,
@@ -45,7 +47,7 @@ class AuthSplashScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Preparando seu insight de hoje...',
+                    l10n.splashLoadingMessage,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AethorColors.sand.withValues(alpha: 0.6),
                         ),

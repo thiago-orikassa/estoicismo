@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 import 'history_types.dart';
@@ -22,29 +23,29 @@ class HistoryListItem extends StatelessWidget {
   final bool hasNote;
   final VoidCallback onTap;
 
-  String _formatShortDate(DateTime value) {
-    const weekdays = <String>[
-      'seg',
-      'ter',
-      'qua',
-      'qui',
-      'sex',
-      'sáb',
-      'dom',
+  String _formatShortDate(DateTime value, AppLocalizations l10n) {
+    final weekdays = <String>[
+      l10n.weekdayShortMon,
+      l10n.weekdayShortTue,
+      l10n.weekdayShortWed,
+      l10n.weekdayShortThu,
+      l10n.weekdayShortFri,
+      l10n.weekdayShortSat,
+      l10n.weekdayShortSun,
     ];
-    const months = <String>[
-      'jan',
-      'fev',
-      'mar',
-      'abr',
-      'mai',
-      'jun',
-      'jul',
-      'ago',
-      'set',
-      'out',
-      'nov',
-      'dez',
+    final months = <String>[
+      l10n.monthShortJan,
+      l10n.monthShortFeb,
+      l10n.monthShortMar,
+      l10n.monthShortApr,
+      l10n.monthShortMay,
+      l10n.monthShortJun,
+      l10n.monthShortJul,
+      l10n.monthShortAug,
+      l10n.monthShortSep,
+      l10n.monthShortOct,
+      l10n.monthShortNov,
+      l10n.monthShortDec,
     ];
 
     final weekday = weekdays[value.weekday - 1];
@@ -55,6 +56,7 @@ class HistoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: AethorColors.cardBackground,
@@ -78,7 +80,7 @@ class HistoryListItem extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            _formatShortDate(date).toUpperCase(),
+                            _formatShortDate(date, l10n).toUpperCase(),
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall
@@ -172,7 +174,7 @@ class CheckinStatusChip extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                'Feito',
+                AppLocalizations.of(context).historyStatusCompleted,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 10,
                       color: AethorColors.deepBlue,
@@ -190,7 +192,7 @@ class CheckinStatusChip extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
-            'Pulado',
+            AppLocalizations.of(context).historyStatusSkipped,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontSize: 10,
                   color: AethorColors.stone.withValues(alpha: 0.5),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../app_state.dart';
@@ -6,6 +8,8 @@ import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 import '../../../core/domain/authors.dart';
 import '../../../core/domain/context_labels.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../daily_quote/domain/models.dart';
 
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({
@@ -22,75 +26,59 @@ class OnboardingFlow extends StatefulWidget {
 }
 
 class _OnboardingFlowState extends State<OnboardingFlow> {
-  static const int _totalSteps = 6;
+  // A-01: merged Reminder + Time into one step → 5 steps total
+  static const int _totalSteps = 5;
 
   int _stepIndex = 0;
   String? _selectedContext;
+  late Future<void> _previewFuture;
   late Set<String> _selectedAuthors;
-  String _selectedVoiceLabel = kMixedAuthorsLabel;
+  String _selectedVoiceId = 'mixed';
   String? _selectedTime;
   bool _remindersEnabled = false;
-  bool _skipTimeStep = false;
 
-  // Contextos com descrição de benefício orientada ao usuário
-  final List<_ContextOption> _contextOptions = const [
-    _ContextOption(
-      key: 'ansiedade',
-      description: 'Recuperar clareza quando a mente acelera',
-    ),
-    _ContextOption(
-      key: 'foco',
-      description: 'Separar o essencial do urgente',
-    ),
-    _ContextOption(
-      key: 'trabalho',
-      description: 'Agir com intenção no ambiente profissional',
-    ),
-    _ContextOption(
-      key: 'relacionamentos',
-      description: 'Reagir menos, entender mais',
-    ),
-    _ContextOption(
-      key: 'decisao_dificil',
-      description: 'Encontrar firmeza na incerteza',
-    ),
+  // Contextos com chave — descrição resolvida via l10n em build
+  static const List<String> _contextKeys = [
+    'ansiedade',
+    'foco',
+    'trabalho',
+    'relacionamentos',
+    'decisao_dificil',
   ];
 
-  // Subtítulos orientados ao benefício, não ao conceito filosófico
-  late final List<_VoiceOption> _voiceOptions = [
-    const _VoiceOption(
-      label: 'Sêneca',
-      subtitle: 'direto ao ponto, sem rodeios',
-      authors: {'Sêneca'},
-    ),
-    const _VoiceOption(
-      label: 'Epicteto',
-      subtitle: 'foco no que você pode controlar',
-      authors: {'Epicteto'},
-    ),
-    const _VoiceOption(
-      label: 'Marco Aurélio',
-      subtitle: 'reflexão e autoconsciência',
-      authors: {'Marco Aurélio'},
-    ),
-    _VoiceOption(
-      label: kMixedAuthorsLabel,
-      subtitle: 'variedade de perspectivas',
-      authors: kAethorAuthors.toSet(),
-    ),
+  // Voice option keys — subtítulo e label resolvidos via l10n em build
+  static const List<String> _voiceIds = [
+    'seneca',
+    'epictetus',
+    'marcus_aurelius',
+    'mixed',
   ];
 
-  final List<_TimeOption> _timeOptions = const [
-    _TimeOption(value: '07:30', label: 'Manhã'),
-    _TimeOption(value: '12:30', label: 'Almoço'),
-    _TimeOption(value: '20:30', label: 'Noite'),
-    _TimeOption(value: 'custom', label: 'Outro horário'),
-  ];
+  // Time option values — labels resolvidos via l10n em build
+  static const List<String> _timeValues = ['07:30', '12:30', '20:30', 'custom'];
 
   @override
   void initState() {
     super.initState();
     _selectedAuthors = kAethorAuthors.toSet();
+
+    if (widget.state.daily != null) {
+      // Dado já disponível — resolve instantâneo.
+      _previewFuture = Future.value();
+    } else {
+      // Adia o fetch para depois do primeiro frame:
+      // loadDaily() chama notifyListeners() (que dispara setState em outros
+      // widgets) — chamá-lo dentro do initState causaria setState durante build.
+      final completer = Completer<void>();
+      _previewFuture = completer.future;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.state.loadDaily().then((_) {
+          if (!completer.isCompleted) completer.complete();
+        }).catchError((_) {
+          if (!completer.isCompleted) completer.complete();
+        });
+      });
+    }
   }
 
   void _goNext() {
@@ -100,11 +88,6 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   void _goBack() {
     if (_stepIndex == 0) return;
-    // Usuário pulou o step de horário: voltar ao step de lembrete
-    if (_stepIndex == 5 && _skipTimeStep) {
-      setState(() => _stepIndex = 3);
-      return;
-    }
     setState(() => _stepIndex -= 1);
   }
 
@@ -145,11 +128,21 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     return '$h:$m';
   }
 
-  String _summaryVoice() {
-    if (_selectedAuthors.length == kAethorAuthors.length) {
-      return kMixedAuthorsLabel;
+  Set<String> _authorsForVoiceId(String id) {
+    switch (id) {
+      case 'seneca':
+        return {'Sêneca'};
+      case 'epictetus':
+        return {'Epicteto'};
+      case 'marcus_aurelius':
+        return {'Marco Aurélio'};
+      default:
+        return kAethorAuthors.toSet();
     }
-    return _selectedVoiceLabel;
+  }
+
+  String _summaryVoice(AppLocalizations l10n) {
+    return localizedAuthorName(context, _selectedVoiceId);
   }
 
   /// Converte timezone IANA para nome legível em português.
@@ -198,6 +191,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
+        final l10n = AppLocalizations.of(context);
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
@@ -205,9 +199,9 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Como funciona',
-                  style: TextStyle(
+                Text(
+                  l10n.onboardingHowItWorksTitle,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Cormorant Garamond',
@@ -215,24 +209,15 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Simples. Direto. Todo dia.',
+                  l10n.onboardingHowItWorksSubtitle,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AethorColors.textMuted,
                       ),
                 ),
                 const SizedBox(height: 16),
-                const _BulletItem(
-                  text:
-                      'Uma citação verificada de Sêneca, Epicteto ou Marco Aurélio — não frases de internet.',
-                ),
-                const _BulletItem(
-                  text:
-                      'Uma ação prática para aplicar hoje, no contexto que você escolher.',
-                ),
-                const _BulletItem(
-                  text:
-                      'Sem quiz infinito. Sem gamificação. Só prática real, todo dia.',
-                ),
+                _BulletItem(text: l10n.onboardingHowItWorksBullet1),
+                _BulletItem(text: l10n.onboardingHowItWorksBullet2),
+                _BulletItem(text: l10n.onboardingHowItWorksBullet3),
                 const SizedBox(height: 16),
                 Container(
                   width: double.infinity,
@@ -244,9 +229,9 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                       color: AethorColors.deepBlue.withValues(alpha: 0.12),
                     ),
                   ),
-                  child: const Text(
-                    '"A filosofia não está nas palavras, mas nos atos."\n— Sêneca',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.onboardingHowItWorksQuote,
+                    style: const TextStyle(
                       fontFamily: 'Cormorant Garamond',
                       fontSize: 17,
                       fontStyle: FontStyle.italic,
@@ -273,6 +258,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       totalSteps: _totalSteps,
       showBack: _stepIndex > 0,
       onBack: _goBack,
+      onSkip: _stepIndex == 0 ? () => _completeOnboarding() : null,
       child: _buildStep(context),
     );
   }
@@ -286,92 +272,91 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       case 2:
         return _buildVoice(context);
       case 3:
-        return _buildReminder(context);
-      case 4:
-        return _buildTime(context);
+        // A-01: Reminder + Time merged into one step
+        return _buildReminderAndTime(context);
       default:
         return _buildDone(context);
     }
   }
 
   Widget _buildIntro(BuildContext context) {
-    return _StepContent(
-      leading: const _BrandHeader(),
-      title: 'Menos reação.\nMais intenção.',
-      subtitle: '1 citação verificada. 1 ação para hoje.',
-      body: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _PreviewCard(
-            quote:
-                '"Não são os acontecimentos que nos perturbam, mas a interpretação que fazemos deles."',
-            author: 'Epicteto',
-            action: 'Reescreva um fato recente sem usar adjetivos.',
-          ),
-        ],
-      ),
-      primaryAction: _PrimaryButton(
-        label: 'Começar agora',
-        onPressed: _goNext,
-      ),
-      secondaryAction: _TextLink(
-        label: 'Ver como funciona',
-        onPressed: _showHowItWorks,
-      ),
+    return _IntroStep(
+      onBegin: _goNext,
+      onHowItWorks: _showHowItWorks,
+      previewFuture: _previewFuture,
+      dailyProvider: () => widget.state.daily,
     );
   }
 
   Widget _buildContext(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final hasSelection = _selectedContext != null;
 
+    final contextDescriptions = <String, String>{
+      'ansiedade': l10n.onboardingContextAnxietyLabel,
+      'foco': l10n.onboardingContextFocusLabel,
+      'trabalho': l10n.onboardingContextWorkLabel,
+      'relacionamentos': l10n.onboardingContextRelationshipsLabel,
+      'decisao_dificil': l10n.onboardingContextHardDecisionLabel,
+    };
+
     return _StepContent(
-      title: 'Qual área você quer fortalecer agora?',
-      subtitle: 'Isso personaliza o insight de hoje.',
-      helperText: hasSelection ? null : 'Escolha uma opção para continuar.',
+      title: l10n.onboardingContextQuestion,
+      subtitle: l10n.onboardingContextSubtitle,
+      helperText: hasSelection ? null : l10n.onboardingContextHelper,
       body: Column(
-        children: _contextOptions.map((option) {
-          final label = contextLabel(option.key);
-          final selected = _selectedContext == option.key;
+        children: _contextKeys.map((key) {
+          final label = localizedContextLabel(context, key);
+          final selected = _selectedContext == key;
           return Padding(
             padding: const EdgeInsets.only(bottom: AethorSpacing.md),
             child: _OptionCard(
               title: label,
-              subtitle: option.description,
+              subtitle: contextDescriptions[key],
               selected: selected,
-              onTap: () => setState(() => _selectedContext = option.key),
+              onTap: () => setState(() => _selectedContext = key),
             ),
           );
         }).toList(),
       ),
       primaryAction: _PrimaryButton(
-        label: 'Continuar',
+        label: l10n.actionContinue,
         enabled: hasSelection,
         onPressed: hasSelection ? _goNext : null,
       ),
       secondaryAction: _TextLink(
-        label: 'Escolher depois',
+        label: l10n.onboardingContextSkip,
         onPressed: _goNext,
       ),
     );
   }
 
   Widget _buildVoice(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    final voiceSubtitles = <String, String>{
+      'seneca': l10n.onboardingVoiceSenecaSubtitle,
+      'epictetus': l10n.onboardingVoiceEpictetusSubtitle,
+      'marcus_aurelius': l10n.onboardingVoiceMarcusSubtitle,
+      'mixed': l10n.onboardingVoiceMixedSubtitle,
+    };
+
     return _StepContent(
-      title: 'Escolha o autor que guia sua prática',
-      subtitle: 'Você pode trocar a qualquer momento nos ajustes.',
+      title: l10n.onboardingVoiceTitle,
+      subtitle: l10n.onboardingVoiceSubtitle,
       body: Column(
-        children: _voiceOptions.map((option) {
-          final selected = _selectedVoiceLabel == option.label;
+        children: _voiceIds.map((id) {
+          final selected = _selectedVoiceId == id;
           return Padding(
             padding: const EdgeInsets.only(bottom: AethorSpacing.md),
             child: _OptionCard(
-              title: option.label,
-              subtitle: option.subtitle,
+              title: localizedAuthorName(context, id),
+              subtitle: voiceSubtitles[id],
               selected: selected,
               onTap: () {
                 setState(() {
-                  _selectedVoiceLabel = option.label;
-                  _selectedAuthors = option.authors;
+                  _selectedVoiceId = id;
+                  _selectedAuthors = _authorsForVoiceId(id);
                 });
               },
             ),
@@ -379,19 +364,30 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         }).toList(),
       ),
       primaryAction: _PrimaryButton(
-        label: 'Continuar',
+        label: l10n.actionContinue,
         onPressed: _goNext,
       ),
       secondaryAction: _TextLink(
-        label: 'Escolher depois',
+        label: l10n.onboardingVoiceSkip,
         onPressed: _goNext,
       ),
     );
   }
 
-  Widget _buildReminder(BuildContext context) {
+  // A-01: Steps 3 (Reminder) + 4 (Time) merged into one step.
+  // O Switch substitui os dois CTAs separados: "Ativar lembretes" / "Agora não".
+  // As opções de horário aparecem com AnimatedSize quando o lembrete é ativado.
+  Widget _buildReminderAndTime(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    final timeLabels = <String, String>{
+      '07:30': l10n.onboardingTimeMorning,
+      '12:30': l10n.onboardingTimeLunch,
+      '20:30': l10n.onboardingTimeEvening,
+      'custom': l10n.onboardingTimeCustom,
+    };
+
     return _StepContent(
-      centered: true,
       leading: Container(
         width: 72,
         height: 72,
@@ -405,126 +401,130 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
           size: 32,
         ),
       ),
-      title: 'Mantenha o ritmo.',
-      subtitle:
-          'Um lembrete diário no horário que você escolher — nada além disso.',
-      body: Text(
-        'Você vai autorizar no próximo passo.',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AethorColors.textMuted,
-            ),
-      ),
-      primaryAction: _PrimaryButton(
-        label: 'Ativar lembretes',
-        onPressed: () async {
-          bool granted = true;
-          if (widget.onRequestNotificationPermission != null) {
-            granted = await widget.onRequestNotificationPermission!();
-          }
-          if (!mounted) return;
-          if (granted) {
-            setState(() {
-              _remindersEnabled = true;
-              _skipTimeStep = false;
-            });
-            _goNext();
-          } else {
-            // Permissão negada pelo sistema: pular horário e ir direto ao fim
-            setState(() {
-              _remindersEnabled = false;
-              _skipTimeStep = true;
-              _stepIndex = 5;
-            });
-          }
-        },
-      ),
-      // TextLink mantém hierarquia visual consistente com os outros steps
-      secondaryAction: _TextLink(
-        label: 'Agora não',
-        onPressed: () {
-          setState(() {
-            _remindersEnabled = false;
-            _skipTimeStep = true;
-            _stepIndex = 5;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _buildTime(BuildContext context) {
-    final hasSelection = _selectedTime != null;
-
-    return _StepContent(
-      title: 'Defina seu horário de prática',
-      subtitle: 'Escolha o horário do seu lembrete diário.',
+      title: l10n.onboardingReminderTitle,
+      subtitle: l10n.onboardingReminderSubtitle,
       body: Column(
-        children: _timeOptions.map((option) {
-          final isCustom = option.value == 'custom';
-          final selected = isCustom
-              ? _selectedTime != null && !_isPresetTime()
-              : _selectedTime == option.value;
-          final subtitle = isCustom
-              ? (_selectedTime != null && !_isPresetTime()
-                  ? 'Selecionado: $_selectedTime'
-                  : null)
-              : option.value;
-          return Padding(
-            padding: const EdgeInsets.only(bottom: AethorSpacing.md),
-            child: _OptionCard(
-              title: option.label,
-              subtitle: subtitle,
-              selected: selected,
-              onTap: () async {
-                if (isCustom) {
-                  await _pickCustomTime();
-                } else {
-                  setState(() => _selectedTime = option.value);
-                }
-              },
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Toggle de ativar/desativar lembrete
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: AethorColors.cardBackground,
+              borderRadius: BorderRadius.circular(AethorRadius.lg),
+              border: Border.all(color: AethorColors.cardOutline),
             ),
-          );
-        }).toList(),
-      ),
-      footer: Padding(
-        padding: const EdgeInsets.only(top: AethorSpacing.xs),
-        child: Text(
-          'Fuso horário: ${_readableTimezone(widget.state.timezone)}',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AethorColors.textSubtle,
-              ),
-        ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.onboardingReminderToggleLabel,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AethorColors.obsidian,
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                ),
+                Switch(
+                  value: _remindersEnabled,
+                  activeThumbColor: AethorColors.deepBlue,
+                  activeTrackColor:
+                      AethorColors.deepBlue.withValues(alpha: 0.4),
+                  onChanged: (value) async {
+                    if (value) {
+                      bool granted = true;
+                      if (widget.onRequestNotificationPermission != null) {
+                        granted =
+                            await widget.onRequestNotificationPermission!();
+                      }
+                      if (!mounted) return;
+                      if (granted) {
+                        setState(() => _remindersEnabled = true);
+                      }
+                    } else {
+                      setState(() {
+                        _remindersEnabled = false;
+                        _selectedTime = null;
+                      });
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          // Horário — expande com animação quando o lembrete é ativado
+          AnimatedSize(
+            duration: MotionTokens.standard,
+            curve: Curves.easeInOut,
+            child: _remindersEnabled
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: AethorSpacing.md),
+                      ..._timeValues.map((value) {
+                        final isCustom = value == 'custom';
+                        final selected = isCustom
+                            ? _selectedTime != null && !_isPresetTime()
+                            : _selectedTime == value;
+                        final subtitle = isCustom
+                            ? (_selectedTime != null && !_isPresetTime()
+                                ? l10n.onboardingReminderTimeSelected(_selectedTime!)
+                                : null)
+                            : value;
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: AethorSpacing.md),
+                          child: _OptionCard(
+                            title: timeLabels[value] ?? value,
+                            subtitle: subtitle,
+                            selected: selected,
+                            onTap: () async {
+                              if (isCustom) {
+                                await _pickCustomTime();
+                              } else {
+                                setState(
+                                    () => _selectedTime = value);
+                              }
+                            },
+                          ),
+                        );
+                      }),
+                      Text(
+                        l10n.onboardingReminderTimezoneLabel(_readableTimezone(widget.state.timezone)),
+                        style:
+                            Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: AethorColors.textSubtle,
+                                ),
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+          ),
+        ],
       ),
       primaryAction: _PrimaryButton(
-        label: 'Salvar horário',
-        enabled: hasSelection,
-        onPressed: hasSelection ? _goNext : null,
-      ),
-      secondaryAction: _TextLink(
-        label: 'Definir depois',
-        onPressed: () {
-          setState(() => _selectedTime = null);
-          _goNext();
-        },
+        label: l10n.actionContinue,
+        onPressed: _goNext,
       ),
     );
   }
 
   bool _isPresetTime() {
-    return _timeOptions
-        .where((option) => option.value != 'custom')
-        .any((option) => option.value == _selectedTime);
+    return _timeValues
+        .where((value) => value != 'custom')
+        .any((value) => value == _selectedTime);
   }
 
   Widget _buildDone(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final chips = <Widget>[
       if (_selectedContext != null)
-        _SummaryChip(label: 'Área: ${contextLabel(_selectedContext!)}'),
-      _SummaryChip(label: 'Voz: ${_summaryVoice()}'),
+        _SummaryChip(label: l10n.onboardingDoneContextChip(localizedContextLabel(context, _selectedContext!))),
+      _SummaryChip(label: l10n.onboardingDoneVoiceChip(_summaryVoice(l10n))),
       if (_selectedTime != null)
-        _SummaryChip(label: 'Horário: $_selectedTime'),
-      if (_remindersEnabled) const _SummaryChip(label: 'Lembrete: ativo'),
+        _SummaryChip(label: l10n.onboardingDoneTimeChip(_selectedTime!)),
+      if (_remindersEnabled) _SummaryChip(label: l10n.onboardingDoneReminderChip),
     ];
 
     final hasChips = chips.isNotEmpty;
@@ -544,8 +544,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
           size: 32,
         ),
       ),
-      title: 'Pronto. Seu primeiro dia está preparado.',
-      subtitle: 'Sem pressa. Um passo de cada vez.',
+      title: l10n.onboardingDoneTitle,
+      subtitle: l10n.onboardingDoneSubtitle,
       body: hasChips
           ? Wrap(
               spacing: 8,
@@ -554,7 +554,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               children: chips,
             )
           : Text(
-              'Você pode personalizar sua experiência a qualquer momento nos ajustes.',
+              l10n.onboardingDonePersonalizeHint,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AethorColors.textMuted,
@@ -562,7 +562,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   ),
             ),
       primaryAction: _PrimaryButton(
-        label: 'Ver meu primeiro insight',
+        label: l10n.onboardingDoneButton,
         onPressed: _completeOnboarding,
       ),
     );
@@ -582,6 +582,7 @@ class _OnboardingScaffold extends StatelessWidget {
     required this.child,
     this.showBack = true,
     this.onBack,
+    this.onSkip,
   });
 
   final double progress;
@@ -591,6 +592,7 @@ class _OnboardingScaffold extends StatelessWidget {
   final Widget child;
   final bool showBack;
   final VoidCallback? onBack;
+  final VoidCallback? onSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -603,10 +605,32 @@ class _OnboardingScaffold extends StatelessWidget {
             const SizedBox(height: AethorSpacing.sm),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: _ProgressBar(
-                value: progress,
-                currentStep: currentStep,
-                totalSteps: totalSteps,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _ProgressBar(
+                      value: progress,
+                      currentStep: currentStep,
+                      totalSteps: totalSteps,
+                      showLabel: onSkip == null,
+                    ),
+                  ),
+                  if (onSkip != null)
+                    TextButton(
+                      onPressed: onSkip,
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(44, 44),
+                        padding: const EdgeInsets.only(left: 8),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context).onboardingSkipButton,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AethorColors.textSubtle,
+                            ),
+                      ),
+                    ),
+                ],
               ),
             ),
             // IconButton ocupa menos espaço vertical que TextButton.icon
@@ -618,7 +642,7 @@ class _OnboardingScaffold extends StatelessWidget {
                   onPressed: onBack,
                   icon: const Icon(AethorIcons.back),
                   color: AethorColors.textPrimary,
-                  tooltip: 'Voltar',
+                  tooltip: AppLocalizations.of(context).onboardingBackTooltip,
                 ),
               ),
             Expanded(
@@ -655,7 +679,6 @@ class _StepContent extends StatelessWidget {
     this.primaryAction,
     this.secondaryAction,
     this.helperText,
-    this.footer,
   });
 
   final String title;
@@ -668,7 +691,6 @@ class _StepContent extends StatelessWidget {
   final Widget body;
   final Widget? primaryAction;
   final Widget? secondaryAction;
-  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -722,10 +744,6 @@ class _StepContent extends StatelessWidget {
                         color: AethorColors.textMuted,
                       ),
                     ),
-                  ],
-                  if (footer != null) ...[
-                    const SizedBox(height: AethorSpacing.md),
-                    footer!,
                   ],
                 ],
               ),
@@ -813,16 +831,18 @@ class _ProgressBar extends StatelessWidget {
     required this.value,
     required this.currentStep,
     required this.totalSteps,
+    this.showLabel = true,
   });
 
   final double value;
   final int currentStep;
   final int totalSteps;
+  final bool showLabel;
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Passo $currentStep de $totalSteps',
+      label: AppLocalizations.of(context).onboardingProgressLabel(currentStep, totalSteps),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -857,16 +877,18 @@ class _ProgressBar extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(width: 10),
-          // Indicador numérico visível — complementa a semântica acima
-          Text(
-            '$currentStep/$totalSteps',
-            style: const TextStyle(
-              fontSize: 11,
-              color: AethorColors.textSubtle,
-              fontWeight: FontWeight.w500,
+          if (showLabel) ...[
+            const SizedBox(width: 10),
+            // Indicador numérico visível — complementa a semântica acima
+            Text(
+              '$currentStep/$totalSteps',
+              style: const TextStyle(
+                fontSize: 11,
+                color: AethorColors.textSubtle,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -885,9 +907,9 @@ class _BrandHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'AETHOR',
-          style: TextStyle(
+        Text(
+          AppLocalizations.of(context).onboardingBrandTitle,
+          style: const TextStyle(
             fontFamily: 'Cormorant Garamond',
             fontSize: 13,
             fontWeight: FontWeight.w700,
@@ -1048,6 +1070,7 @@ class _PreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(AethorSpacing.lg),
       decoration: BoxDecoration(
@@ -1059,7 +1082,7 @@ class _PreviewCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Hoje, para começar',
+            l10n.onboardingIntroTodayLabel,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: AethorColors.textSubtle,
                   letterSpacing: 0.8,
@@ -1070,7 +1093,7 @@ class _PreviewCard extends StatelessWidget {
             quote,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontFamily: 'Cormorant Garamond',
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.w600,
                   fontStyle: FontStyle.italic,
                   height: 1.4,
@@ -1080,7 +1103,7 @@ class _PreviewCard extends StatelessWidget {
           Text(
             '— $author',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AethorColors.copper,
+                  color: AethorColors.copperText,
                   fontWeight: FontWeight.w600,
                 ),
           ),
@@ -1091,7 +1114,7 @@ class _PreviewCard extends StatelessWidget {
           ),
           const SizedBox(height: AethorSpacing.md),
           Text(
-            'Ação de hoje',
+            l10n.onboardingIntroActionLabel,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: AethorColors.textMuted,
                 ),
@@ -1150,6 +1173,9 @@ class _TextLink extends StatelessWidget {
     return Center(
       child: TextButton(
         onPressed: onPressed,
+        style: TextButton.styleFrom(
+          minimumSize: const Size(double.infinity, 44),
+        ),
         child: Text(
           label,
           style: const TextStyle(
@@ -1233,31 +1259,359 @@ class _BulletItem extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Data models
+// Intro step — coreografia de entrada animada
+//
+// Timeline (ms / 2600ms total):
+//   0ms    → Brand AETHOR        fadeIn 420ms            contemplative
+//   340ms  → Headline            typewriter 32ms/char    linear
+//   1120ms → Subtitle            fadeSlideIn Y6  420ms   contemplative
+//   1360ms → Preview card        heroSlideIn Y14 500ms   easeOutCubic
+//   1740ms → "Ver como funciona" fadeIn 380ms             easeOut
+//   1940ms → CTA button          heroSlideIn Y10 500ms   easeOutCubic
 // ---------------------------------------------------------------------------
 
-class _ContextOption {
-  const _ContextOption({required this.key, required this.description});
-
-  final String key;
-  final String description;
-}
-
-class _VoiceOption {
-  const _VoiceOption({
-    required this.label,
-    required this.subtitle,
-    required this.authors,
+class _IntroStep extends StatefulWidget {
+  const _IntroStep({
+    required this.onBegin,
+    required this.onHowItWorks,
+    required this.previewFuture,
+    required this.dailyProvider,
   });
 
-  final String label;
-  final String subtitle;
-  final Set<String> authors;
+  final VoidCallback onBegin;
+  final VoidCallback onHowItWorks;
+  final Future<void> previewFuture;
+  final DailyPackage? Function() dailyProvider;
+
+  @override
+  State<_IntroStep> createState() => _IntroStepState();
 }
 
-class _TimeOption {
-  const _TimeOption({required this.value, required this.label});
+class _IntroStepState extends State<_IntroStep>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  bool _started = false;
 
-  final String value;
-  final String label;
+  static const int _totalMs = 2600;
+  static const int _msPerChar = 32;
+
+  // Janelas de tempo em ms
+  static const int _brandStart      = 0;
+  static const int _brandDur        = 420;
+  static const int _typewriterStart = 340;
+  static const int _subtitleStart   = 1120;
+  static const int _subtitleDur     = 420;
+  static const int _cardStart       = 1360;
+  static const int _cardDur         = 500;
+  static const int _linkStart       = 1740;
+  static const int _linkDur         = 380;
+  static const int _ctaStart        = 1940;
+  static const int _ctaDur          = 500;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: _totalMs),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  void _maybeStart(bool reduceMotion) {
+    if (_started) return;
+    _started = true;
+    if (reduceMotion) {
+      _ctrl.value = 1.0;
+    } else {
+      _ctrl.forward();
+    }
+  }
+
+  double _progress(int startMs, int durMs) {
+    final ms = _ctrl.value * _totalMs;
+    if (ms < startMs) return 0.0;
+    if (ms >= startMs + durMs) return 1.0;
+    return ((ms - startMs) / durMs).clamp(0.0, 1.0);
+  }
+
+  double _easeOut(int start, int dur) =>
+      MotionTokens.curveEntry.transform(_progress(start, dur));
+
+  double _contemplate(int start, int dur) =>
+      MotionTokens.curveContemplative.transform(_progress(start, dur));
+
+  double _heroEase(int start, int dur) =>
+      MotionTokens.curveHeroEntry.transform(_progress(start, dur));
+
+  int _visibleChars(int textLength) {
+    final ms = _ctrl.value * _totalMs;
+    if (ms < _typewriterStart) return 0;
+    return ((ms - _typewriterStart) / _msPerChar)
+        .floor()
+        .clamp(0, textLength);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final reduceMotion = MotionTokens.reduceMotionOf(context);
+    _maybeStart(reduceMotion);
+
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, _) => _buildContent(context, reduceMotion),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, bool rm) {
+    final l10n = AppLocalizations.of(context);
+    final titleText = l10n.onboardingIntroTitle;
+    final brandT    = rm ? 1.0 : _contemplate(_brandStart, _brandDur);
+    final subtitleT = rm ? 1.0 : _contemplate(_subtitleStart, _subtitleDur);
+    final cardT     = rm ? 1.0 : _heroEase(_cardStart, _cardDur);
+    final linkT     = rm ? 1.0 : _easeOut(_linkStart, _linkDur);
+    final ctaT      = rm ? 1.0 : _heroEase(_ctaStart, _ctaDur);
+    final chars     = rm ? titleText.length : _visibleChars(titleText.length);
+    final allDone   = chars >= titleText.length;
+
+    final titleStyle = Theme.of(context).textTheme.displaySmall?.copyWith(
+          fontFamily: 'Cormorant Garamond',
+          fontSize: 40,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w500,
+          height: 1.1,
+        );
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Brand
+          Opacity(
+            opacity: brandT,
+            child: const _BrandHeader(),
+          ),
+          const SizedBox(height: AethorSpacing.md),
+
+          // Headline — typewriter espelha o QuoteCard
+          Semantics(
+            label: titleText,
+            child: ExcludeSemantics(
+              child: Text.rich(
+                TextSpan(
+                  style: titleStyle,
+                  children: [
+                    if (chars > 0)
+                      TextSpan(text: titleText.substring(0, chars)),
+                    if (!allDone)
+                      TextSpan(
+                        text: titleText.substring(chars),
+                        style: titleStyle?.copyWith(color: Colors.transparent),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: AethorSpacing.sm),
+
+          // Subtitle
+          Opacity(
+            opacity: subtitleT,
+            child: Transform.translate(
+              offset: Offset(0, 6.0 * (1.0 - subtitleT)),
+              child: Text(
+                l10n.onboardingIntroSubtitle,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AethorColors.textMuted,
+                      height: 1.4,
+                    ),
+              ),
+            ),
+          ),
+          const SizedBox(height: AethorSpacing.lg),
+
+          // Corpo scrollável
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Preview card
+                  Opacity(
+                    opacity: cardT,
+                    child: Transform.translate(
+                      offset: Offset(0, 14.0 * (1.0 - cardT)),
+                      child: FutureBuilder<void>(
+                        future: widget.previewFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const _PreviewCardSkeleton();
+                          }
+                          final pkg = widget.dailyProvider();
+                          if (pkg != null) {
+                            return _LivePreviewCard(package: pkg);
+                          }
+                          final l10n2 = AppLocalizations.of(context);
+                          return _PreviewCard(
+                            quote: l10n2.onboardingIntroExampleQuote,
+                            author: l10n2.onboardingIntroExampleAuthor,
+                            action: l10n2.onboardingIntroExampleAction,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  // Link
+                  Opacity(
+                    opacity: linkT,
+                    child: _TextLink(
+                      label: l10n.onboardingIntroHowItWorks,
+                      onPressed: widget.onHowItWorks,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // CTA
+          const SizedBox(height: AethorSpacing.sm),
+          Opacity(
+            opacity: ctaT,
+            child: Transform.translate(
+              offset: Offset(0, 10.0 * (1.0 - ctaT)),
+              child: _PrimaryButton(
+                label: l10n.onboardingIntroCta,
+                onPressed: widget.onBegin,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+// ---------------------------------------------------------------------------
+// Preview card — skeleton de carregamento
+// ---------------------------------------------------------------------------
+
+class _PreviewCardSkeleton extends StatelessWidget {
+  const _PreviewCardSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 220,
+      decoration: BoxDecoration(
+        color: AethorColors.cardBackground,
+        borderRadius: BorderRadius.circular(AethorRadius.lg),
+        border: Border.all(color: AethorColors.cardOutline),
+      ),
+      child: const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: AethorColors.deepBlue,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Preview card — conteúdo real vindo da API (DailyPackage)
+// ---------------------------------------------------------------------------
+
+class _LivePreviewCard extends StatelessWidget {
+  const _LivePreviewCard({required this.package});
+
+  final DailyPackage package;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final quote = package.quote;
+    final action = package.recommendation.title;
+    final sourceLine =
+        '${quote.sourceWork.toUpperCase()} / ${quote.sourceRef.toUpperCase()}';
+
+    return Container(
+      padding: const EdgeInsets.all(AethorSpacing.lg),
+      decoration: BoxDecoration(
+        color: AethorColors.cardBackground,
+        borderRadius: BorderRadius.circular(AethorRadius.lg),
+        border: Border.all(color: AethorColors.cardOutline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.onboardingIntroTodayLabel,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AethorColors.textSubtle,
+                  letterSpacing: 0.8,
+                ),
+          ),
+          const SizedBox(height: AethorSpacing.sm),
+          Text(
+            '"${quote.text}"',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontFamily: 'Cormorant Garamond',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                  height: 1.4,
+                ),
+          ),
+          const SizedBox(height: AethorSpacing.xs),
+          Text(
+            '— ${quote.author}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AethorColors.copperText,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            sourceLine,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AethorColors.textSubtle,
+                  fontSize: 11,
+                  letterSpacing: 0.7,
+                  fontWeight: FontWeight.w400,
+                ),
+          ),
+          const SizedBox(height: AethorSpacing.md),
+          Container(height: 1, color: AethorColors.cardOutline),
+          const SizedBox(height: AethorSpacing.md),
+          Text(
+            l10n.onboardingIntroActionLabel,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: AethorColors.textMuted,
+                ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            action,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AethorColors.textSecondary,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

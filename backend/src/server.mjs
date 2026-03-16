@@ -533,17 +533,47 @@ function pickRecommendationForQuote({ quote, userContext, hash }) {
   return ordered[hash % ordered.length];
 }
 
-function pickDailyPair(dateLocal, timezone, userContext) {
+const SUPPORTED_LANGS = ['pt', 'en', 'es'];
+
+function localizeQuote(quote, lang) {
+  if (!lang || lang === 'pt') return quote;
+  const textKey = `text_${lang}`;
+  if (!quote[textKey]) return quote;
+  const { text_en, text_es, ...rest } = quote; // eslint-disable-line no-unused-vars
+  return { ...rest, text: quote[textKey] };
+}
+
+function localizeRecommendation(rec, lang) {
+  if (!lang || lang === 'pt') return rec;
+  const suffix = `_${lang}`;
+  const titleKey = `action_title${suffix}`;
+  const stepsKey = `action_steps${suffix}`;
+  const promptKey = `journal_prompt${suffix}`;
+  if (!rec[titleKey]) return rec;
+  const { action_title_en, action_steps_en, journal_prompt_en,
+          action_title_es, action_steps_es, journal_prompt_es, ...rest } = rec; // eslint-disable-line no-unused-vars
+  return {
+    ...rest,
+    action_title: rec[titleKey],
+    action_steps: rec[stepsKey] ?? rec.action_steps,
+    journal_prompt: rec[promptKey] ?? rec.journal_prompt
+  };
+}
+
+function pickDailyPair(dateLocal, timezone, userContext, lang) {
   const hash = stableHash(`${dateLocal}:${timezone}:${userContext ?? ''}`);
-  const quote = seed.quotes[hash % seed.quotes.length];
-  const recommendation = pickRecommendationForQuote({ quote, userContext, hash });
+  const rawQuote = seed.quotes[hash % seed.quotes.length];
+  const rawRecommendation = pickRecommendationForQuote({ quote: rawQuote, userContext, hash });
+
+  const resolvedLang = SUPPORTED_LANGS.includes(lang) ? lang : 'pt';
 
   return {
     date_local: dateLocal,
     timezone,
     user_context: userContext ?? null,
-    quote,
-    recommendation
+    lang: resolvedLang,
+    quote: localizeQuote(rawQuote, resolvedLang),
+    recommendation: localizeRecommendation(rawRecommendation, resolvedLang)
   };
 }
 
@@ -677,28 +707,6 @@ const server = createServer(async (req, res) => {
 
   if (req.method === 'GET' && url.pathname === '/health') {
     return sendJson(res, 200, { ok: true, service: 'aethor-backend' });
-  }
-
-  // Apple App Site Association — required for Universal Links (iOS deeplinks via https://)
-  // Apple fetches this file from https://aethor.app/.well-known/apple-app-site-association
-  if (
-    req.method === 'GET' &&
-    (url.pathname === '/.well-known/apple-app-site-association' ||
-      url.pathname === '/apple-app-site-association')
-  ) {
-    const aasa = {
-      applinks: {
-        apps: [],
-        details: [
-          {
-            appID: 'CK8Q479NZG.com.thiago.aethorApp',
-            paths: ['/today', '/history', '/favorites', '/settings', '/today/*'],
-          },
-        ],
-      },
-    };
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-    return res.end(JSON.stringify(aasa));
   }
 
   if (req.method === 'GET' && url.pathname === '/v1/observability/metrics') {
@@ -927,6 +935,7 @@ const server = createServer(async (req, res) => {
     const dateLocalParam = url.searchParams.get('date_local');
     const timezone = url.searchParams.get('timezone');
     const userContext = url.searchParams.get('user_context');
+    const lang = url.searchParams.get('lang') ?? 'pt';
 
     if (!timezone) {
       return sendJson(res, 400, {
@@ -943,11 +952,12 @@ const server = createServer(async (req, res) => {
       });
     }
 
-    const pack = pickDailyPair(dateLocal, timezone, userContext);
+    const pack = pickDailyPair(dateLocal, timezone, userContext, lang);
     appendAnalyticsEvent('daily_package_viewed', {
       date_local: dateLocal,
       timezone,
       user_context: userContext,
+      lang: pack.lang,
       author: pack.quote.author,
       context: pack.recommendation.context
     });
@@ -1184,6 +1194,7 @@ const server = createServer(async (req, res) => {
     const timezone = url.searchParams.get('timezone');
     const dateLocalParam = url.searchParams.get('date_local');
     const userContext = url.searchParams.get('user_context');
+    const lang = url.searchParams.get('lang') ?? 'pt';
     const daysRaw = url.searchParams.get('days') ?? '30';
     const days = Number(daysRaw);
 
@@ -1212,7 +1223,7 @@ const server = createServer(async (req, res) => {
     const items = [];
     for (let offset = 0; offset < days; offset += 1) {
       const day = isoDateOffset(dateLocal, -offset);
-      items.push(pickDailyPair(day, timezone, userContext));
+      items.push(pickDailyPair(day, timezone, userContext, lang));
     }
     return sendJson(res, 200, { items });
   }

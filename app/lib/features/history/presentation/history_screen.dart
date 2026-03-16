@@ -6,6 +6,7 @@ import '../../../core/design_system/motion/motion.dart';
 import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 import '../../../core/paywall/paywall_flow.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../daily_quote/domain/models.dart';
 
 class HistoryScreen extends StatelessWidget {
@@ -51,6 +52,7 @@ class HistoryScreen extends StatelessWidget {
   }
 
   Widget _buildUpsellCard(BuildContext context, AppState state) {
+    final l10n = AppLocalizations.of(context);
     return AethorCard(
       variant: AethorCardVariant.subtle,
       padding: const EdgeInsets.all(20),
@@ -60,7 +62,7 @@ class HistoryScreen extends StatelessWidget {
           const Icon(AethorIcons.lock, color: AethorColors.copper),
           const SizedBox(height: 8),
           Text(
-            'Histórico completo é Pro',
+            l10n.historyProUpsellTitle,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AethorColors.obsidian,
@@ -68,7 +70,7 @@ class HistoryScreen extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Revise todas as suas práticas. Observe os padrões.',
+            l10n.historyProUpsellDesc,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AethorColors.textMuted,
                 ),
@@ -89,7 +91,7 @@ class HistoryScreen extends StatelessWidget {
                 state: state,
                 feature: PremiumFeature.fullHistory,
               ),
-              child: const Text('Ver planos Pro'),
+              child: Text(l10n.historyProUpsellButton),
             ),
           ),
         ],
@@ -99,11 +101,12 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final header = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Histórico',
+          l10n.historyTitle,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
                 fontFamily: 'Cormorant Garamond',
                 fontSize: 48,
@@ -142,29 +145,70 @@ class HistoryScreen extends StatelessWidget {
             const SizedBox(height: 12),
           ],
           AethorEmptyState(
-            title: offline ? 'Você está offline.' : 'Seu histórico começa com a primeira prática.',
+            title: offline ? l10n.historyEmptyOffline : l10n.historyEmptyOnline,
             description: offline
-                ? 'Conecte-se para sincronizar seu histórico.'
-                : 'A prática de hoje será o primeiro registro.',
+                ? l10n.historyEmptySync
+                : l10n.historyEmptyFirstRecord,
             icon: Icon(
               offline ? AethorIcons.wifiOff : AethorIcons.history,
               size: 32,
               color: offline ? AethorColors.deepBlue : AethorColors.textSubtle,
             ),
-            actionLabel: offline ? 'Sincronizar' : null,
+            actionLabel: offline ? l10n.actionSync : null,
             onAction: offline ? state.bootstrap : null,
           ),
         ],
       );
     }
 
+    const int freeLimit = 7;
     final isPro = state.isPro;
     final items =
-        isPro ? state.history : state.history.take(7).toList(growable: false);
+        isPro ? state.history : state.history.take(freeLimit).toList(growable: false);
     final showUpsell = !isPro && state.history.length > items.length;
 
     final entries = <Widget>[
       header,
+      // Indicador progressivo do limite free (A-05)
+      if (!isPro && state.history.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value:
+                        (state.history.length / freeLimit).clamp(0.0, 1.0),
+                    backgroundColor:
+                        AethorColors.sand.withValues(alpha: 0.5),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      state.history.length >= freeLimit
+                          ? AethorColors.copper
+                          : AethorColors.deepBlue,
+                    ),
+                    minHeight: 4,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Semantics(
+                label: l10n.historyLimitLabel(state.history.length, freeLimit),
+                child: Text(
+                  l10n.historyLimitLabel(state.history.length, freeLimit),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontSize: 11,
+                        color: state.history.length >= freeLimit
+                            ? AethorColors.copper
+                            : AethorColors.textMuted,
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
       if (state.offline) AethorOfflineBanner(onSync: state.bootstrap),
       if (state.offline) const SizedBox(height: 4),
       ...items.map((item) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../domain/context_labels.dart';
 import '../tokens/design_tokens.dart';
 import 'aethor_card.dart';
@@ -28,6 +29,7 @@ class PracticeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AethorCard(
       variant: AethorCardVariant.defaultCard,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
@@ -54,21 +56,21 @@ class PracticeCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _BulletInfo(
-            label: 'Situação',
-            value: contextLabel(practiceContext),
+            label: l10n.practiceCardContextLabel,
+            value: localizedContextLabel(context, practiceContext),
             bulletSize: const Size(8, 8),
             bulletRadius: 99,
           ),
           const SizedBox(height: 12),
           _BulletInfo(
-            label: 'Tempo previsto',
+            label: l10n.practiceCardTimeLabel,
             value: '$minutes min',
             bulletSize: const Size(8, 8),
             bulletRadius: 99,
           ),
           const SizedBox(height: 12),
           Text(
-            'Como aplicar hoje'.toUpperCase(),
+            l10n.practiceCardHowApply.toUpperCase(),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   letterSpacing: 0.65,
                   fontSize: 13,
@@ -125,7 +127,7 @@ class PracticeCard extends StatelessWidget {
             if (expectedOutcome.isNotEmpty)
               Text.rich(
                 TextSpan(
-                  text: 'Impacto esperado: ',
+                  text: '${l10n.practiceCardExpectedImpactLabel} ',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
@@ -148,7 +150,7 @@ class PracticeCard extends StatelessWidget {
             if (completionCriteria.isNotEmpty)
               Text.rich(
                 TextSpan(
-                  text: 'Sinal de conclusão: ',
+                  text: '${l10n.practiceCardCompletionSignalLabel} ',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
@@ -172,7 +174,7 @@ class PracticeCard extends StatelessWidget {
             const Divider(height: 1, color: AethorColors.divider),
             const SizedBox(height: 12),
             Text(
-              'Reflexão do dia: $journalPrompt',
+              '${l10n.practiceCardReflectionLabel} $journalPrompt',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontFamily: 'Cormorant Garamond',
                     fontStyle: FontStyle.italic,

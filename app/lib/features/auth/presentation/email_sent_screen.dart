@@ -79,19 +79,20 @@ class EmailSentScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              if (onEnterCode != null) ...[
-                AuthButton(
-                  variant: AuthButtonVariant.primary,
-                  label: 'Inserir código',
-                  onPressed: onEnterCode!,
-                ),
-                const SizedBox(height: 12),
-              ],
+              // Hierarquia correta: ação principal = abrir email para ler o código
               AuthButton(
-                variant: AuthButtonVariant.secondary,
+                variant: AuthButtonVariant.primary,
                 label: 'Abrir app de e-mail',
                 onPressed: onOpenEmail,
               ),
+              if (onEnterCode != null) ...[
+                const SizedBox(height: 12),
+                AuthButton(
+                  variant: AuthButtonVariant.secondary,
+                  label: 'Inserir código manualmente',
+                  onPressed: onEnterCode!,
+                ),
+              ],
               const SizedBox(height: 12),
               AuthLink(
                 label: 'Usar outro e-mail',

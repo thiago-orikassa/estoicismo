@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../app_state.dart';
 import '../../../core/design_system/components/components.dart';
@@ -10,7 +11,10 @@ import '../../../core/design_system/tokens/aethor_icons.dart';
 import '../../../core/design_system/tokens/design_tokens.dart';
 import '../../../core/domain/authors.dart';
 import '../../../core/domain/context_labels.dart';
+import '../../../core/auth/auth_flow.dart';
+import '../../../core/auth/auth_models.dart';
 import '../../../core/paywall/paywall_flow.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.state});
@@ -24,11 +28,15 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final List<String> _authors = kAethorAuthors;
   late Set<String> _selectedAuthors;
+  String _appVersion = '';
 
   @override
   void initState() {
     super.initState();
     _selectedAuthors = {...widget.state.preferredAuthors};
+    PackageInfo.fromPlatform().then((info) {
+      if (mounted) setState(() => _appVersion = info.version);
+    });
   }
 
   @override
@@ -39,10 +47,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  String _timezoneLabel(String timezone) {
+  String _timezoneLabel(String timezone, AppLocalizations l10n) {
     return switch (timezone) {
-      'America/Sao_Paulo' => 'Brasília (GMT-3)',
-      'America/Rio_Branco' => 'Rio Branco (GMT-5)',
+      'America/Sao_Paulo' => l10n.settingsTzBrasilia,
+      'America/Rio_Branco' => l10n.settingsTzRioBranco,
       _ => timezone,
     };
   }
@@ -55,28 +63,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return 'America/Sao_Paulo';
   }
 
-  String _authorsSummary() {
+  String _authorsSummary(AppLocalizations l10n) {
     if (_selectedAuthors.length == _authors.length) {
-      return 'Todos (Modo Misto)';
+      return l10n.settingsAuthorsAll;
     }
     if (_selectedAuthors.isEmpty) {
-      return 'Nenhum';
+      return l10n.settingsAuthorsNone;
     }
-    return 'Personalizado';
+    return l10n.settingsAuthorsCustom;
   }
 
-  Future<void> _showTimezonePicker() async {
-    const timezones = <String>[
-      'America/Sao_Paulo',
-      'America/Rio_Branco',
+  Future<void> _showLanguagePicker(AppLocalizations l10n) async {
+    final options = <({String code, String label})>[
+      (code: 'pt', label: l10n.languagePt),
+      (code: 'en', label: l10n.languageEn),
+      (code: 'es', label: l10n.languageEs),
     ];
 
-    // Detecta automaticamente o timezone e oferece como primeiro item se diferente
-    final detected = _detectDeviceTimezone();
-    final detectedLabel =
-        '${_timezoneLabel(detected)} (detectado automaticamente)';
-
-    final selected = await showModalBottomSheet<String>(
+    await showModalBottomSheet<void>(
       context: context,
       backgroundColor: AethorColors.cardBackground,
       shape: const RoundedRectangleBorder(
@@ -91,14 +95,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Fuso Horário',
+                  l10n.settingsLanguagePickerTitle,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
                       ),
                 ),
                 const SizedBox(height: 12),
-                // Opção de detecção automática
+                ...options.map(
+                  (opt) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(opt.label),
+                    trailing: widget.state.locale == opt.code
+                        ? const Icon(AethorIcons.check, color: AethorColors.copper)
+                        : null,
+                    onTap: () {
+                      widget.state.setLocale(opt.code);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                const Divider(height: 1, color: AethorColors.rowDivider),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    '🌐 Seguir idioma do dispositivo',
+                    style: TextStyle(color: AethorColors.textMuted, fontSize: 14),
+                  ),
+                  trailing: widget.state.locale == null
+                      ? const Icon(AethorIcons.check, color: AethorColors.copper)
+                      : null,
+                  onTap: () {
+                    widget.state.setLocale(null);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _showTimezonePicker() async {
+    final l10n = AppLocalizations.of(context);
+    const timezones = <String>[
+      'America/Sao_Paulo',
+      'America/Rio_Branco',
+    ];
+
+    final detected = _detectDeviceTimezone();
+    final detectedLabel = l10n.settingsTimezoneAuto(_timezoneLabel(detected, l10n));
+
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AethorColors.cardBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        final innerL10n = AppLocalizations.of(context);
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  innerL10n.settingsTimezone,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 12),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(detectedLabel),
@@ -111,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ...timezones.map(
                   (tz) => ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text(_timezoneLabel(tz)),
+                    title: Text(_timezoneLabel(tz, innerL10n)),
                     trailing: tz == widget.state.timezone
                         ? const Icon(AethorIcons.check, color: AethorColors.copper)
                         : null,
@@ -140,10 +212,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'decisao_dificil',
     ];
 
+    final l10n = AppLocalizations.of(context);
     final selected = await _showSingleSelect(
-      title: 'Contexto Preferencial',
+      title: l10n.settingsPreferredContext,
       options: contexts,
-      labelBuilder: contextLabel,
+      labelBuilder: (k) => localizedContextLabel(context, k),
       currentValue: widget.state.preferredContext,
     );
 
@@ -209,7 +282,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Autores Preferidos',
+                      AppLocalizations.of(context).settingsPreferredAuthors,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
@@ -249,7 +322,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: AethorPressScale(
                         child: FilledButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Concluir'),
+                          child: Text(AppLocalizations.of(context).actionDone),
                         ),
                       ),
                     ),
@@ -267,26 +340,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
+        final dl10n = AppLocalizations.of(context);
         return AlertDialog(
           backgroundColor: AethorColors.cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Text('Sair da conta?'),
-          content: const Text(
-            'Seus check-ins e favoritos estão salvos na nuvem e serão restaurados ao entrar novamente.',
-          ),
+          title: Text(dl10n.settingsLogoutDialogTitle),
+          content: Text(dl10n.settingsLogoutDialogMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(dl10n.actionCancel),
             ),
             FilledButton(
               style: FilledButton.styleFrom(
                 backgroundColor: AethorColors.error,
               ),
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Sair'),
+              child: Text(dl10n.actionSignOut),
             ),
           ],
         );
@@ -294,7 +366,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     if (confirmed != true) return;
-    widget.state.markAuthenticated(false);
+    await widget.state.signOut();
+    if (!mounted) return;
+    await AuthFlow.showLoginPrompt(
+      context,
+      state: widget.state,
+      contextType: AuthPromptContext.sync,
+      force: true,
+    );
   }
 
   Future<void> _showPushDiagnostic() async {
@@ -373,11 +452,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SnackBar(content: Text('FCM token copiado!')),
                   );
                 },
-                child: const Text('Copiar FCM'),
+                child: const Text('Copiar FCM'),  // debug-only, stays hardcoded
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Fechar'),
+                child: const Text('Fechar'),  // debug-only
               ),
             ],
           ),
@@ -390,23 +469,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
+        final dl10n = AppLocalizations.of(context);
         return AlertDialog(
           backgroundColor: AethorColors.cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Text('Resetar onboarding?'),
-          content: const Text(
-            'Isso reabre o fluxo inicial e limpa as preferências de onboarding.',
-          ),
+          title: Text(dl10n.settingsResetOnboardingTitle),
+          content: Text(dl10n.settingsResetOnboardingMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(dl10n.actionCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Resetar'),
+              child: Text(dl10n.actionReset),
             ),
           ],
         );
@@ -417,10 +495,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await widget.state.resetOnboarding();
     if (!mounted) return;
 
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Onboarding será exibido ao reabrir o app.'),
-      ),
+      SnackBar(content: Text(l10n.settingsResetOnboardingSuccess)),
     );
   }
 
@@ -473,6 +550,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final reminderTime = widget.state.reminderTime ?? '08:00';
     final permissionDenied = widget.state.notificationPermission ==
         NotificationPermissionStatus.denied;
@@ -480,7 +558,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
       children: [
         Text(
-          'Ajustes',
+          l10n.settingsTitle,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
                 fontFamily: 'Cormorant Garamond',
                 fontSize: 48,
@@ -492,7 +570,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 4),
         Text(
-          'CONFIGURAÇÕES E PREFERÊNCIAS',
+          l10n.settingsSubtitle,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontSize: 11,
                 letterSpacing: 1.1,
@@ -502,28 +580,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 32),
         _SettingsSection(
-          title: 'Geral',
+          title: l10n.settingsSectionGeneral,
           child: Column(
             children: [
               _SettingsRow(
                 icon: AethorIcons.globe,
-                title: 'Fuso Horário',
-                trailing: _timezoneLabel(widget.state.timezone),
+                title: l10n.settingsTimezone,
+                trailing: _timezoneLabel(widget.state.timezone, l10n),
                 onTap: _showTimezonePicker,
                 showDivider: true,
               ),
               _SettingsRow(
+                icon: AethorIcons.globe,
+                title: l10n.settingsLanguage,
+                trailing: switch (widget.state.locale) {
+                  'en' => l10n.languageEn,
+                  'es' => l10n.languageEs,
+                  _ => l10n.languagePt,
+                },
+                onTap: () => _showLanguagePicker(l10n),
+                showDivider: true,
+              ),
+              _SettingsRow(
                 icon: AethorIcons.user,
-                title: 'Autores Preferidos',
-                trailing: _authorsSummary(),
+                title: l10n.settingsPreferredAuthors,
+                trailing: _authorsSummary(l10n),
                 onTap: _showAuthorPicker,
                 showDivider: true,
               ),
               _SettingsRow(
                 icon: AethorIcons.calendar,
-                title: 'Contexto Preferencial',
-                subtitle: 'Personalize suas práticas',
-                trailing: contextLabel(widget.state.preferredContext),
+                title: l10n.settingsPreferredContext,
+                subtitle: l10n.settingsPreferredContextSubtitle,
+                trailing: localizedContextLabel(context, widget.state.preferredContext),
                 onTap: _showContextPicker,
                 showDivider: false,
               ),
@@ -532,7 +621,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 32),
         _SettingsSection(
-          title: 'Assinatura',
+          title: l10n.settingsSectionSubscription,
           child: SubscriptionSettingsCard(
             status: widget.state.subscriptionStatus,
             plan: widget.state.subscriptionPlan,
@@ -545,10 +634,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             onManage: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content:
-                      Text('Gerencie sua assinatura na App Store/Play Store.'),
-                ),
+                SnackBar(content: Text(l10n.settingsManageSubscriptionSnackbar)),
               );
             },
             onRestore: () =>
@@ -557,13 +643,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 32),
         _SettingsSection(
-          title: 'Conteúdo',
+          title: l10n.settingsSectionContent,
           child: Column(
             children: [
               NotificationSettingRow(
                 enabled: widget.state.remindersEnabled,
                 time: reminderTime,
-                timezone: _timezoneLabel(widget.state.timezone),
+                timezone: _timezoneLabel(widget.state.timezone, l10n),
                 systemPermissionDenied: permissionDenied,
                 embedded: true,
                 onToggle: () {
@@ -576,18 +662,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onTimeTap: _showReminderTimePicker,
                 onOpenSystemSettings: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                          'Abra as configurações do sistema para permitir notificações.'),
-                    ),
+                    SnackBar(content: Text(l10n.settingsOpenSystemSettingsHint)),
                   );
                 },
               ),
               const Divider(height: 1, color: AethorColors.rowDivider),
-              const _SettingsRow(
+              _SettingsRow(
                 icon: AethorIcons.verified,
-                title: 'Fontes Verificadas',
-                trailing: 'Sempre',
+                title: l10n.settingsVerifiedSources,
+                trailing: l10n.settingsAlways,
                 showDivider: false,
               ),
             ],
@@ -627,6 +710,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       label: const Text('Resetar onboarding'),
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Diagnóstico IAP',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AethorColors.obsidian,
+                        ),
+                  ),
+                  const SizedBox(height: 6),
+                  Builder(builder: (context) {
+                    final ps = widget.state.purchaseService;
+                    if (ps == null) {
+                      return const Text('PurchaseService: null',
+                          style: TextStyle(fontSize: 12, color: Colors.red));
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('isAvailable: ${ps.available}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: ps.available ? Colors.green : Colors.red)),
+                        Text('productsLoaded: ${ps.productsLoaded}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: ps.productsLoaded ? Colors.green : Colors.orange)),
+                        if (ps.notFoundIds.isNotEmpty)
+                          Text('notFound: ${ps.notFoundIds}',
+                              style: const TextStyle(fontSize: 12, color: Colors.red)),
+                        if (ps.queryError != null)
+                          Text('error: ${ps.queryError!.message}',
+                              style: const TextStyle(fontSize: 12, color: Colors.red)),
+                      ],
+                    );
+                  }),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        await widget.state.purchaseService?.reload();
+                        if (context.mounted) setState(() {});
+                      },
+                      child: const Text('Reload produtos IAP'),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -638,7 +768,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             GestureDetector(
               onLongPress: _showPushDiagnostic,
               child: Text(
-                'Aethor • Versão 1.0.0',
+                l10n.appVersion(_appVersion.isEmpty ? '—' : _appVersion),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 11,
@@ -648,7 +778,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Clareza para agir.',
+              l10n.appTagline,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 12,
@@ -658,7 +788,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 8),
             Semantics(
               button: true,
-              label: 'Sair da conta',
+              label: l10n.settingsLogout,
               child: SizedBox(
                 width: 137,
                 height: 48,
@@ -671,7 +801,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   child: Text(
-                    'Sair da conta',
+                    l10n.settingsLogout,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

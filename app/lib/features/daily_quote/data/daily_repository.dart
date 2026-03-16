@@ -11,6 +11,7 @@ class DailyRepository {
     required String timezone,
     String? dateLocal,
     String? userContext,
+    String? lang,
   }) async {
     final data = await _api.get(
       '/v1/daily-package',
@@ -19,6 +20,7 @@ class DailyRepository {
         'timezone': timezone,
         if (userContext != null && userContext.isNotEmpty)
           'user_context': userContext,
+        if (lang != null && lang.isNotEmpty) 'lang': lang,
       },
     );
     return DailyPackage.fromJson(data);
@@ -29,6 +31,7 @@ class DailyRepository {
     String? dateLocal,
     int days = 30,
     String? userContext,
+    String? lang,
   }) async {
     final data = await _api.get(
       '/v1/history',
@@ -38,6 +41,7 @@ class DailyRepository {
         'days': '$days',
         if (userContext != null && userContext.isNotEmpty)
           'user_context': userContext,
+        if (lang != null && lang.isNotEmpty) 'lang': lang,
       },
     );
 

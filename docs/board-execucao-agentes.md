@@ -49,29 +49,47 @@ Baseado em:
 | IOS-01 | iOS Specialist | Base UI iOS (HIG + Dynamic Type) | P1 | M | MA-01 | Home, histórico e ajustes com padrões HIG | DONE |
 | IOS-02 | iOS Specialist | Fluxo push iOS (APNs/FCM + permissões) | P0 | M | BE-05 | Push entregue e aberto com deeplink correto | IN PROGRESS |
 | IOS-03 | iOS Specialist | Acessibilidade iOS (Dynamic Type/VoiceOver) | P1 | S | IOS-01 | Checklist sem bloqueadores críticos | TODO |
-| IOS-04 | iOS Specialist | Integrar compra e restore iOS (StoreKit) com retorno para feature bloqueada | P0 | M | MA-05, BE-07 | Trial/compra/restore concluídos com retorno ao contexto correto | TODO |
+| IOS-04 | iOS Specialist | Integrar compra e restore iOS (StoreKit) com retorno para feature bloqueada | P0 | M | MA-05, BE-07 | Trial/compra/restore concluídos com retorno ao contexto correto | IN PROGRESS |
 | QA-01 | QA and Analytics Lead | Plano de testes e estratégia de regressão | P0 | S | PS-01, MA-01 | Plano com suíte mínima por fluxo crítico | DONE |
 | QA-02 | QA and Analytics Lead | Instrumentação do funil diário | P0 | S | PS-02, BE-04 | Eventos publicados com naming consistente | DONE |
 | QA-03 | QA and Analytics Lead | Testes E2E do fluxo diário (7 dias simulados) | P0 | M | BE-05, AN-02, IOS-02 | Execução sem falha crítica por 7 ciclos | TODO |
 | QA-04 | QA and Analytics Lead | Gate de release beta | P0 | S | QA-03 | Crash-free >99,5% e checklist final aprovado | TODO |
 | QA-05 | QA and Analytics Lead | Testes E2E de monetização com guardrails de retenção | P0 | M | MA-05, BE-07, AN-04, IOS-04 | Fluxo paywall/trial/restore sem quebra do ritual diário free | TODO |
 | QA-06 | QA and Analytics Lead | Dashboard e alertas de monetização (trial, conversão, impacto em D7/check-in) | P0 | S | BE-08, QA-05 | Painel ativo com regras de corte automatizáveis | TODO |
+| I18N-01 | Mobile Architect | Setup infraestrutura i18n (flutter_localizations + intl + package_info_plus + .arb base) | P1 | S | IOS-04, AN-04 | App compila com 3 locales (pt/en/es); versão lida dinamicamente via package_info_plus | DONE |
+| I18N-02 | Mobile Architect | Extrair todas as strings hardcoded para arquivos .arb (pt/en/es) — todas as telas | P1 | L | I18N-01 | Zero strings hardcoded na camada de apresentação; 3 arquivos .arb completos e sem chave faltando | DONE |
+| I18N-03 | Mobile Architect | Seletor de idioma em Settings + persistência do locale no AppState | P1 | S | I18N-01 | Usuário altera idioma em Ajustes; preferência persiste entre sessões; detecção automática pelo device como fallback | DONE |
+| I18N-04 | Stoic Content Curator | Traduzir citações e recomendações para EN e ES (conteúdo editorial) | P2 | L | SC-02, I18N-01 | Backend serve citações e recomendações nos 3 idiomas com base na preferência do usuário; seed validado por curador | DONE |
+| I18N-05 | Backend and Data Engineer | API aceita parâmetro de idioma (`lang`) no daily-package e retorna conteúdo no locale correto | P2 | M | I18N-04, BE-02 | `GET /v1/daily-package?lang=en` retorna conteúdo em inglês; fallback para pt se idioma não disponível | DONE |
+| I18N-06 | QA and Analytics Lead | QA das 3 localidades (regressão + layout + edge cases) | P1 | M | I18N-02, I18N-03 | Todas as telas verificadas em pt/en/es; sem overflow de layout, sem chave faltando, sem regressão no fluxo free | DONE |
+| I18N-07 | Product Strategist | Metadados da App Store e Play Store localizados (en/es) | P2 | S | I18N-01 | Listings em inglês e espanhol publicados nas stores | DONE |
 
 ## 2) Board Kanban Atual (Release MVP)
 
 ## TODO
-- SC-05
+
+**Release v1.0 (pré-aprovação Apple):**
 - AN-03
 - AN-04
 - IOS-03
 - IOS-04
-- QA-03
 - QA-04
 - QA-05
 - QA-06
-- ~~BE-09~~ ✅ DONE
 - BE-10
 - BE-12
+
+**Pós-release v1.0:**
+- SC-05
+
+**v1.1 — Internacionalização (en/pt/es):**
+- I18N-01
+- I18N-02
+- I18N-03
+- I18N-04
+- I18N-05
+- I18N-06
+- I18N-07
 
 ## IN PROGRESS
 - AN-02
@@ -98,6 +116,7 @@ Baseado em:
 | 1 | Fechar orquestração de paywall (A/B/C) com guardrails e auditabilidade | MA-05 | 2026-02-17 a 2026-02-21 | DONE |
 | 2 | Fechar push + deeplink cross-platform e validar ritual diário | AN-02, IOS-02, QA-03 | 2026-02-23 a 2026-03-06 | IN PROGRESS |
 | 3 | Fechar monetização E2E + observabilidade + gate beta | AN-03, IOS-03, AN-04, IOS-04, QA-05, QA-06, QA-04 | 2026-02-24 a 2026-03-06 | TODO |
+| 4 | v1.1 — Internacionalização completa (en/pt/es) — UI + conteúdo + stores | I18N-01, I18N-02, I18N-03, I18N-04, I18N-05, I18N-06, I18N-07 | Pós-aprovação Apple (v1.1) | TODO |
 
 ## 2.0.1) Execução do Acionável 1 (MA-05)
 - Implementado motor de decisão de elegibilidade em `app/lib/core/paywall/paywall_policy.dart`.
@@ -123,17 +142,39 @@ Baseado em:
 | 6 | 2026-03-05 a 2026-03-06 | E2E do ritual diário (7 ciclos) | QA-03 | QA and Analytics Lead | AN-02, IOS-02, BE-05 | 7/7 ciclos simulados sem falha crítica (push -> abertura -> consumo -> check-in) | TODO |
 | 7 | 2026-03-06 | Gate final de release beta | QA-04 | QA and Analytics Lead + Product Strategist | QA-03, QA-05, QA-06 | Go/No-Go formal: crash-free >99,5%, guardrails preservados e checklist final assinado | TODO |
 | 8 | Pós-release (após 2026-03-11) | Expansão editorial P2 | SC-05 | Stoic Content Curator | SC-02 | Autores adicionais publicados com fonte canônica e 100% das citações rastreáveis | TODO |
+| 9 | v1.1 — Sprint 1 (infra i18n) | Setup + extração de strings | I18N-01, I18N-02, I18N-03 | Mobile Architect | IOS-04, AN-04 | Infraestrutura de localização ativa; todas as strings das telas extraídas e traduzidas (pt/en/es); seletor de idioma funcional em Settings | TODO |
+| 10 | v1.1 — Sprint 2 (conteúdo + backend) | Tradução editorial + API multi-lang | I18N-04, I18N-05 | Stoic Content Curator + Backend Engineer | I18N-01, SC-02 | Citações e recomendações disponíveis em EN/ES no backend; endpoint daily-package aceita parâmetro `lang` | TODO |
+| 11 | v1.1 — Sprint 3 (QA + stores) | Validação completa + metadados localizados | I18N-06, I18N-07 | QA Lead + Product Strategist | I18N-02, I18N-03, I18N-04, I18N-05 | Zero regressão em pt; en/es sem overflow e sem chave faltando; listings nas stores atualizados | TODO |
 
 ## 2.2) Caminho crítico de execução
+
+**v1.0 (Release atual):**
 1. Trilha monetização: `MA-05 -> AN-04 + IOS-04 -> QA-05 -> QA-06 -> QA-04`.
 2. Trilha ritual diário: `AN-02 + IOS-02 -> QA-03 -> QA-04`.
 3. `QA-04` só fecha quando as duas trilhas acima estiverem concluídas e evidenciadas.
+
+**v1.1 (Internacionalização):**
+4. Trilha UI: `I18N-01 -> I18N-02 -> I18N-03 -> I18N-06`.
+5. Trilha conteúdo: `SC-02 (done) -> I18N-04 -> I18N-05 -> I18N-06`.
+6. Trilha stores: `I18N-01 -> I18N-07` (paralela, pode iniciar após infra pronta).
+7. `I18N-06` só fecha quando trilhas UI e conteúdo estiverem completas. Release v1.1 dependente de `I18N-06` + `I18N-07`.
+
+## 2.2.1) Dependências i18n — decisões de design que bloqueiam execução
+
+Antes de iniciar I18N-01, três decisões precisam estar tomadas:
+
+| Decisão | Opção escolhida | Impacto |
+|---------|----------------|---------|
+| Detecção de idioma | Automático pelo device + override manual em Settings | Afeta AppState e MaterialApp |
+| Fallback quando idioma não disponível | pt-BR (idioma original do app) | Afeta .arb e lógica de locale |
+| Conteúdo (citações) em EN/ES | Tradução humana revisada por curador | Afeta cronograma I18N-04; sem ML translation |
 
 ## 2.3) Checklist técnico obrigatório por stream
 - Push/deeplink (`AN-02`, `IOS-02`): permissão contextual, token válido, payload com rota, app aberto em foreground/background/cold start, fallback seguro sem quebra do ritual free.
 - Billing (`AN-04`, `IOS-04`): uso de fluxo nativo da loja, validação de entitlement no backend, restore idempotente, transparência de preço/teste/cancelamento.
 - Telemetria (`QA-06`): eventos versionados, propriedades mínimas por evento, dashboard com corte automático para queda de D7 (>10% relativo) e check-in (>8% relativo).
 - Qualidade (`QA-03`, `QA-05`, `QA-04`): evidência de execução (logs, vídeo curto, relatório), regressão do fluxo free monitorada, plano de rollback pronto.
+- Internacionalização (`I18N-01`→`I18N-07`): nenhuma string hardcoded na camada de apresentação; `.arb` com 100% de cobertura de chaves nos 3 idiomas; seletor de idioma não quebra o fluxo de check-in; conteúdo editorial EN/ES validado por falante nativo antes do release v1.1.
 
 ## 2.4) Referências de mercado usadas no plano
 - Android notification permission: https://developer.android.com/develop/ui/views/notifications/notification-permission
@@ -197,6 +238,8 @@ Meta do bloco C:
 - Se QA-03 encontrar falha crítica: voltar tarefa para IN PROGRESS com plano de correção em 24h.
 - Se D7 cair >10% relativo após exposição de paywall: pausar variação e voltar para controle.
 - Se check-in rate cair >8% relativo após paywall: reduzir frequência de exibição e reavaliar gatilhos.
+- Se I18N-04 (tradução editorial) atrasar >1 semana: lançar v1.1 apenas com UI localizada (en/es) e conteúdo ainda em pt; entregar conteúdo traduzido na v1.2.
+- Se I18N-06 encontrar overflow de layout em EN ou ES: bloquear release v1.1 e corrigir antes de submeter para as stores.
 
 ## 6) Definição de pronto (DoD global)
 Uma tarefa só vai para `DONE` quando tiver:
@@ -215,6 +258,61 @@ Uma tarefa só vai para `DONE` quando tiver:
 - **Boas práticas documentadas:** `docs/backend-best-practices.md`
 - **Commit:** `a3701e2` — `fix(backend): harden security before public TestFlight`
 - **⚠️ BE-09 pendente:** dados SQLite são ephemeral — Railway Volume não configurado. **Não subir para produção real antes de resolver.**
+
+## 8) Plano v1.1 — Internacionalização (en/pt/es) — Mapeado em 2026-03-15
+
+### Contexto
+App aguardando revisão Apple (v1.0). Internacionalização planejada como primeira feature pós-aprovação.
+Escopo: **L — Completo** (UI + conteúdo editorial + metadata das stores).
+
+### Arquitetura alvo
+
+```
+app/
+├── l10n/
+│   ├── app_pt.arb       ← base (pt-BR)
+│   ├── app_en.arb       ← inglês
+│   └── app_es.arb       ← espanhol
+├── pubspec.yaml         ← + flutter_localizations, intl ^0.19, package_info_plus ^8
+└── lib/
+    ├── main.dart        ← + localizationsDelegates + supportedLocales
+    ├── app_state.dart   ← + locale (String) + setLocale() + _localeKey
+    └── features/settings/presentation/settings_screen.dart
+        └── row "Idioma / Language" + bottom sheet picker (pt/en/es)
+```
+
+### Fluxo UX decidido
+- **Detecção automática** pelo device (iOS Settings > Language) como default.
+- **Override manual** em Ajustes > Geral > Idioma (bottom sheet com 3 opções).
+- **Fallback**: pt-BR se locale do device não for suportado.
+- Troca de idioma é **reativa** (sem restart do app) via `setLocale()` + `notifyListeners()`.
+
+### Strings a localizar (telas e componentes)
+| Tela | Chaves estimadas |
+|------|-----------------|
+| Settings | ~30 |
+| Home (daily quote) | ~15 |
+| History | ~10 |
+| Favorites | ~8 |
+| Paywall | ~20 |
+| Onboarding | ~25 |
+| Auth | ~12 |
+| Componentes globais | ~10 |
+| **Total** | **~130 chaves** |
+
+### Conteúdo editorial (I18N-04)
+- 40 citações verificadas → tradução para EN e ES (revisão por falante nativo obrigatória)
+- 40 recomendações práticas → tradução para EN e ES
+- Backend: campo `lang` adicionado ao seed; endpoint aceita `?lang=en|pt|es`
+- **Contingência**: se editorial atrasar, v1.1 lança com UI localizada e conteúdo em pt; conteúdo EN/ES na v1.2
+
+### Critério de aceite da v1.1
+- [ ] Zero strings hardcoded na camada de apresentação
+- [ ] Seletor de idioma funcional em Ajustes (persiste entre sessões)
+- [ ] Todas as telas sem overflow em EN e ES (strings EN/ES são mais longas que pt)
+- [ ] Conteúdo editorial EN/ES validado por curador
+- [ ] `GET /v1/daily-package?lang=en` retorna citação e recomendação em inglês
+- [ ] App Store e Play Store com listing em EN e ES
 
 ## 7) Evidências recentes (2026-02-14)
 - App (feature flags + gatilhos): `app/lib/app_state.dart`, `app/lib/core/paywall/paywall_flow.dart`, `app/lib/features/daily_quote/presentation/home_screen.dart`, `app/lib/features/daily_quote/data/daily_repository.dart`.

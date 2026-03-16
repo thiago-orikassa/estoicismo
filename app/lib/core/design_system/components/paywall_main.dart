@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/subscription.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 import 'paywall_types.dart';
 
 class PaywallMain extends StatelessWidget {
@@ -27,9 +28,10 @@ class PaywallMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final primaryLabel = selectedPlan == SubscriptionPlan.annual
-        ? 'Iniciar 7 dias grátis'
-        : 'Assinar agora';
+        ? l10n.paywallButtonAnnual
+        : l10n.paywallButtonMonthly;
 
     return Material(
       color: AethorColors.obsidian,
@@ -44,7 +46,7 @@ class PaywallMain extends StatelessWidget {
                   children: [
                     const SizedBox(height: 40),
                     Text(
-                      'Pratique com profundidade. Sem limites.',
+                      l10n.paywallMainTitle,
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
                             fontFamily: 'Cormorant Garamond',
                             fontStyle: FontStyle.italic,
@@ -55,7 +57,7 @@ class PaywallMain extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Ritual diário completo. Histórico, favoritos e trilhas sem restrição.',
+                      l10n.paywallMainDescription,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: AethorColors.sand,
                             height: 1.5,
@@ -72,7 +74,7 @@ class PaywallMain extends StatelessWidget {
                     _ComparisonTable(),
                     const SizedBox(height: 20),
                     Text(
-                      'Cancele quando quiser. Sem compromisso.',
+                      l10n.paywallCancelNotice,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AethorColors.sand.withValues(alpha: 0.8),
                           ),
@@ -108,7 +110,7 @@ class PaywallMain extends StatelessWidget {
                           ),
                         ),
                         onPressed: onContinueFree,
-                        child: const Text('Continuar no gratuito'),
+                        child: Text(l10n.paywallContinueFree),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -118,7 +120,7 @@ class PaywallMain extends StatelessWidget {
                         style: TextButton.styleFrom(
                           foregroundColor: AethorColors.sand,
                         ),
-                        child: const Text('Restaurar compra'),
+                        child: Text(l10n.paywallRestorePurchase),
                       ),
                     ),
                   ],
@@ -131,7 +133,7 @@ class PaywallMain extends StatelessWidget {
               child: IconButton(
                 onPressed: onClose,
                 icon: const Icon(AethorIcons.close, color: AethorColors.ivory),
-                tooltip: 'Fechar',
+                tooltip: l10n.actionClose,
               ),
             ),
           ],
@@ -144,10 +146,11 @@ class PaywallMain extends StatelessWidget {
 class _ValueBullets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final items = [
-      'Histórico completo e ilimitado.',
-      'Favoritos sem limite e revisita rápida.',
-      'Trilhas guiadas de aprofundamento.',
+      l10n.paywallBullet1,
+      l10n.paywallBullet2,
+      l10n.paywallBullet3,
     ];
 
     return Column(
@@ -198,20 +201,21 @@ class _PlanSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         _PlanCard(
-          title: 'Plano Anual',
-          subtitle: '7 dias grátis',
+          title: l10n.paywallPlanAnnualTitle,
+          subtitle: l10n.paywallPlanAnnualSubtitle,
           price: 'R\$ 149,00/ano',
-          highlight: 'Mais vantajoso',
+          highlight: l10n.paywallPlanAnnualHighlight,
           selected: selectedPlan == SubscriptionPlan.annual,
           onTap: () => onPlanChange(SubscriptionPlan.annual),
         ),
         const SizedBox(height: 12),
         _PlanCard(
-          title: 'Plano Mensal',
-          subtitle: 'Pagamento mensal',
+          title: l10n.paywallPlanMonthlyTitle,
+          subtitle: l10n.paywallPlanMonthlySubtitle,
           price: 'R\$ 19,90/mês',
           selected: selectedPlan == SubscriptionPlan.monthly,
           onTap: () => onPlanChange(SubscriptionPlan.monthly),
@@ -320,14 +324,15 @@ class _PlanCard extends StatelessWidget {
 class _ComparisonTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final rows = [
-      ('Citação + prática diária', true, true),
-      ('Histórico completo', false, true),
-      ('Favoritos ilimitados', false, true),
-      ('Áudios práticos', false, true),
-      ('Trilhas guiadas', false, true),
-      ('Personalização avançada', false, true),
-      ('Suporte prioritário', false, true),
+      (l10n.paywallComparisonFeature1, true, true),
+      (l10n.paywallComparisonFeature2, false, true),
+      (l10n.paywallComparisonFeature3, false, true),
+      (l10n.paywallComparisonFeature4, false, true),
+      (l10n.paywallComparisonFeature5, false, true),
+      (l10n.paywallComparisonFeature6, false, true),
+      (l10n.paywallComparisonFeature7, false, true),
     ];
 
     return Container(
@@ -341,13 +346,13 @@ class _ComparisonTable extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child:
-                    Text('Recursos', style: TextStyle(color: AethorColors.sand)),
+                    Text(l10n.paywallComparisonHeaderFeatures, style: const TextStyle(color: AethorColors.sand)),
               ),
               const SizedBox(width: 12),
               Text(
-                'Gratuito',
+                l10n.paywallComparisonHeaderFree,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AethorColors.sand,
                       fontWeight: FontWeight.w600,
@@ -355,7 +360,7 @@ class _ComparisonTable extends StatelessWidget {
               ),
               const SizedBox(width: 16),
               Text(
-                'Pro',
+                l10n.paywallComparisonHeaderPro,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AethorColors.ivory,
                       fontWeight: FontWeight.w600,

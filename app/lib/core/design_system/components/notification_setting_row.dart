@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../tokens/aethor_icons.dart';
 import '../tokens/design_tokens.dart';
 
@@ -27,6 +28,7 @@ class NotificationSettingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -52,7 +54,7 @@ class NotificationSettingRow extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Lembrete Diário',
+                      l10n.notificationSettingDailyReminder,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -62,7 +64,7 @@ class NotificationSettingRow extends StatelessWidget {
                     if (enabled && !systemPermissionDenied) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Todos os dias às $time',
+                        '${l10n.notificationSettingDailySchedule} $time',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 12,
                               color: AethorColors.textMuted,
@@ -100,7 +102,7 @@ class NotificationSettingRow extends StatelessWidget {
                           size: 16, color: AethorColors.copper),
                       const SizedBox(width: 6),
                       Text(
-                        'Permissão negada',
+                        l10n.notificationSettingPermissionDenied,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -111,7 +113,7 @@ class NotificationSettingRow extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Ative notificações nas configurações do sistema para receber lembretes.',
+                    l10n.notificationSettingEnableSystem,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 11,
                           color: AethorColors.textMuted,
@@ -134,7 +136,7 @@ class NotificationSettingRow extends StatelessWidget {
                           borderRadius: BorderRadius.circular(AethorRadius.sm),
                         ),
                       ),
-                      child: const Text('Abrir Configurações'),
+                      child: Text(l10n.notificationSettingOpenSettings),
                     ),
                   ),
                 ],
@@ -150,7 +152,7 @@ class NotificationSettingRow extends StatelessWidget {
                 Divider(height: 1, color: AethorColors.border.withValues(alpha: 0.3)),
                 const SizedBox(height: 12),
                 Text(
-                  'HORÁRIO DO LEMBRETE',
+                  l10n.notificationSettingTimeLabel,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontSize: 11,
                         letterSpacing: 1,
@@ -186,7 +188,7 @@ class NotificationSettingRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'FUSO HORÁRIO',
+                  l10n.notificationSettingTimezoneLabel,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontSize: 11,
                         letterSpacing: 1,
@@ -212,7 +214,7 @@ class NotificationSettingRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Você receberá um lembrete todos os dias no horário escolhido.',
+                  l10n.notificationSettingReminderInfo,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 11,
                         color: AethorColors.textSubtle,
