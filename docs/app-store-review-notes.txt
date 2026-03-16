@@ -1,0 +1,65 @@
+NOTES FOR APP REVIEW TEAM — AETHOR
+===================================
+
+BACKEND
+-------
+The app connects to a live production backend (no local server required):
+  https://aethor-production.up.railway.app
+
+All API endpoints are active and publicly reachable. No VPN or special
+network configuration is needed.
+
+
+ACCOUNT & SIGN-IN
+-----------------
+The app supports Sign in with Apple. You may create a new account during
+review using any Apple ID, or use the sandbox account below.
+
+Sandbox test account (for In-App Purchase testing):
+  Email:    aethor.tester.2026@outlook.com
+  Password: (use the password set in App Store Connect > Users & Access >
+             Sandbox Testers for this account)
+
+To sign in with the sandbox account on device:
+  Settings → App Store → Sandbox Account → Sign In
+
+
+IN-APP PURCHASES — HOW TO TRIGGER THE PAYWALL
+----------------------------------------------
+The app has a first-session guardrail: the paywall does NOT appear on the
+very first launch (by design, to protect new-user retention).
+
+To reach the paywall after first launch:
+
+  Option A — Settings tab (always accessible, no guardrail):
+    1. Open the app.
+    2. Tap the "Ajustes" (Settings) tab at the bottom.
+    3. Tap "Ver planos" in the subscription card.
+    4. The paywall appears immediately.
+
+  Option B — Feature block (after first session):
+    1. Open the app and complete one daily check-in.
+    2. Navigate to Histórico or Favoritos.
+    3. Tap any locked item — the premium block sheet appears.
+    4. Tap "Ver planos" to open the full paywall.
+
+PRODUCTS AVAILABLE
+------------------
+  • aethor_pro_annual   — Pro Anual  — R$ 149,00/year  — includes 7-day free trial
+  • aethor_pro_monthly  — Pro Mensal — R$ 19,90/month  — no trial
+
+To test purchase, use the sandbox account signed into the device's App Store.
+To test restore, purchase in sandbox, delete and reinstall the app, then tap
+"Restaurar compra" on the paywall or in Settings.
+
+
+ADDITIONAL NOTES
+----------------
+• The app is a daily stoic practice companion: each day the user receives a
+  curated quote + practical recommendation + check-in.
+• Free users have full access to the daily ritual. Pro unlocks history,
+  favorites, and guided tracks.
+• Push notifications are used only for the daily ritual reminder. Permission
+  is requested contextually, not on first launch.
+• No user-generated content. No third-party logins other than Apple and Google.
+• Crash reporting and analytics are handled via Firebase (no PII stored).
