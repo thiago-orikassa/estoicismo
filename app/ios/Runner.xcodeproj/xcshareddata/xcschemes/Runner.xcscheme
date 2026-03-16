@@ -62,7 +62,8 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       enableGPUValidationMode = "1"
-      allowLocationSimulation = "YES">
+      allowLocationSimulation = "YES"
+      storeKitConfigurationFileReference = "AE5F3D1294B7C8A063F5E2B1">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
