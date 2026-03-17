@@ -831,10 +831,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkinTitle => 'Daily Check-in';
 
   @override
-  String get checkinAppliedBtn => 'I applied it today';
+  String get checkinAppliedBtn => 'Applied today';
 
   @override
-  String get checkinNotAppliedBtn => 'I didn\'t apply it';
+  String get checkinNotAppliedBtn => 'Didn\'t apply';
 
   @override
   String get checkinSaving => 'Saving...';

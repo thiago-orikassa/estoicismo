@@ -302,8 +302,8 @@
   "premiumRestorePurchase": "Restore purchase",
 
   "checkinTitle": "Daily Check-in",
-  "checkinAppliedBtn": "I applied it today",
-  "checkinNotAppliedBtn": "I didn't apply it",
+  "checkinAppliedBtn": "Applied today",
+  "checkinNotAppliedBtn": "Didn't apply",
   "checkinSaving": "Saving...",
   "checkinRegisteredTitle": "Check-in recorded",
   "checkinAppliedMessage": "You applied today's practice.",
